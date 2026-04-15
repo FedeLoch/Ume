@@ -26,12 +26,12 @@ UmeEvaluator >> analyzer [
 UmeEvaluator >> classesFor: target [
 
 	targetClasses ifNil: [ targetClasses := target package definedClasses ].
-	
+
 	^ targetClasses
 ]
 
 { #category : 'as yet unclassified' }
-UmeEvaluator >> eval: receiver method: target from: schema with: args andCoverage: incrCoverage collectingWith: collector [
+UmeEvaluator >> eval: receiver method: methodToPerform from: schema with: args andCoverage: incrCoverage collectingWith: collector [
 
 	| localCoverageResult result assertResult case profilingResult |
 	
@@ -41,7 +41,7 @@ UmeEvaluator >> eval: receiver method: target from: schema with: args andCoverag
 		
 		"Executing PB Analyzer"
 		case := PBAProgram from:
-			[ result := receiver perform: target selector withArguments: args ] forClasses: (self classesFor: target).
+			[ result := receiver perform: methodToPerform selector withArguments: args ] forClasses: (self classesFor: methodToPerform).
 
 		profilingResult := analyzer analyze: case.
 

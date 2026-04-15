@@ -237,6 +237,12 @@ UmeRunner >> initialize [
 	
 ]
 
+{ #category : 'testing' }
+UmeRunner >> isKernelMethod: method [ 
+	
+	^ method package name = 'Kernel'
+]
+
 { #category : 'tests' }
 UmeRunner >> reRun: result [
 
@@ -310,9 +316,10 @@ UmeRunner >> target: targetMethod [
 	"target package methods <- all package methods"
 
 	"target sendReachableMethods <- all send called methods"
-	
 	target := targetMethod.
-	methodsToInstrument := target sendReachableMethods.
+
+	methodsToInstrument := (self isKernelMethod: targetMethod) ifTrue:
+		[ target selfReachableMethods ] ifFalse: [ target sendReachableMethods ]
 	
 ]
 
