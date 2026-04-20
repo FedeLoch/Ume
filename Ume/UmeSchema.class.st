@@ -30,12 +30,6 @@ UmeSchema >> argumentConstraints: anArgumentConstraints [
 	argumentConstraints := anArgumentConstraints.
 ]
 
-{ #category : 'accessing' }
-UmeSchema >> assert: anAssertBlock [
-
-	property := anAssertBlock
-]
-
 { #category : 'initialization' }
 UmeSchema >> initialize [ 
 
@@ -49,7 +43,7 @@ UmeSchema >> merge: anotherSchema [
 
 	self mergeReceiverConstraint: anotherSchema receiverConstraint.
 	self mergeArgumentConstraint: anotherSchema argumentConstraints.
-	self mergeAssert: anotherSchema property. 
+	self mergeProperty: anotherSchema property. 
 	"TODO:
 		Think how to index the schema, for the moment the schema respect the next structure:
 		{
@@ -83,7 +77,7 @@ UmeSchema >> mergeArgumentConstraint: someArgumentConstraints [
 ]
 
 { #category : 'accessing' }
-UmeSchema >> mergeAssert: aProperty [
+UmeSchema >> mergeProperty: aProperty [
 
 	property ifNil: [ ^ property := aProperty ].
 ]
