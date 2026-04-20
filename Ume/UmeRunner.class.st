@@ -180,7 +180,7 @@ UmeRunner >> genTest: incrCoverage with: collector [
 	caseFeedback := feedbackEvaluator eval: test.
 	generator feed: caseFeedback.
 	
-	^ test feedback: caseFeedback; assert: schema assert; yourself
+	^ test feedback: caseFeedback; property: schema property; yourself
 ]
 
 { #category : 'as yet unclassified' }

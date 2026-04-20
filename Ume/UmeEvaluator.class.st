@@ -47,7 +47,7 @@ UmeEvaluator >> eval: receiver method: methodToPerform from: schema with: args a
 
 		localCoverageResult := collector collectResult.
 		
-		assertResult := schema assert value: receiver value: args value: result
+		assertResult := schema property value: receiver value: args value: result
 	] on: Error do: [ :error | ^ UmeEvalError new
 			stack: (error signalerContext stackOfSize: 10);
 			profilingResult: profilingResult;

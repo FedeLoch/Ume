@@ -78,7 +78,7 @@ RegexExperiment >> schemaCorpusWith: mutators [
 	^ UmeSchema new
 		receiverConstraint: receiverConstraint;
 		argumentConstraints: argumentConstraints;
-		assert: assert
+		property: assert
 ]
 
 { #category : 'running' }
@@ -125,5 +125,5 @@ RegexExperiment >> weightedGrammarSchema [
 	^ UmeSchema new
 		receiverConstraint: receiverConstraint;
 		argumentConstraints: argumentConstraints;
-		assert: assert
+		property: assert
 ]

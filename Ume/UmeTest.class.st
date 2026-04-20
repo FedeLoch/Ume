@@ -22,7 +22,7 @@ Class {
 { #category : 'ston-core' }
 UmeTest class >> stonAllInstVarNames [
 
-	^ super stonAllInstVarNames copyWithoutAll: #( target assert )
+	^ super stonAllInstVarNames copyWithoutAll: #( target #property )
 ]
 
 { #category : 'running' }
@@ -46,12 +46,6 @@ UmeTest >> arguments: inputs [
 UmeTest >> argumentsString [
 
 	^ (STON toString: arguments) fullPrintString
-]
-
-{ #category : 'accessing' }
-UmeTest >> assert [
-
-	^ assert
 ]
 
 { #category : 'accessing' }
@@ -169,6 +163,18 @@ UmeTest >> name [
 UmeTest >> profiledRun [
 
 	^ TimeProfiler spyOn: [ self run ]
+]
+
+{ #category : 'accessing' }
+UmeTest >> property [
+
+	^ assert
+]
+
+{ #category : 'accessing' }
+UmeTest >> property: anAssert [
+
+	assert := anAssert
 ]
 
 { #category : 'accessing' }

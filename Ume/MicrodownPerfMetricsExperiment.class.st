@@ -38,7 +38,7 @@ MicrodownPerfMetricsExperiment >> schema [
 	^ UmeSchema new
 		  receiverConstraint: (UmeObjectConstraint new generator: (UmeConstantGenerator new value: Microdown));
 		  argumentConstraints: { (UmeObjectConstraint new objectClass: String; generator: markdownGenerator) };
-		  assert: [ :regex :input :result | true ]
+		  property: [ :regex :input :result | true ]
 ]
 
 { #category : 'accessing' }

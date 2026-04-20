@@ -31,5 +31,5 @@ UmeJSONTest >> setUp [
 		          receiverConstraint: receiverConstraint;
 		          argumentConstraints: argumentConstraints;
 		          score: [ :re :inputs :res | 1 ];
-		          assert: [ :regex :input :result | true ].
+		          property: [ :regex :input :result | true ].
 ]

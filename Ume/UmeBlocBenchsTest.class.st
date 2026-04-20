@@ -142,7 +142,7 @@ UmeBlocBenchsTest >> setUp [
 	assert := [ :coll :args :blbResult | blbResult hasError not ].
 	schema := UmeSchema new
 		          receiverConstraint: receiverConstraint;
-		          assert: assert
+		          property: assert
 ]
 
 { #category : 'tests' }

@@ -41,7 +41,7 @@ NeoJSONPerfMetricsExperiment >> schema [
 	^ UmeSchema new
 		receiverConstraint: receiverConstraint;
 		argumentConstraints: argumentConstraints;
-		assert: [ :regex :input :result | true ].
+		property: [ :regex :input :result | true ].
 ]
 
 { #category : 'accessing' }

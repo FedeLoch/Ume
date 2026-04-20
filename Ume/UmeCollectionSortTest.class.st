@@ -32,7 +32,7 @@ UmeCollectionSortTest >> setUp [
 	          result = coll sort and: result size = coll size ]. "TODO: improve the assertion"
 	schema := UmeSchema new
 		          receiverConstraint: receiverConstraint ;
-		          assert: assert
+		          property: assert
 ]
 
 { #category : 'tests' }
