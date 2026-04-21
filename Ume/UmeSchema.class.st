@@ -13,6 +13,17 @@ Class {
 	#tag : 'Property Schema'
 }
 
+{ #category : 'as yet unclassified' }
+UmeSchema class >> receiver: aReceiver method: aMethod arguments: theArguments property:aProperty [
+"Build a Schema with a fixed arguments order"
+
+	^ self new 
+	receiverConstraint: aReceiver;
+	argumentConstraints: theArguments;
+	method: aMethod;
+	property: aProperty.
+]
+
 { #category : 'ston-core' }
 UmeSchema class >> stonAllInstVarNames [
 
