@@ -5,7 +5,8 @@ Class {
 		'property',
 		'argumentConstraints',
 		'receiverConstraint',
-		'score'
+		'score',
+		'method'
 	],
 	#category : 'Ume-Property Schema',
 	#package : 'Ume',
@@ -86,6 +87,18 @@ UmeSchema >> mergeProperty: aProperty [
 UmeSchema >> mergeReceiverConstraint: aReceiverConstraint [
 
 	receiverConstraint ifNil: [ receiverConstraint := aReceiverConstraint ].
+]
+
+{ #category : 'accessing' }
+UmeSchema >> method [
+
+	^ method
+]
+
+{ #category : 'accessing' }
+UmeSchema >> method: aMethod [
+
+	method := aMethod 
 ]
 
 { #category : 'accessing' }

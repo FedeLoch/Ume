@@ -30,9 +30,10 @@ UmeAPITest >> testIntegerAddition [
 	schema := UmeSchema new
     	receiverConstraint: receiver;
     	argumentConstraints: argumentConstraints;
-    	property: property.
+    	property: property;
+		method: SmallInteger >> #+.
 
-	runner := ((UmeRunner test: SmallInteger >> #+ from: schema times: 5) guidedByExecutionTime)run.
+	runner := ((UmeRunner test: schema method from: schema times: 5) guidedByExecutionTime)run.
 	
 	self assertSuccess: runner.
 	self assert: (runner tests size) equals: 5. 
@@ -66,9 +67,10 @@ UmeAPITest >> testNeoJsonPerformance [
 		receiverConstraint: receiverConstraint;
 		argumentConstraints: argumentConstraints;
 		score: [ :re :inputs :res | 1 ];
-		property: [ :regex :input :result | true ].
-
-	runner := ((UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 20 seconds) "guidedByMethodsCalls") run.
+		property: [ :regex :input :result | true ];
+		method: NeoJSONReader class >> #fromString:.
+		
+	runner := ((UmeRunner test: schema method from: schema for: 20 seconds) "guidedByMethodsCalls") run.
 	
 
 	self assertSuccess: runner.
@@ -100,9 +102,10 @@ UmeAPITest >> testSortingCollection [
 
 	schema := UmeSchema new 
     	receiverConstraint: receiver; 
-    	property: property.
+    	property: property;
+		method: SequenceableCollection >> #sort.
 
-	runner := UmeRunner test: SequenceableCollection >> #sort from: schema for: 3 seconds.
+	runner := UmeRunner test: schema method from: schema for: 3 seconds.
 
 	runner guidedByExecutionTime.
 
