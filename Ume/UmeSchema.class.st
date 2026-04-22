@@ -24,6 +24,18 @@ UmeSchema class >> receiver: aReceiver method: aMethod arguments: theArguments p
 	property: aProperty.
 ]
 
+{ #category : 'as yet unclassified' }
+UmeSchema class >> receiver: aReceiver method: aMethod arguments: theArguments property:aProperty score: aBlock [
+"Build a Schema with a fixed arguments order"
+
+	^ self new 
+	receiverConstraint: aReceiver;
+	argumentConstraints: theArguments;
+	method: aMethod;
+	property: aProperty;
+	score: aBlock.
+]
+
 { #category : 'ston-core' }
 UmeSchema class >> stonAllInstVarNames [
 
