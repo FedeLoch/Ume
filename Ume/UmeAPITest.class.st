@@ -13,6 +13,13 @@ UmeAPITest >> assertSuccess: result [
 	self assert: (result tests groupedBy: [ :r | r result class ]) keys first equals: UmeEvalSuccess.
 ]
 
+{ #category : 'running' }
+UmeAPITest >> setUp [
+	
+	super setUp.
+	self timeLimit: 2 minutes. 
+]
+
 { #category : 'tests' }
 UmeAPITest >> testIntegerAddition [
 
