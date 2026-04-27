@@ -119,6 +119,12 @@ UmeRunner class >> testWithPackageCoverage: targetMethod from: schema times: tim
 		targetAndPackageCoverage: targetMethod
 ]
 
+{ #category : 'tests' }
+UmeRunner >> computingProgressFor: tests since: time [
+	
+	^ stopCriteria computeProgressFor: tests since: time
+]
+
 { #category : 'as yet unclassified' }
 UmeRunner >> continue: times from: result [
 
@@ -273,20 +279,26 @@ UmeRunner >> reachableMethods [
 { #category : 'tests' }
 UmeRunner >> run [
 
-	| tests time collector incrCoverage |
+	^[ :job | 
+		| tests time collector incrCoverage progress|
 	
-	time := Time millisecondClockValue.
-	tests := OrderedCollection new.
-	collector := C2CoverageCollector new methods: self reachableMethods.
-	incrCoverage := IncrementalCoverageResult for: { target } from: collector.
+		time := Time millisecondClockValue.
+		tests := OrderedCollection new.
+		collector := C2CoverageCollector new methods: self reachableMethods.
+		incrCoverage := IncrementalCoverageResult for: { target } from: collector.
 	
-	collector runOn: [ [
-		self shouldGenNext: tests since: time withCoverage: incrCoverage] whileTrue: [
-			tests add: (self genTest: incrCoverage with: collector).
-		]
-	].
+		collector runOn: [ [
+			self shouldGenNext: tests since: time withCoverage: incrCoverage] whileTrue: [
+				tests add: (self genTest: incrCoverage with: collector).
+				progress := self computingProgressFor: tests since: time. 
+				job 
+					progress: (progress );
+					title: 'running Ume campaign... (', (progress * 100) rounded asString , '%)'.
+			]
+		].
+		self genReport: tests since: time withCoverage: incrCoverage	
+	] asJob run
 
-	^ self genReport: tests since: time withCoverage: incrCoverage
 ]
 
 { #category : 'accessing' }

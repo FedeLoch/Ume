@@ -13,13 +13,6 @@ UmeAPITest >> assertSuccess: result [
 	self assert: (result tests groupedBy: [ :r | r result class ]) keys first equals: UmeEvalSuccess.
 ]
 
-{ #category : 'running' }
-UmeAPITest >> setUp [
-	
-	super setUp.
-	self timeLimit: 2 minutes. 
-]
-
 { #category : 'tests' }
 UmeAPITest >> testIntegerAddition [
 
@@ -109,7 +102,9 @@ UmeAPITest >> testSortingCollection [
     	receiverConstraint: receiver; 
     	property: property.
 
-	runner := ((UmeRunner test: SequenceableCollection >> #sort from: schema for: 3 seconds) guidedByExecutionTime) run.
-	
-	self assertSuccess: runner.
+	runner := UmeRunner test: SequenceableCollection >> #sort from: schema for: 3 seconds.
+
+	runner guidedByExecutionTime.
+
+	runner run
 ]

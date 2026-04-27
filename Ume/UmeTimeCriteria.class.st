@@ -10,6 +10,17 @@ Class {
 }
 
 { #category : 'asserting' }
+UmeTimeCriteria >> computeProgressFor: tests since: time [
+	|duration durationInMs|
+	
+	duration := (Time millisecondClockValue) - time.
+
+	durationInMs := duration  milliSeconds.
+	
+	^ (durationInMs / timeout) 
+]
+
+{ #category : 'asserting' }
 UmeTimeCriteria >> shouldGenNext: currentTests since: aTime withCoverage: aCoverage [
 
 	^ aTime milliSeconds < timeout 
