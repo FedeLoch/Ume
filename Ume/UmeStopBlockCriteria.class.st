@@ -3,7 +3,7 @@ Class {
 	#superclass : 'UmeStopCriteria',
 	#instVars : [
 		'block',
-		'rest'
+		'step'
 	],
 	#category : 'Ume-Runner',
 	#package : 'Ume',
@@ -25,30 +25,15 @@ UmeStopBlockCriteria >> computeProgressFor: tests since: time [
 	
 	^ progression min: 100."
 	
-	| step |
-	step := self rest * 0.1.
-	rest := (self rest - step).
-	^ (100 - self rest ) /100
-	
-	
+	|limit|
+	limit := 10000.
+	^ (tests size / limit) min: 1.0
 ]
 
 { #category : 'initialization' }
 UmeStopBlockCriteria >> initialize [ 
 
-	rest := 100. 
-]
-
-{ #category : 'accessing' }
-UmeStopBlockCriteria >> rest [ 
-
-	^ rest 
-]
-
-{ #category : 'accessing' }
-UmeStopBlockCriteria >> rest: aRest [
-
-	rest := aRest 
+	step := 0. 
 ]
 
 { #category : 'asserting' }
