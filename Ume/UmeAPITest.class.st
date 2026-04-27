@@ -102,9 +102,7 @@ UmeAPITest >> testSortingCollection [
     	receiverConstraint: receiver; 
     	property: property.
 
-	runner := UmeRunner test: SequenceableCollection >> #sort from: schema for: 3 seconds.
-
-	runner guidedByExecutionTime.
-
-	runner run
+	runner := ((UmeRunner test: SequenceableCollection >> #sort from: schema for: 3 seconds) guidedByExecutionTime) run.
+	
+	self assertSuccess: runner.
 ]
