@@ -2,8 +2,11 @@
 * text=auto
 
 # Declare files that will always have CRLF line endings on checkout.
-*.st text eol=crlf
+* text eol=lf
+*.st text eol=lf
+*.ston text eol=lf
 
 # Denote all files that are truly binary and should not be modified.
 *.png binary
 *.jpg binary
+
