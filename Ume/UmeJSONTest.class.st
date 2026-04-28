@@ -1,35 +1,57 @@
 Class {
-	#name : 'UmeJSONTest',
-	#superclass : 'UmeFrameworkTest',
+	#name : 'UmeJsonTest',
+	#superclass : 'UmeAPITest',
 	#instVars : [
-		'receiverConstraint',
-		'argumentConstraints',
-		'schema'
+		'schema',
+		'receiver',
+		'argument'
 	],
-	#category : 'Ume-Framework Tests',
+	#category : 'Ume-API Tests',
 	#package : 'Ume',
-	#tag : 'Framework Tests'
+	#tag : 'API Tests'
 }
 
 { #category : 'running' }
-UmeJSONTest >> jsonGenerator [
+UmeJsonTest >> setUp [
 
-	self subclassResponsibility 
-]
-
-{ #category : 'running' }
-UmeJSONTest >> setUp [
-
+	| mutator generator|
 	super setUp.
-	self timeLimit: 5 hours.
+	
+	mutator := UmeGrammarLiteralsMutator  from: JSONGrammar new.
+	mutator maxInputSize: 30.
 
-	receiverConstraint := UmeObjectConstraint new generator: (UmeConstantGenerator new value: NeoJSONReader).
+	"Corpus-based generator starts with a seed and evolves it."
+	generator := UmeCorpusGenerator new
+		  seeds: { '{"n":true,"x":6}' };
+		  mutationsPerIteration: 1;
+		  mutators: { mutator };
+		  heuristic: UmePickBestElementDifferenceHeuristic new.
 
-	argumentConstraints := { UmeObjectConstraint new objectClass: String; generator: self jsonGenerator }.
+	receiver := UmeObjectConstraint new
+		generator: (UmeConstantGenerator new value: NeoJSONReader).
+	
+	argument := {
+		UmeObjectConstraint new generator: generator
+	}.
 
 	schema := UmeSchema new
-		          receiverConstraint: receiverConstraint;
-		          argumentConstraints: argumentConstraints;
-		          score: [ :re :inputs :res | 1 ];
-		          property: [ :regex :input :result | true ].
+		receiverConstraint: receiver;
+		argumentConstraints: argument ;
+		score: [ :re :inputs :res | 1 ];
+		property: [ :regex :input :result | true ].
+
+
+]
+
+{ #category : 'tests' }
+UmeJsonTest >> testNeoJsonPerformance [
+
+	|runner|
+	
+	runner := ((UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 20 seconds) "guidedByMethodsCalls") run.
+	
+	self assertSuccess: runner.
+	self assert: (runner totalTime >= 20 seconds).
+	
+
 ]
