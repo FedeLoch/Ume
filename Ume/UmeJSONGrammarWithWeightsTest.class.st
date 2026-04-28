@@ -1,6 +1,6 @@
 Class {
 	#name : 'UmeJSONGrammarWithWeightsTest',
-	#superclass : 'UmeJSONTest',
+	#superclass : 'AnObsoleteUmeJSONTest',
 	#instVars : [
 		'runner'
 	],

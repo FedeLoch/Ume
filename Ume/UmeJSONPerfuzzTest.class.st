@@ -1,6 +1,6 @@
 Class {
 	#name : 'UmeJSONPerfuzzTest',
-	#superclass : 'UmeJSONTest',
+	#superclass : 'AnObsoleteUmeJSONTest',
 	#category : 'Ume-Framework Tests',
 	#package : 'Ume',
 	#tag : 'Framework Tests'

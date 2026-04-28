@@ -1,6 +1,6 @@
 Class {
 	#name : 'UmeJSONPerfuzzWithTreeGrammarMutationTest',
-	#superclass : 'UmeJSONTest',
+	#superclass : 'AnObsoleteUmeJSONTest',
 	#instVars : [
 		'runner'
 	],
