@@ -18,16 +18,8 @@ UmeStopBlockCriteria >> block: aBlock [
 
 { #category : 'asserting' }
 UmeStopBlockCriteria >> computeProgressFor: tests since: time [
-	"| progression|
-	progression := 100 - (self rest) + (self rest/ 2).
-	rest := (100 - progression ). 
 	
-	
-	^ progression min: 100."
-	
-	|limit|
-	limit := 10000.
-	^ (tests size / limit) min: 1.0
+	^ (tests size / 10000) min: 1.0
 ]
 
 { #category : 'initialization' }
