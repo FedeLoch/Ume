@@ -2,7 +2,8 @@ Class {
 	#name : 'UmeStopBlockCriteria',
 	#superclass : 'UmeStopCriteria',
 	#instVars : [
-		'block'
+		'block',
+		'step'
 	],
 	#category : 'Ume-Runner',
 	#package : 'Ume',
@@ -13,6 +14,18 @@ Class {
 UmeStopBlockCriteria >> block: aBlock [
 
 	block := aBlock 
+]
+
+{ #category : 'asserting' }
+UmeStopBlockCriteria >> computeProgressFor: tests since: time [
+	
+	^ (tests size / 10000) min: 1.0
+]
+
+{ #category : 'initialization' }
+UmeStopBlockCriteria >> initialize [ 
+
+	step := 0. 
 ]
 
 { #category : 'asserting' }

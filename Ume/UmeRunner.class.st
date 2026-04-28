@@ -56,34 +56,6 @@ UmeRunner class >> test: targetMethod from: schema withCoverageTolerance: tolera
 ]
 
 { #category : 'tests' }
-UmeRunner class >> testFrom: schema [
-	
-	^ self new schema: (UmeSchemaInfer enrich: schema for: schema method); target: schema method
-]
-
-{ #category : 'tests' }
-UmeRunner class >> testFrom: schema for: time [ 
-	
-	^ self new 
-		schema: (UmeSchemaInfer enrich: schema for: schema method); 
-		withCriteria: (UmeTimeCriteria new timeout: time);
-		target: schema method;
-		withLowCost.
-	
-]
-
-{ #category : 'tests' }
-UmeRunner class >> testFrom: schema times: times [
-	
-	^ self new 
-		schema: (UmeSchemaInfer enrich: schema for: schema method); 
-		withCriteria: (UmeCountCriteria new times: times);
-		target: schema method;
-		withLowCost.
-
-]
-
-{ #category : 'tests' }
 UmeRunner class >> testWithLowCost: targetMethod from: schema [
 	
 	^ self new schema: (UmeSchemaInfer enrich: schema for: targetMethod); target: targetMethod; withLowCost
@@ -145,6 +117,12 @@ UmeRunner class >> testWithPackageCoverage: targetMethod from: schema times: tim
 		schema: (UmeSchemaInfer enrich: schema for: targetMethod);
 		withCriteria: (UmeCountCriteria new times: times);
 		targetAndPackageCoverage: targetMethod
+]
+
+{ #category : 'tests' }
+UmeRunner >> computingProgressFor: tests since: time [
+	
+	^ stopCriteria computeProgressFor: tests since: time
 ]
 
 { #category : 'as yet unclassified' }
@@ -301,20 +279,27 @@ UmeRunner >> reachableMethods [
 { #category : 'tests' }
 UmeRunner >> run [
 
-	| tests time collector incrCoverage |
+	^[ :job | self runCampaign: job ] asJob run.
+]
+
+{ #category : 'tests' }
+UmeRunner >> runCampaign: aJob [
+ 
+	| tests time collector incrCoverage progress|
 	
 	time := Time millisecondClockValue.
 	tests := OrderedCollection new.
 	collector := C2CoverageCollector new methods: self reachableMethods.
 	incrCoverage := IncrementalCoverageResult for: { target } from: collector.
-	
 	collector runOn: [ [
 		self shouldGenNext: tests since: time withCoverage: incrCoverage] whileTrue: [
-			tests add: (self genTest: incrCoverage with: collector).
-		]
-	].
-
-	^ self genReport: tests since: time withCoverage: incrCoverage
+		tests add: (self genTest: incrCoverage with: collector).
+		progress := self computingProgressFor: tests since: time. 
+		aJob
+			progress: (progress );
+			title: 'running Ume campaign... (', (progress * 100) rounded asString , '%)'.
+		] ].
+	self genReport: tests since: time withCoverage: incrCoverage
 ]
 
 { #category : 'accessing' }

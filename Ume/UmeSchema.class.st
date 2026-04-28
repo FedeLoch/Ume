@@ -5,36 +5,12 @@ Class {
 		'property',
 		'argumentConstraints',
 		'receiverConstraint',
-		'score',
-		'method'
+		'score'
 	],
 	#category : 'Ume-Property Schema',
 	#package : 'Ume',
 	#tag : 'Property Schema'
 }
-
-{ #category : 'as yet unclassified' }
-UmeSchema class >> receiver: aReceiver method: aMethod arguments: theArguments property:aProperty [
-"Build a Schema with a fixed arguments order"
-
-	^ self new 
-	receiverConstraint: aReceiver;
-	argumentConstraints: theArguments;
-	method: aMethod;
-	property: aProperty.
-]
-
-{ #category : 'as yet unclassified' }
-UmeSchema class >> receiver: aReceiver method: aMethod arguments: theArguments property:aProperty score: aBlock [
-"Build a Schema with a fixed arguments order"
-
-	^ self new 
-	receiverConstraint: aReceiver;
-	argumentConstraints: theArguments;
-	method: aMethod;
-	property: aProperty;
-	score: aBlock.
-]
 
 { #category : 'ston-core' }
 UmeSchema class >> stonAllInstVarNames [
@@ -110,18 +86,6 @@ UmeSchema >> mergeProperty: aProperty [
 UmeSchema >> mergeReceiverConstraint: aReceiverConstraint [
 
 	receiverConstraint ifNil: [ receiverConstraint := aReceiverConstraint ].
-]
-
-{ #category : 'accessing' }
-UmeSchema >> method [
-
-	^ method
-]
-
-{ #category : 'accessing' }
-UmeSchema >> method: aMethod [
-
-	method := aMethod 
 ]
 
 { #category : 'accessing' }
