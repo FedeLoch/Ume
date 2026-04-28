@@ -11,6 +11,35 @@ Class {
 	#tag : 'API Tests'
 }
 
+{ #category : 'running' }
+UmeSortingCollectionTest >> setUp [ 
+
+	|collGen|
+	
+	super setUp.
+	
+	collGen := UmeGenerator onceInstance: [ :instance :props |
+		(Random new nextIntegerBetween: 1 and: 10) timesRepeat: [
+			instance add: (props at: 'item') gen
+		] . instance ] of: OrderedCollection.
+
+	receiver := UmeObjectConstraint new
+    	objectClass: OrderedCollection;
+    	generator: collGen;
+    	props: { 
+        	'item' -> (UmeObjectConstraint new generator: (UmeGenerator oneOf: (1 to: 10))) 
+    	}.
+
+	property := [ :coll :args :res | 
+    	res isSorted & (res size = coll size) 
+	].
+
+	schema := UmeSchema new 
+    	receiverConstraint: receiver; 
+    	property: property.
+
+]
+
 { #category : 'tests' }
 UmeSortingCollectionTest >> testSortingCollection [
 
