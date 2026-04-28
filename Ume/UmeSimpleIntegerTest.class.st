@@ -33,6 +33,15 @@ UmeSimpleIntegerTest >> setUp [
 ]
 
 { #category : 'tests' }
+UmeSimpleIntegerTest >> successful: aResult [ 
+	|groups|
+	groups := aResult tests groupedBy: [ :r | r result class ].
+	
+	^ ( groups size = 1) and: [ groups keys first = UmeEvalSuccess ].
+	
+]
+
+{ #category : 'tests' }
 UmeSimpleIntegerTest >> testIntegerAddition [ 
 
 	| runner | 

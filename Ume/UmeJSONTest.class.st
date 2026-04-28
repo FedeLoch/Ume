@@ -33,3 +33,8 @@ UmeJSONTest >> setUp [
 		          score: [ :re :inputs :res | 1 ];
 		          assert: [ :regex :input :result | true ]. 
 ]
+
+{ #category : 'as yet unclassified' }
+UmeJSONTest >> testGuidingByMethodsCalls [
+	^ self subclassResponsibility
+]

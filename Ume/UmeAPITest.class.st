@@ -9,9 +9,7 @@ Class {
 { #category : 'tests' }
 UmeAPITest >> assertSuccess: result [
 
-	"TODO: think about what make a campaign fonctionnal"
-	self assert: (result tests groupedBy: [ :r | r result class ]) size equals: 1.
-	self assert: (result tests groupedBy: [ :r | r result class ]) keys first equals: UmeEvalSuccess.
+	self assert: ( self successful: result ).
 ]
 
 { #category : 'running' }
@@ -19,6 +17,12 @@ UmeAPITest >> setUp [
 	
 	super setUp.
 	self timeLimit: 1 minute. 
+]
+
+{ #category : 'as yet unclassified' }
+UmeAPITest >> successful: aResult [
+
+	^ self subclassResponsibility 
 ]
 
 { #category : 'tests' }
