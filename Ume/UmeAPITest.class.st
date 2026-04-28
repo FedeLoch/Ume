@@ -26,7 +26,7 @@ UmeAPITest >> successful: aResult [
 ]
 
 { #category : 'tests' }
-UmeAPITest >> testIntegerAddition [
+UmeAPITest >> testIntegerAdditionByCount [
 
 	| receiver argumentConstraints property schema runner |
 	

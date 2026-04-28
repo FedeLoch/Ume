@@ -17,7 +17,7 @@ UmeSortingCollectionTest >> setUp [
 	|collGen|
 	
 	super setUp.
-	
+	self timeLimit: 2 minutes.
 	collGen := UmeGenerator onceInstance: [ :instance :props |
 		(Random new nextIntegerBetween: 1 and: 10) timesRepeat: [
 			instance add: (props at: 'item') gen
@@ -40,12 +40,31 @@ UmeSortingCollectionTest >> setUp [
 
 ]
 
+{ #category : 'running' }
+UmeSortingCollectionTest >> successful: aResult [ 
+	|groups|
+	groups := aResult tests groupedBy: [ :r | r result class ].
+	
+	^ ( groups size = 1) and: [ groups keys first = UmeEvalSuccess ].
+	
+]
+
 { #category : 'tests' }
-UmeSortingCollectionTest >> testSortingCollection [
+UmeSortingCollectionTest >> testSortingCollectionByCount [
 
 	| runner |
-	runner := ((UmeRunner test: SequenceableCollection >> #sort from: schema for: 3 seconds) guidedByExecutionTime) run.
+	runner := ((UmeRunner test: SequenceableCollection >> #sort from: schema times: 5) guidedByExecutionTime) run.
 
 	self assertSuccess: runner.
-	self assert: (runner totalTime >= 3 seconds).
+	self assert: (runner tests size) equals: 5. 
+]
+
+{ #category : 'tests' }
+UmeSortingCollectionTest >> testSortingCollectionByTimes [
+
+	| runner |
+	runner := ((UmeRunner test: SequenceableCollection >> #sort from: schema for: 10 seconds) guidedByExecutionTime) run.
+
+	self assertSuccess: runner.
+	self assert: (runner totalTime >= 10 seconds).
 ]

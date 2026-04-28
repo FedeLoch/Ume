@@ -42,11 +42,21 @@ UmeSimpleIntegerTest >> successful: aResult [
 ]
 
 { #category : 'tests' }
-UmeSimpleIntegerTest >> testIntegerAddition [ 
+UmeSimpleIntegerTest >> testIntegerAdditionByCount [ 
 
 	| runner | 
 	runner := ((UmeRunner test: SmallInteger >> #+ from: schema times: 5) guidedByExecutionTime)run.
 	
 	self assertSuccess: runner.
 	self assert: (runner tests size) equals: 5. 
+]
+
+{ #category : 'tests' }
+UmeSimpleIntegerTest >> testIntegerAdditionByTime [
+
+	| runner | 
+	runner := ((UmeRunner test: SmallInteger >> #+ from: schema for: 5 seconds) guidedByExecutionTime)run.
+	
+	self assertSuccess: runner.
+	self assert: (runner totalTime >= 5 seconds).
 ]
