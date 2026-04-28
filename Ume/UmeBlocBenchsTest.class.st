@@ -150,7 +150,7 @@ UmeBlocBenchsTest >> testGivingABlocBenchSchemaThenGenerateCasesToAnalyseCoverag
 
 	| result |
 
-	resutl := (UmeRunner test: BlBCase >> #run from: schema times: 2) run.
+	result := (UmeRunner test: BlBCase >> #run from: schema times: 2) run.
 
 	self assertSuccess: result.
 	self assert: (result tests size) equals: 10.
