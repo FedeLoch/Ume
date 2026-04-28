@@ -31,3 +31,13 @@ UmeSimpleIntegerTest >> setUp [
     	argumentConstraints: arguments;
     	property: property.
 ]
+
+{ #category : 'tests' }
+UmeSimpleIntegerTest >> testIntegerAddition [ 
+
+	| runner | 
+	runner := ((UmeRunner test: SmallInteger >> #+ from: schema times: 5) guidedByExecutionTime)run.
+	
+	self assertSuccess: runner.
+	self assert: (runner tests size) equals: 5. 
+]
