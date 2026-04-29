@@ -24,6 +24,17 @@ UmeSchema class >> receiver: aReceiver method: aMethod arguments: theArguments p
 ]
 
 { #category : 'ston-core' }
+UmeSchema class >> receiver: aReceiver method: aMethod arguments: theArguments property:aProperty score: aScore [
+	"Build a Schema with a fixed arguments order"
+	^ self new 
+	receiverConstraint: aReceiver;
+	argumentConstraints: theArguments;
+	method: aMethod;
+	property: aProperty;
+	score: aScore.
+]
+
+{ #category : 'ston-core' }
 UmeSchema class >> stonAllInstVarNames [
 
 	^ super stonAllInstVarNames copyWithoutAll: #( #property #score )

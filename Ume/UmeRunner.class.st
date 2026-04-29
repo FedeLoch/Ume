@@ -74,6 +74,15 @@ UmeRunner class >> testFrom: schema times: times [
 ]
 
 { #category : 'tests' }
+UmeRunner class >> testFrom: schema withCoverageTolerance: tolerance [
+
+	^ self new
+		schema: (UmeSchemaInfer enrich: schema for: schema method);
+		withCriteria: (UmeStopCoverageCriteria new tolerance: tolerance);
+		target: schema method
+]
+
+{ #category : 'tests' }
 UmeRunner class >> testWithLowCost: targetMethod from: schema [
 	
 	^ self new schema: (UmeSchemaInfer enrich: schema for: targetMethod); target: targetMethod; withLowCost
