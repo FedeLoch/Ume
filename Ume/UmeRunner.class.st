@@ -56,6 +56,12 @@ UmeRunner class >> test: targetMethod from: schema withCoverageTolerance: tolera
 ]
 
 { #category : 'tests' }
+UmeRunner class >> testFrom: schema [
+	
+	^ self new schema: (UmeSchemaInfer enrich: schema for: schema method); target: schema method
+]
+
+{ #category : 'tests' }
 UmeRunner class >> testFrom: schema for: time [
 
 	^ self new
