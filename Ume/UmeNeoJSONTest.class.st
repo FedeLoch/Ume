@@ -48,7 +48,7 @@ UmeNeoJSONTest >> targetMethod [
 	^ NeoJSONReader class >> #fromString:
 ]
 
-{ #category : 'running' }
+{ #category : 'Ume dynamic tests' }
 UmeNeoJSONTest >> test_474231552 [
 
 	self doTest: {
@@ -58,7 +58,7 @@ UmeNeoJSONTest >> test_474231552 [
 		} asDictionary
 ]
 
-{ #category : 'running' }
+{ #category : 'Ume dynamic tests' }
 UmeNeoJSONTest >> test_594914560 [
 
 	self doTest: {
@@ -68,7 +68,7 @@ UmeNeoJSONTest >> test_594914560 [
 		} asDictionary
 ]
 
-{ #category : 'running' }
+{ #category : 'Ume dynamic tests' }
 UmeNeoJSONTest >> test_774203648 [
 
 	self doTest: {
