@@ -8,6 +8,5 @@ Class {
 
 { #category : 'as yet unclassified' }
 UmeProperty >> satisfiesReceiver: aReceiver args: anArgs result: aResult [
-
-    ^ self value: aReceiver value: anArgs value: aResult
+	self subclassResponsibility
 ]
