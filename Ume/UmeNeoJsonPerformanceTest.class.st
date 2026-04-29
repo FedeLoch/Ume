@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeNeoJsonTest',
+	#name : 'UmeNeoJsonPerformanceTest',
 	#superclass : 'UmeAPITest',
 	#instVars : [
 		'schema',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : 'running' }
-UmeNeoJsonTest >> setUp [
+UmeNeoJsonPerformanceTest >> setUp [
 
 	| mutator generator|
 	super setUp.
@@ -44,7 +44,7 @@ UmeNeoJsonTest >> setUp [
 ]
 
 { #category : 'tests' }
-UmeNeoJsonTest >> testNeoJsonPerformance [
+UmeNeoJsonPerformanceTest >> testNeoJsonPerformance [
 
 	|runner|
 	runner := ((UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 20 seconds) "guidedByMethodsCalls") run.
