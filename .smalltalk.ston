@@ -8,6 +8,6 @@ SmalltalkCISpec {
     }
   ],
   #testing : {
-    #classes : [ 'UmeAPI*' ]
+    #categories : [ 'API Tests' ]
   }
 }
