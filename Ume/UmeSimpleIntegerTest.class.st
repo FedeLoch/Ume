@@ -37,8 +37,7 @@ UmeSimpleIntegerTest >> successful: aResult [
 	|groups|
 	groups := aResult tests groupedBy: [ :r | r result class ].
 	
-	^ ( groups size = 1) and: [ groups keys first = UmeEvalSuccess ].
-	
+	^ ( groups size = 1) and: [ groups keys first = UmeEvalSuccess ]
 ]
 
 { #category : 'tests' }
