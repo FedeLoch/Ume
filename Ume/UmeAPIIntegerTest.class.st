@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeSimpleIntegerTest',
+	#name : 'UmeAPIIntegerTest',
 	#superclass : 'UmeAPITest',
 	#instVars : [
 		'schema',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : 'running' }
-UmeSimpleIntegerTest >> setUp [ 
+UmeAPIIntegerTest >> setUp [ 
 
 	super setUp.
 	
@@ -33,7 +33,7 @@ UmeSimpleIntegerTest >> setUp [
 ]
 
 { #category : 'tests' }
-UmeSimpleIntegerTest >> successful: aResult [ 
+UmeAPIIntegerTest >> successful: aResult [ 
 	|groups|
 	groups := aResult tests groupedBy: [ :r | r result class ].
 	
@@ -41,7 +41,7 @@ UmeSimpleIntegerTest >> successful: aResult [
 ]
 
 { #category : 'tests' }
-UmeSimpleIntegerTest >> testIntegerAdditionByCount [ 
+UmeAPIIntegerTest >> testIntegerAdditionByCount [ 
 
 	| runner | 
 	runner := ((UmeRunner test: SmallInteger >> #+ from: schema times: 5) guidedByExecutionTime)run.
@@ -51,7 +51,7 @@ UmeSimpleIntegerTest >> testIntegerAdditionByCount [
 ]
 
 { #category : 'tests' }
-UmeSimpleIntegerTest >> testIntegerAdditionByTime [
+UmeAPIIntegerTest >> testIntegerAdditionByTime [
 
 	| runner | 
 	runner := ((UmeRunner test: SmallInteger >> #+ from: schema for: 5 seconds) guidedByExecutionTime)run.

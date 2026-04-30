@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeSortingCollectionTest',
+	#name : 'UmeAPISortingTest',
 	#superclass : 'UmeAPITest',
 	#instVars : [
 		'schema',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : 'running' }
-UmeSortingCollectionTest >> setUp [ 
+UmeAPISortingTest >> setUp [ 
 
 	|collGen|
 	
@@ -41,7 +41,7 @@ UmeSortingCollectionTest >> setUp [
 ]
 
 { #category : 'running' }
-UmeSortingCollectionTest >> successful: aResult [ 
+UmeAPISortingTest >> successful: aResult [ 
 	|groups|
 	groups := aResult tests groupedBy: [ :r | r result class ].
 	
@@ -49,7 +49,7 @@ UmeSortingCollectionTest >> successful: aResult [
 ]
 
 { #category : 'tests' }
-UmeSortingCollectionTest >> testSortingCollectionByCount [
+UmeAPISortingTest >> testSortingCollectionByCount [
 
 	| runner |
 	runner := ((UmeRunner test: SequenceableCollection >> #sort from: schema times: 5) guidedByExecutionTime) run.
@@ -59,7 +59,7 @@ UmeSortingCollectionTest >> testSortingCollectionByCount [
 ]
 
 { #category : 'tests' }
-UmeSortingCollectionTest >> testSortingCollectionByTimes [
+UmeAPISortingTest >> testSortingCollectionByTimes [
 
 	| runner |
 	runner := ((UmeRunner test: SequenceableCollection >> #sort from: schema for: 10 seconds) guidedByExecutionTime) run.
