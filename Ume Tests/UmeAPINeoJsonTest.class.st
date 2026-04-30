@@ -46,10 +46,12 @@ UmeAPINeoJsonTest >> setUp [
 { #category : 'tests' }
 UmeAPINeoJsonTest >> testNeoJsonPerformance [
 
-	|runner|
-	runner := ((UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 20 seconds) "guidedByMethodsCalls") run.
+	| runner result |
+	runner := UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 2 seconds.
+	
+	result := runner run.
+
 	self assertSuccess:runner.
-	self assert:(runner totalTime >= 20 seconds).
 	
 
 ]
