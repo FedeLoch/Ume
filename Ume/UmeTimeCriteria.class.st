@@ -15,6 +15,7 @@ UmeTimeCriteria >> computeProgressFor: tests since: time [
 	
 	duration := (Time millisecondClockValue) - time.
 	durationInMs := duration  milliSeconds.
+	
 	^ (durationInMs / timeout) 
 ]
 
