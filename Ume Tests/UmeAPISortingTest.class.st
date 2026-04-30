@@ -6,8 +6,8 @@ Class {
 		'receiver',
 		'property'
 	],
-	#category : 'Ume-API Tests',
-	#package : 'Ume',
+	#category : 'Ume Tests-API Tests',
+	#package : 'Ume Tests',
 	#tag : 'API Tests'
 }
 
