@@ -3,6 +3,7 @@ SmalltalkCISpec {
     SCIMetacelloLoadSpec {
       #baseline : 'Ume',
       #directory : '',
+      #onConflict : #useIncoming,
       #platforms : [ #pharo ]
     }
   ],
