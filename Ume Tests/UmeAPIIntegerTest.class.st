@@ -49,8 +49,8 @@ UmeAPIIntegerTest >> testIntegerAdditionByCount [
 	runner guidedByExecutionTime.
 	result := runner run.
 	
-	self assertSuccess: runner.
-	self assert: (runner tests size) equals: 5. 
+	self assertSuccess: result.
+	self assert: (result tests size) equals: 5. 
 ]
 
 { #category : 'tests' }
@@ -63,6 +63,6 @@ UmeAPIIntegerTest >> testIntegerAdditionByTime [
 	runner guidedByExecutionTime.
 	result := runner run.
 	
-	self assertSuccess: runner.
-	self assert: (runner totalTime >= 2 seconds).
+	self assertSuccess: result.
+	self assert: (result totalTime >= 2 seconds).
 ]
