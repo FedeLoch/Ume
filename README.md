@@ -2,6 +2,12 @@
   <img src="ume-images/ume_logo.png" alt="Ume Logo" width="200"/>
 </p>
 
+<p align="center">
+  <a href="https://github.com/FedeLoch/Ume/actions/workflows/ci.yml"><img src="https://github.com/FedeLoch/Ume/actions/workflows/ci.yml/badge.svg" alt="CI Status"/></a>
+  <a href="https://github.com/FedeLoch/Ume"><img src="https://img.shields.io/github/last-commit/FedeLoch/Ume" alt="Last Commit"/></a>
+  <a href="https://github.com/FedeLoch/Ume"><img src="https://img.shields.io/github/license/FedeLoch/Ume" alt="License"/></a>
+</p>
+
 # Ume - Property-Based Testing & Guided Performance Fuzzing
 
 Ume is a framework for Pharo designed to discover both functional bugs and performance outliers (Perfuzzing). It combines traditional random generation with grammar-based mutations, feedback-oriented exploration, and automatic regression test generation. To know more about Ume:
@@ -14,6 +20,9 @@ Ume is a framework for Pharo designed to discover both functional bugs and perfo
 - [Performance Analysis with Charts](https://github.com/FedeLoch/Ume/wiki/Charts)
 - [Low-Cost instrumentation API](https://github.com/FedeLoch/Ume/wiki/Low-Cost-API)
 
+## Repository Status
+
+Ume is under active development as part of a PhD research project. The core functionality for property-based testing and performance fuzzing is stable and usable.
 
 ## Core Objective
 
