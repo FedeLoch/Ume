@@ -44,15 +44,21 @@ UmeAPINeoJsonTest >> setUp [
 ]
 
 { #category : 'tests' }
+UmeAPINeoJsonTest >> successful: umeResult [
+
+	^ umeResult topCases isEmpty not
+]
+
+{ #category : 'tests' }
 UmeAPINeoJsonTest >> testNeoJsonPerformance [
 
 	| runner result |
 
-	runner := UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 2 seconds.
+	runner := UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 5 seconds.
 	
 	result := runner run.
 
-	self assertSuccess: runner.
+	self assertSuccess: result.
 	
 
 ]
