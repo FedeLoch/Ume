@@ -47,11 +47,12 @@ UmeAPINeoJsonTest >> setUp [
 UmeAPINeoJsonTest >> testNeoJsonPerformance [
 
 	| runner result |
+
 	runner := UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 2 seconds.
 	
 	result := runner run.
 
-	self assertSuccess:runner.
+	self assertSuccess: runner.
 	
 
 ]

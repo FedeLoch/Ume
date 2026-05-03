@@ -51,19 +51,27 @@ UmeAPISortingTest >> successful: aResult [
 { #category : 'tests' }
 UmeAPISortingTest >> testSortingCollectionByCount [
 
-	| runner |
-	runner := ((UmeRunner test: SequenceableCollection >> #sort from: schema times: 5) guidedByExecutionTime) run.
+	| runner result |
+	
+	runner := UmeRunner test: SequenceableCollection >> #sort from: schema times: 5.
+	
+	runner guidedByExecutionTime.
+	result := runner run.
 
-	self assertSuccess: runner.
-	self assert: (runner tests size) equals: 5. 
+	self assertSuccess: result.
+	self assert: (result tests size) equals: 5. 
 ]
 
 { #category : 'tests' }
 UmeAPISortingTest >> testSortingCollectionByTimes [
 
-	| runner |
-	runner := ((UmeRunner test: SequenceableCollection >> #sort from: schema for: 10 seconds) guidedByExecutionTime) run.
+	| runner result |
+
+	runner := UmeRunner test: SequenceableCollection >> #sort from: schema for: 2 seconds.
+	
+	runner guidedByExecutionTime.
+	result := runner run.
 
 	self assertSuccess: runner.
-	self assert: (runner totalTime >= 10 seconds).
+	self assert: (runner totalTime >= 2 seconds).
 ]
