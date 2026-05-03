@@ -53,7 +53,7 @@ UmeAPISortingTest >> testSortingCollectionByCount [
 
 	| runner result |
 	
-	runner := UmeRunner test: SequenceableCollection >> #sort from: schema times: 5.
+	runner := UmeRunner testWithLowCost: SequenceableCollection >> #sort from: schema times: 5.
 	
 	runner guidedByExecutionTime.
 	result := runner run.
@@ -67,11 +67,11 @@ UmeAPISortingTest >> testSortingCollectionByTimes [
 
 	| runner result |
 
-	runner := UmeRunner test: SequenceableCollection >> #sort from: schema for: 2 seconds.
+	runner := UmeRunner testWithLowCost: SequenceableCollection >> #sort from: schema for: 10 seconds.
 	
 	runner guidedByExecutionTime.
 	result := runner run.
 
-	self assertSuccess: runner.
-	self assert: (runner totalTime >= 2 seconds).
+	self assertSuccess: result.
+	self assert: (result totalTime >= 5 seconds).
 ]

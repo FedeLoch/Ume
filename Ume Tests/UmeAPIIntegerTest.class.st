@@ -44,7 +44,7 @@ UmeAPIIntegerTest >> successful: aResult [
 UmeAPIIntegerTest >> testIntegerAdditionByCount [ 
 
 	| runner result | 
-	runner := UmeRunner test: SmallInteger >> #+ from: schema times: 5.
+	runner := UmeRunner testWithLowCost: SmallInteger >> #+ from: schema times: 5.
 	
 	runner guidedByExecutionTime.
 	result := runner run.
@@ -58,7 +58,7 @@ UmeAPIIntegerTest >> testIntegerAdditionByTime [
 
 	| runner result |
 
-	runner := UmeRunner test: SmallInteger >> #+ from: schema for: 2 seconds.
+	runner := UmeRunner testWithLowCost: SmallInteger >> #+ from: schema for: 2 seconds.
 	
 	runner guidedByExecutionTime.
 	result := runner run.
