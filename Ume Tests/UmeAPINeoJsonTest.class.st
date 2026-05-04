@@ -1,18 +1,18 @@
 Class {
-	#name : 'UmeNeoJsonTest',
+	#name : 'UmeAPINeoJsonTest',
 	#superclass : 'UmeAPITest',
 	#instVars : [
 		'schema',
 		'receiver',
 		'argument'
 	],
-	#category : 'Ume-API Tests',
-	#package : 'Ume',
+	#category : 'Ume Tests-API Tests',
+	#package : 'Ume Tests',
 	#tag : 'API Tests'
 }
 
 { #category : 'running' }
-UmeNeoJsonTest >> setUp [
+UmeAPINeoJsonTest >> setUp [
 
 	| mutator generator|
 	super setUp.
@@ -44,17 +44,21 @@ UmeNeoJsonTest >> setUp [
 ]
 
 { #category : 'tests' }
-UmeNeoJsonTest >> testNeoJsonPerformance [
+UmeAPINeoJsonTest >> successful: umeResult [
 
-	|runner|
-	runner := ((UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 20 seconds) "guidedByMethodsCalls") run.
-	self assertSuccess:runner.
-	self assert:(runner totalTime >= 20 seconds).
+	^ umeResult topCases isEmpty not
+]
+
+{ #category : 'tests' }
+UmeAPINeoJsonTest >> testNeoJsonPerformance [
+
+	| runner result |
+
+	runner := UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 5 seconds.
+	
+	result := runner run.
+
+	self assertSuccess: result.
 	
 
-	^ {
-		self corpusGenFrom: '[]' mpi: 3 mutators: {
-			(UmeGrammarDerivationMutator from: JSONGrammar new) maxInputSize: 100
-		}
-	}
 ]

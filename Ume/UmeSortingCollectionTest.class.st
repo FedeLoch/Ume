@@ -52,6 +52,7 @@ UmeSortingCollectionTest >> successful: aResult [
 { #category : 'tests' }
 UmeSortingCollectionTest >> testSortingCollectionByCount [
 
+<<<<<<< HEAD
 	| runner result|
 	runner := UmeRunner test: SequenceableCollection >> #sort from: schema times: 5. 
 	runner guidedByExecutionTime. 
@@ -59,11 +60,19 @@ UmeSortingCollectionTest >> testSortingCollectionByCount [
 
 	self assertSuccess: result .
 	self assert: (result tests size) equals: 5. 
+=======
+	| runner |
+	runner := ((UmeRunner test: SequenceableCollection >> #sort from: schema times: 5) guidedByExecutionTime) run.
+
+	self assertSuccess: runner.
+	self assert: (runner tests size) equals: 5. 
+>>>>>>> main
 ]
 
 { #category : 'tests' }
 UmeSortingCollectionTest >> testSortingCollectionByTimes [
 
+<<<<<<< HEAD
 	| runner result|
 	runner := UmeRunner test: SequenceableCollection >> #sort from: schema for: 10 seconds.
 	runner guidedByExecutionTime. 
@@ -71,4 +80,11 @@ UmeSortingCollectionTest >> testSortingCollectionByTimes [
 
 	self assertSuccess: result.
 	self assert: (result totalTime >= 10 seconds).
+=======
+	| runner |
+	runner := ((UmeRunner test: SequenceableCollection >> #sort from: schema for: 10 seconds) guidedByExecutionTime) run.
+
+	self assertSuccess: runner.
+	self assert: (runner totalTime >= 10 seconds).
+>>>>>>> main
 ]

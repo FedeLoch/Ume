@@ -44,23 +44,19 @@ UmeSimpleIntegerTest >> successful: aResult [
 { #category : 'tests' }
 UmeSimpleIntegerTest >> testIntegerAdditionByCount [ 
 
-	| runner result| 
-	runner := UmeRunner test: SmallInteger >> #+ from: schema times: 5.
-	runner guidedByExecutionTime.
-	result := runner run.
+	| runner | 
+	runner := ((UmeRunner test: SmallInteger >> #+ from: schema times: 5) guidedByExecutionTime)run.
 	
-	self assertSuccess: result.
-	self assert: (result tests size) equals: 5. 
+	self assertSuccess: runner.
+	self assert: (runner tests size) equals: 5. 
 ]
 
 { #category : 'tests' }
 UmeSimpleIntegerTest >> testIntegerAdditionByTime [
 
-	| runner result | 
-	runner := UmeRunner test: SmallInteger >> #+ from: schema for: 5 seconds.
-	runner guidedByExecutionTime.
-	result := runner run.
+	| runner | 
+	runner := ((UmeRunner test: SmallInteger >> #+ from: schema for: 5 seconds) guidedByExecutionTime)run.
 	
-	self assertSuccess: result.
-	self assert: (result totalTime >= 5 seconds).
+	self assertSuccess: runner.
+	self assert: (runner totalTime >= 5 seconds).
 ]
