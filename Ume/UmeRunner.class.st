@@ -17,9 +17,18 @@ Class {
 }
 
 { #category : 'tests' }
-UmeRunner class >> test: targetMethod [
+UmeRunner class >> test: schema [
 	
-	^ self test: targetMethod from: UmeSchema new
+	^ self new schema: (UmeSchemaInfer enrich: schema for: schema method); target: schema method
+]
+
+{ #category : 'tests' }
+UmeRunner class >> test: schema for: time [
+
+	^ self new
+		schema: (UmeSchemaInfer enrich: schema for: schema method);
+		withCriteria: (UmeTimeCriteria new timeout: time);
+		target: schema method
 ]
 
 { #category : 'tests' }
@@ -56,22 +65,7 @@ UmeRunner class >> test: targetMethod from: schema withCoverageTolerance: tolera
 ]
 
 { #category : 'tests' }
-UmeRunner class >> testFrom: schema [
-	
-	^ self new schema: (UmeSchemaInfer enrich: schema for: schema method); target: schema method
-]
-
-{ #category : 'tests' }
-UmeRunner class >> testFrom: schema for: time [
-
-	^ self new
-		schema: (UmeSchemaInfer enrich: schema for: schema method);
-		withCriteria: (UmeTimeCriteria new timeout: time);
-		target: schema method
-]
-
-{ #category : 'tests' }
-UmeRunner class >> testFrom: schema times: times [
+UmeRunner class >> test: schema times: times [
 
 	^ self new
 		schema: (UmeSchemaInfer enrich: schema for: schema method);
@@ -80,7 +74,7 @@ UmeRunner class >> testFrom: schema times: times [
 ]
 
 { #category : 'tests' }
-UmeRunner class >> testFrom: schema withCoverageTolerance: tolerance [
+UmeRunner class >> test: schema withCoverageTolerance: tolerance [
 
 	^ self new
 		schema: (UmeSchemaInfer enrich: schema for: schema method);
