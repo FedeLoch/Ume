@@ -1,0 +1,13 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'Ume',
+      #directory : '',
+      #onConflict : #useIncoming,
+      #platforms : [ #pharo ]
+    }
+  ],
+  #testing : {
+    #categories : [ 'Ume Tests' ]
+  }
+}
