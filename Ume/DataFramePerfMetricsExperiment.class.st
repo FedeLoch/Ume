@@ -46,7 +46,7 @@ DataFramePerfMetricsExperiment >> schema [
 						   file writeStreamDo: [ :stream | stream nextPutAll: input ].
 						   file asFileReference ];
 				   unwrap: #contents) };
-		  assert: [ :regex :input :result | true ]
+		  property: [ :regex :input :result | true ]
 ]
 
 { #category : 'accessing' }

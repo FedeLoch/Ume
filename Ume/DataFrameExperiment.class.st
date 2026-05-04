@@ -46,7 +46,7 @@ DataFrameExperiment >> schemaCorpusWith: mutators [
 						   file writeStreamDo: [ :stream | stream nextPutAll: input ].
 						   file asFileReference ];
 				   unwrap: #contents) };
-		  assert: [ :regex :input :result | true ]
+		  property: [ :regex :input :result | true ]
 ]
 
 { #category : 'running' }

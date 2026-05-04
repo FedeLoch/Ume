@@ -94,7 +94,7 @@ UmeRegexTest >> setUp [
 		          receiverConstraint: receiverConstraint;
 		          argumentConstraints: argumentConstraints;
 		          score: score;
-		          assert: assert
+		          property: assert
 ]
 
 { #category : 'tests' }

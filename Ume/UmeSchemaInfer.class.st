@@ -97,7 +97,7 @@ UmeSchemaInfer class >> schemaFor: method [
 	inputConstraints := self argumentConstraintsFor: method.
 	assert := self assertFor: method.
 	
-	^ UmeSchema new receiverConstraint: objectConstraints; argumentConstraints: inputConstraints; assert: assert.
+	^ UmeSchema new receiverConstraint: objectConstraints; argumentConstraints: inputConstraints; property: assert.
 ]
 
 { #category : 'as yet unclassified' }

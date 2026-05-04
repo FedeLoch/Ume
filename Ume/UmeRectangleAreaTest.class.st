@@ -36,7 +36,7 @@ UmeRectangleAreaTest >> setUp [
 	schema := UmeSchema new
 		          receiverConstraint: receiverConstraint;
 		          argumentConstraints: argumentConstraints;
-		          assert: assert
+		          property: assert
 ]
 
 { #category : 'as yet unclassified' }

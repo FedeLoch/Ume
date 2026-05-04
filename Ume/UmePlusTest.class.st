@@ -25,7 +25,7 @@ UmePlusTest >> setUp [
 		UmeObjectConstraint new generator: (UmeGenerator oneOf: range)
 	}.
 	assert := [ :n :args :result | args first + n = result ].
-	schema := UmeSchema new receiverConstraint: receiverConstraint; argumentConstraints: argumentConstraints; assert: assert.
+	schema := UmeSchema new receiverConstraint: receiverConstraint; argumentConstraints: argumentConstraints; property: assert.
 ]
 
 { #category : 'as yet unclassified' }

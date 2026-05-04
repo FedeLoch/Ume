@@ -205,7 +205,7 @@ UmeUnitTest >> schema [
 		receiverConstraint: receiverConstraint;
 		argumentConstraints: argumentConstraints;
 		score: [ :rcv :args :res | self score: rcv arguments: args result: res ];
-		assert: [ :rcv :args :res | self assert: rcv arguments: args result: res ].
+		property: [ :rcv :args :res | self assert: rcv arguments: args result: res ].
 ]
 
 { #category : 'running' }

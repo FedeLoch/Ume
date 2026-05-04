@@ -12,13 +12,13 @@ Class {
 }
 
 { #category : 'running' }
-UmeJSONTest >> jsonGenerator [
+UmeJSONTest >> jsonGenerator [ 
 
 	self subclassResponsibility 
 ]
 
 { #category : 'running' }
-UmeJSONTest >> setUp [
+UmeJSONTest >> setUp [ 
 
 	super setUp.
 	self timeLimit: 5 hours.
@@ -31,5 +31,10 @@ UmeJSONTest >> setUp [
 		          receiverConstraint: receiverConstraint;
 		          argumentConstraints: argumentConstraints;
 		          score: [ :re :inputs :res | 1 ];
-		          assert: [ :regex :input :result | true ].
+		          assert: [ :regex :input :result | true ]. 
+]
+
+{ #category : 'as yet unclassified' }
+UmeJSONTest >> testGuidingByMethodsCalls [
+	^ self subclassResponsibility
 ]

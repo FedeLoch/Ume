@@ -2,7 +2,7 @@ Class {
 	#name : 'UmeSchema',
 	#superclass : 'Object',
 	#instVars : [
-		'assert',
+		'property',
 		'argumentConstraints',
 		'receiverConstraint',
 		'score'
@@ -15,7 +15,7 @@ Class {
 { #category : 'ston-core' }
 UmeSchema class >> stonAllInstVarNames [
 
-	^ super stonAllInstVarNames copyWithoutAll: #( #assert #score )
+	^ super stonAllInstVarNames copyWithoutAll: #( #property #score )
 ]
 
 { #category : 'accessing' }
@@ -28,18 +28,6 @@ UmeSchema >> argumentConstraints [
 UmeSchema >> argumentConstraints: anArgumentConstraints [
 
 	argumentConstraints := anArgumentConstraints.
-]
-
-{ #category : 'accessing' }
-UmeSchema >> assert [
-
-	^ assert
-]
-
-{ #category : 'accessing' }
-UmeSchema >> assert: anAssertBlock [
-
-	assert := anAssertBlock
 ]
 
 { #category : 'initialization' }
@@ -55,7 +43,7 @@ UmeSchema >> merge: anotherSchema [
 
 	self mergeReceiverConstraint: anotherSchema receiverConstraint.
 	self mergeArgumentConstraint: anotherSchema argumentConstraints.
-	self mergeAssert: anotherSchema assert. 
+	self mergeProperty: anotherSchema property. 
 	"TODO:
 		Think how to index the schema, for the moment the schema respect the next structure:
 		{
@@ -89,15 +77,27 @@ UmeSchema >> mergeArgumentConstraint: someArgumentConstraints [
 ]
 
 { #category : 'accessing' }
-UmeSchema >> mergeAssert: anAssert [
+UmeSchema >> mergeProperty: aProperty [
 
-	assert ifNil: [ ^ assert := anAssert ].
+	property ifNil: [ ^ property := aProperty ].
 ]
 
 { #category : 'accessing' }
 UmeSchema >> mergeReceiverConstraint: aReceiverConstraint [
 
 	receiverConstraint ifNil: [ receiverConstraint := aReceiverConstraint ].
+]
+
+{ #category : 'accessing' }
+UmeSchema >> property [
+
+	^ property 
+]
+
+{ #category : 'accessing' }
+UmeSchema >> property: anAssertBlock [
+
+	property := anAssertBlock
 ]
 
 { #category : 'accessing' }

@@ -78,7 +78,7 @@ RegexPerfMetricsExperiment >> schema [
 	^ UmeSchema new
 		receiverConstraint: receiverConstraint;
 		argumentConstraints: argumentConstraints;
-		assert: assert
+		property: assert
 ]
 
 { #category : 'accessing' }

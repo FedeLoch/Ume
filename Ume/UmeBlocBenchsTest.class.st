@@ -142,7 +142,7 @@ UmeBlocBenchsTest >> setUp [
 	assert := [ :coll :args :blbResult | blbResult hasError not ].
 	schema := UmeSchema new
 		          receiverConstraint: receiverConstraint;
-		          assert: assert
+		          property: assert
 ]
 
 { #category : 'tests' }
@@ -150,7 +150,7 @@ UmeBlocBenchsTest >> testGivingABlocBenchSchemaThenGenerateCasesToAnalyseCoverag
 
 	| result |
 
-	resutl := (UmeRunner test: BlBCase >> #run from: schema times: 2) run.
+	result := (UmeRunner test: BlBCase >> #run from: schema times: 2) run.
 
 	self assertSuccess: result.
 	self assert: (result tests size) equals: 10.

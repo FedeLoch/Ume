@@ -46,5 +46,5 @@ UmeMicrodownTest >> setUp [
 		          receiverConstraint: (UmeObjectConstraint new generator: (UmeConstantGenerator new value: Microdown));
 		          argumentConstraints: { UmeObjectConstraint new objectClass: String; generator: self markdownGenerator };
 		          score: [ :re :inputs :res | 1 ];
-		          assert: [ :regex :input :result | true ].
+		          property: [ :regex :input :result | true ].
 ]

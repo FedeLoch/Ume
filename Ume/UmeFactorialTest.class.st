@@ -17,7 +17,7 @@ UmeFactorialTest >> setUp [
 	
 	receiverConstraint := UmeObjectConstraint new generator: (UmeGenerator oneOf: (10 to: 100)).
 	assert := [ :n :args :result | n * (n - 1) factorial = result ].
-	schema := UmeSchema new receiverConstraint: receiverConstraint; assert: assert.
+	schema := UmeSchema new receiverConstraint: receiverConstraint; property: assert.
 ]
 
 { #category : 'tests' }
