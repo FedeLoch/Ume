@@ -279,7 +279,7 @@ UmeRunner >> reachableMethods [
 { #category : 'tests' }
 UmeRunner >> run [
 
-	^[ :job | self runCampaign: job ] asJob run.
+	^ [ :job | self runCampaign: job ] asJob run.
 ]
 
 { #category : 'tests' }
@@ -291,15 +291,18 @@ UmeRunner >> runCampaign: aJob [
 	tests := OrderedCollection new.
 	collector := C2CoverageCollector new methods: self reachableMethods.
 	incrCoverage := IncrementalCoverageResult for: { target } from: collector.
+
 	collector runOn: [ [
 		self shouldGenNext: tests since: time withCoverage: incrCoverage] whileTrue: [
 		tests add: (self genTest: incrCoverage with: collector).
-		progress := self computingProgressFor: tests since: time. 
+		progress := self computingProgressFor: tests since: time.
+		"We update the progress bar with the current campaign status"
 		aJob
-			progress: (progress );
-			title: 'running Ume campaign... (', (progress * 100) rounded asString , '%)'.
+			progress: ( progress );
+			title: 'Running Ume Campaign... (', (progress * 100) rounded asString , '%)'.
 		] ].
-	self genReport: tests since: time withCoverage: incrCoverage
+
+	^ self genReport: tests since: time withCoverage: incrCoverage
 ]
 
 { #category : 'accessing' }
