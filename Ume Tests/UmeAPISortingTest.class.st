@@ -36,7 +36,8 @@ UmeAPISortingTest >> setUp [
 
 	schema := UmeSchema new 
     	receiverConstraint: receiver; 
-    	property: property.
+    	property: property;
+		method: SequenceableCollection >> #sort.
 
 ]
 
@@ -53,7 +54,7 @@ UmeAPISortingTest >> testSortingCollectionByCount [
 
 	| runner result |
 	
-	runner := UmeRunner testWithLowCost: SequenceableCollection >> #sort from: schema times: 5.
+	runner := UmeRunner testWithLowCost: schema times: 5.
 	
 	runner guidedByExecutionTime.
 	result := runner run.
@@ -67,7 +68,7 @@ UmeAPISortingTest >> testSortingCollectionByTimes [
 
 	| runner result |
 
-	runner := UmeRunner testWithLowCost: SequenceableCollection >> #sort from: schema for: 10 seconds.
+	runner := UmeRunner testWithLowCost: schema for: 10 seconds.
 	
 	runner guidedByExecutionTime.
 	result := runner run.

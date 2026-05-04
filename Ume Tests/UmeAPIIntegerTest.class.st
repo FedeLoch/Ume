@@ -29,7 +29,8 @@ UmeAPIIntegerTest >> setUp [
 	schema := UmeSchema new
     	receiverConstraint: receiver;
     	argumentConstraints: arguments;
-    	property: property.
+    	property: property;
+		method: SmallInteger >> #+.
 ]
 
 { #category : 'tests' }
@@ -44,7 +45,7 @@ UmeAPIIntegerTest >> successful: aResult [
 UmeAPIIntegerTest >> testIntegerAdditionByCount [ 
 
 	| runner result | 
-	runner := UmeRunner testWithLowCost: SmallInteger >> #+ from: schema times: 5.
+	runner := UmeRunner testWithLowCost: schema times: 5.
 	
 	runner guidedByExecutionTime.
 	result := runner run.
@@ -58,7 +59,7 @@ UmeAPIIntegerTest >> testIntegerAdditionByTime [
 
 	| runner result |
 
-	runner := UmeRunner testWithLowCost: SmallInteger >> #+ from: schema for: 2 seconds.
+	runner := UmeRunner testWithLowCost: schema for: 2 seconds.
 	
 	runner guidedByExecutionTime.
 	result := runner run.
