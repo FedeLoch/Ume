@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-MyUmeExampleProperty >> satisfiesReceiver: aReceiver args: anArgs result: aResult [
+MyUmeExampleProperty >> satisfies: aReceiver args: anArgs result: aResult [
 
 	^ aResult > 0
 ]

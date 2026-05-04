@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-UmeProperty >> satisfiesReceiver: aReceiver args: anArgs result: aResult [
+UmeProperty >> satisfies: aReceiver args: anArgs result: aResult [
 
 	self subclassResponsibility
 ]
