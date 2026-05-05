@@ -77,3 +77,17 @@ UmeAPISortingTest >> testSortingCollectionByTimes [
 	self assertSuccess: result.
 	self assert: (result totalTime >= 5 seconds).
 ]
+
+{ #category : 'tests' }
+UmeAPISortingTest >> testSortingCollectionOutliersOnly [
+
+	| runner result |
+	
+	runner := UmeRunner testWithLowCost: schema times: 5.
+	
+	runner guidedByExecutionTime.
+	result := runner run.
+
+	"self assertSuccess: result."
+	(result tests) do: [ :t | self assert: t feedback improvement > 0 ].
+]

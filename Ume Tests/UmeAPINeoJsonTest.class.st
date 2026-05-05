@@ -93,6 +93,21 @@ UmeAPINeoJsonTest >> testNeoJsonPerformanceNewAPI [
 ]
 
 { #category : 'tests' }
+UmeAPINeoJsonTest >> testNeoJsonPerformanceOutliersOnly [
+
+	| runner result |
+
+	runner := UmeRunner test: schema.
+	
+	result := runner run.
+
+	self assertSuccess: result.
+	(result tests) do: [ :t | self assert: t feedback improvement > 0 ].
+	
+
+]
+
+{ #category : 'tests' }
 UmeAPINeoJsonTest >> testNeoJsonPerformanceTimer [
 
 	| runner result |
