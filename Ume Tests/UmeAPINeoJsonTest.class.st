@@ -70,7 +70,7 @@ UmeAPINeoJsonTest >> testNeoJsonPerformanceCount [
 	| runner result |
 
 	runner := UmeRunner test: schema times: 2.
-	
+	runner saveAll.
 	result := runner run.
 
 	self assertSuccess: result.

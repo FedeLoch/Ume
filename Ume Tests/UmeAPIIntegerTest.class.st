@@ -48,6 +48,7 @@ UmeAPIIntegerTest >> testIntegerAdditionByCount [
 	runner := UmeRunner testWithLowCost: schema times: 5.
 	
 	runner guidedByExecutionTime.
+	runner saveAll.
 	result := runner run.
 	
 	self assertSuccess: result.
