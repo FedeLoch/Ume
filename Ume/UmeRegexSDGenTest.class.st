@@ -22,7 +22,7 @@ UmeRegexSDGenTest >> testGivingARegexFuzzerAndASDGenGeneratorThenWeForceThePerfo
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema for: 10 minutes) guidedByCoverage; run.
+	result := (UmeRunner test: schema for: 10 minutes) guidedByCoverage; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -33,7 +33,7 @@ UmeRegexSDGenTest >> testGivingARegexFuzzerAndASDGenGeneratorThenWeForceThePerfo
 
 	| result |
 
-	result := (UmeRunner testWithLowCost: RxMatcher >> #matches: from: schema for: 2 minutes) guidedByExecutionTime; run.
+	result := (UmeRunner testWithLowCost: schema for: 2 minutes) guidedByExecutionTime; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -44,7 +44,7 @@ UmeRegexSDGenTest >> testGivingARegexFuzzerAndSDGenSGeneratorThenWeForceThePerfo
 
 	| result |
 
-	result := (UmeRunner testWithLowCost: RxMatcher >> #matches: from: schema for: 2 minutes) guidedByScore; run.
+	result := (UmeRunner testWithLowCost: schema for: 2 minutes) guidedByScore; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -55,7 +55,7 @@ UmeRegexSDGenTest >> testGuidingByMethodsCalls [
 
 	| result |
 
-	result := (UmeRunner testWithLowCost: RxMatcher >> #matches: from: schema for: 10 minutes) guidedByMethodsCalls; run.
+	result := (UmeRunner testWithLowCost: schema for: 10 minutes) guidedByMethodsCalls; run.
 	
 	self assert: (result tests size) equals: 10000.
 

@@ -27,7 +27,7 @@ UmeRegexPerfuzzTest >> testGuidingByMethodsCalls [
 
 	| runner result |
 	
-	runner := (UmeRunner test: RxMatcher >> #matches: from: schema for: 10 minutes) guidedByMethodsCalls.
+	runner := (UmeRunner test: schema for: 10 minutes) guidedByMethodsCalls.
 	result := runner run.
 	
 	self assert: (result tests size) equals: 10000.

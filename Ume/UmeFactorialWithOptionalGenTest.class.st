@@ -26,7 +26,7 @@ UmeFactorialWithOptionalGenTest >> setUp [
 	receiverConstraint := UmeObjectConstraint new generator:
 		(UmeDyncamicSelectionGenerator new generators: generators).
 	assert := [ :n :args :result | n * (n - 1) factorial = result ].
-	schema := UmeSchema new receiverConstraint: receiverConstraint; property: assert.
+	schema := UmeSchema new receiverConstraint: receiverConstraint; property: assert; method: Integer >> #factorial.
 ]
 
 { #category : 'tests' }
@@ -34,7 +34,7 @@ UmeFactorialWithOptionalGenTest >> testGivingASmallIntegerSchemaWithDynamicGener
 
 	| result |
 
-	result := (UmeRunner test: Integer >> #factorial from: schema times: 1000) run.
+	result := (UmeRunner test: schema times: 1000) run.
 
 	self assertSuccess: result.
 	self assert: (result tests size) equals: 1000.

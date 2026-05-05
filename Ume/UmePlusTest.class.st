@@ -25,7 +25,7 @@ UmePlusTest >> setUp [
 		UmeObjectConstraint new generator: (UmeGenerator oneOf: range)
 	}.
 	assert := [ :n :args :result | args first + n = result ].
-	schema := UmeSchema new receiverConstraint: receiverConstraint; argumentConstraints: argumentConstraints; property: assert.
+	schema := UmeSchema new receiverConstraint: receiverConstraint; argumentConstraints: argumentConstraints; property: assert; method: SmallInteger >> #+.
 ]
 
 { #category : 'as yet unclassified' }
@@ -33,7 +33,7 @@ UmePlusTest >> testGivingASmallIntegerSchemaThenValidatePlusResult [
 
 	| result |
 
-	result := (UmeRunner test: SmallInteger >> #+ from: schema) run.
+	result := (UmeRunner test: schema) run.
 
 	self assertSuccess: result.
 	self assert: (result tests size) equals: 100.
