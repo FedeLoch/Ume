@@ -94,7 +94,8 @@ UmeRegexTest >> setUp [
 		          receiverConstraint: receiverConstraint;
 		          argumentConstraints: argumentConstraints;
 		          score: score;
-		          property: assert
+		          property: assert;
+					 method: RxMatcher >> #matches:.
 ]
 
 { #category : 'tests' }
@@ -102,7 +103,7 @@ UmeRegexTest >> testGivingARegexFuzzerGeneratorThenWeForceThePerformanceBug [
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema times: 10000) run.
+	result := (UmeRunner test: schema times: 10000) run.
 
 	self assert: (result tests size) equals: 10000.
 
@@ -113,7 +114,7 @@ UmeRegexTest >> testGivingARegexFuzzerGeneratorThenWeForceThePerformanceBugByTim
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema for: 10 minutes) run.
+	result := (UmeRunner test: schema for: 10 minutes) run.
 
 	self assert: (result tests size) equals: 10000.
 ]

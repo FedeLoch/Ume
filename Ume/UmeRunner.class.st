@@ -18,15 +18,24 @@ Class {
 }
 
 { #category : 'tests' }
-UmeRunner class >> test: targetMethod [
+UmeRunner class >> test: schema [
 	
-	^ self test: targetMethod from: UmeSchema new
+	^ self new schema: schema; target: schema method
+]
+
+{ #category : 'tests' }
+UmeRunner class >> test: schema for: time [
+
+	^ self new
+		schema: schema;
+		withCriteria: (UmeTimeCriteria new timeout: time);
+		target: schema method
 ]
 
 { #category : 'tests' }
 UmeRunner class >> test: targetMethod from: schema [
 	
-	^ self new schema: (UmeSchemaInfer enrich: schema for: targetMethod); target: targetMethod
+	^ self new schema: schema;  target: targetMethod
 ]
 
 { #category : 'tests' }
@@ -54,6 +63,40 @@ UmeRunner class >> test: targetMethod from: schema withCoverageTolerance: tolera
 		schema: (UmeSchemaInfer enrich: schema for: targetMethod);
 		withCriteria: (UmeStopCoverageCriteria new tolerance: tolerance);
 		target: targetMethod
+]
+
+{ #category : 'tests' }
+UmeRunner class >> test: schema times: times [
+
+	^ self new
+		schema: schema;
+		withCriteria: (UmeCountCriteria new times: times);
+		target: schema method
+]
+
+{ #category : 'tests' }
+UmeRunner class >> test: schema withCoverageTolerance: tolerance [
+
+	^ self new
+		schema: schema;
+		withCriteria: (UmeStopCoverageCriteria new tolerance: tolerance);
+		target: schema method
+]
+
+{ #category : 'tests' }
+UmeRunner class >> testWithLowCost: schema [
+	
+	^ self new schema: schema; target: schema method; withLowCost
+]
+
+{ #category : 'tests' }
+UmeRunner class >> testWithLowCost: schema for: time [
+
+	^ self new
+		schema: schema;
+		withCriteria: (UmeTimeCriteria new timeout: time);
+		target: schema method;
+		withLowCost
 ]
 
 { #category : 'tests' }
@@ -103,6 +146,45 @@ UmeRunner class >> testWithLowCost: targetMethod from: schema withCriteria: aBlo
 ]
 
 { #category : 'tests' }
+UmeRunner class >> testWithLowCost: schema times: times [
+
+	^ self new
+		schema: schema;
+		withCriteria: (UmeCountCriteria new times: times);
+		target: schema method;
+		withLowCost
+]
+
+{ #category : 'tests' }
+UmeRunner class >> testWithLowCost: schema withCoverageTolerance: tolerance [
+
+	^ self new
+		schema: schema;
+		withCriteria: (UmeStopCoverageCriteria new tolerance: tolerance);
+		target: schema method;
+		withLowCost
+]
+
+{ #category : 'tests' }
+UmeRunner class >> testWithLowCost: schema withCriteria: aBlock [
+
+	^ self new
+		schema: schema;
+		withCriteria: (UmeStopBlockCriteria new block: aBlock);
+		target: schema method;
+		withLowCost
+]
+
+{ #category : 'tests' }
+UmeRunner class >> testWithPackageCoverage: schema for: time [
+
+	^ self new
+		schema: schema;
+		withCriteria: (UmeTimeCriteria new timeout: time);
+		targetAndPackageCoverage: schema method
+]
+
+{ #category : 'tests' }
 UmeRunner class >> testWithPackageCoverage: targetMethod from: schema for: time [
 
 	^ self new
@@ -118,6 +200,15 @@ UmeRunner class >> testWithPackageCoverage: targetMethod from: schema times: tim
 		schema: (UmeSchemaInfer enrich: schema for: targetMethod);
 		withCriteria: (UmeCountCriteria new times: times);
 		targetAndPackageCoverage: targetMethod
+]
+
+{ #category : 'tests' }
+UmeRunner class >> testWithPackageCoverage: schema times: times [
+
+	^ self new
+		schema: schema;
+		withCriteria: (UmeCountCriteria new times: times);
+		targetAndPackageCoverage: schema method
 ]
 
 { #category : 'tests' }

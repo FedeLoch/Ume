@@ -22,7 +22,7 @@ UmeRegexGramatronTest >> testGivingARegexFuzzerAndAGramatronGeneratorThenWeForce
 
 	| result |
 
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema for: 10 minutes) guidedByCoverage; run.
+	result := (UmeRunner test: schema for: 10 minutes) guidedByCoverage; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -33,7 +33,7 @@ UmeRegexGramatronTest >> testGivingARegexFuzzerAndAGramatronGeneratorThenWeForce
 
 	| result |
 
-	result := (UmeRunner testWithLowCost: RxMatcher >> #matches: from: schema for: 1 minutes) guidedByScore; run.
+	result := (UmeRunner testWithLowCost: schema for: 1 minutes) guidedByScore; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -44,7 +44,7 @@ UmeRegexGramatronTest >> testGuidedByMethodsCalled [
 
 	| result |
 
-	result := (UmeRunner testWithLowCost: RxMatcher >> #matches: from: schema for: 10 minutes) guidedByMethodsCalls; run.
+	result := (UmeRunner testWithLowCost: schema for: 10 minutes) guidedByMethodsCalls; run.
 	
 	self assert: (result tests size) equals: 10000.
 

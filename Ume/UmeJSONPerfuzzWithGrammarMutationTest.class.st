@@ -26,7 +26,7 @@ UmeJSONPerfuzzWithGrammarMutationTest >> jsonGenerator [
 UmeJSONPerfuzzWithGrammarMutationTest >> setUp [ 
 
 	super setUp.
-	runner := UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 5 minutes.
+	runner := UmeRunner test: schema for: 5 minutes.
 
 ]
 

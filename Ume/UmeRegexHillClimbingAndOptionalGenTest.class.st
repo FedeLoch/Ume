@@ -43,7 +43,7 @@ UmeRegexHillClimbingAndOptionalGenTest >> testGivingARegexFuzzerAndAHillClimbing
 
 	| result |
 
-	result := (UmeRunner testWithLowCost: RxMatcher >> #matches: from: schema for: 2 minutes) guidedByScore; run.
+	result := (UmeRunner testWithLowCost: schema for: 2 minutes) guidedByScore; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -54,7 +54,7 @@ UmeRegexHillClimbingAndOptionalGenTest >> testGuidingByMethodsCalls [
 
 	| result |
 
-	result := (UmeRunner testWithLowCost: RxMatcher >> #matches: from: schema for: 5 minutes) guidedByMethodsCalls; run.
+	result := (UmeRunner testWithLowCost: schema for: 5 minutes) guidedByMethodsCalls; run.
 	
 	self assert: (result tests size) equals: 1000.
 

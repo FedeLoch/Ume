@@ -17,7 +17,7 @@ UmeFactorialTest >> setUp [
 	
 	receiverConstraint := UmeObjectConstraint new generator: (UmeGenerator oneOf: (10 to: 100)).
 	assert := [ :n :args :result | n * (n - 1) factorial = result ].
-	schema := UmeSchema new receiverConstraint: receiverConstraint; property: assert.
+	schema := UmeSchema new receiverConstraint: receiverConstraint; property: assert; method: Integer >> #factorial.
 ]
 
 { #category : 'tests' }
@@ -25,7 +25,7 @@ UmeFactorialTest >> testGivingASmallIntegerSchemaThenValidateFactorialResult [
 
 	| result |
 
-	result := (UmeRunner test: Integer >> #factorial from: schema) run.
+	result := (UmeRunner test: schema) run.
 
 	self assertSuccess: result.
 	self assert: (result tests size) equals: 100.
@@ -36,7 +36,7 @@ UmeFactorialTest >> testGivingASmallIntegerSchemaThenValidateFactorialResultFrom
 
 	| result |
 
-	result := (UmeRunner test: Integer >> #factorial from: schema times: 2542) run.
+	result := (UmeRunner test: schema times: 2542) run.
 
 	self assertSuccess: result.
 	self assert: (result tests size) equals: 2542.
@@ -47,7 +47,7 @@ UmeFactorialTest >> testGivingASmallIntegerSchemaThenValidateFactorialResultFrom
 
 	| result |
 
-	result := (UmeRunner test: Integer >> #factorial from: schema for: 2 seconds) run.
+	result := (UmeRunner test: schema for: 2 seconds) run.
 
 	self assertSuccess: result.
 	self assert: (result totalTime >= 2 seconds) equals: true.

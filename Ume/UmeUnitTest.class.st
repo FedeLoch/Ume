@@ -160,7 +160,7 @@ UmeUnitTest >> guidedByScore [
 { #category : 'running' }
 UmeUnitTest >> instanceRunner: duration [
 
-	runner := UmeRunner test: self targetMethod from: self schema for: duration
+	runner := UmeRunner test: self schema schema for: duration
 ]
 
 { #category : 'running' }

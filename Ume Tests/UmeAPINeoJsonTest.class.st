@@ -38,7 +38,8 @@ UmeAPINeoJsonTest >> setUp [
 		receiverConstraint: receiver;
 		argumentConstraints: argument ;
 		score: [ :re :inputs :res | 1 ];
-		property: [ :regex :input :result | true ].
+		property: [ :regex :input :result | true ];
+		method: NeoJSONReader class >> #fromString:.
 
 
 ]
@@ -55,6 +56,48 @@ UmeAPINeoJsonTest >> testNeoJsonPerformance [
 	| runner result |
 
 	runner := UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 5 seconds.
+	
+	result := runner run.
+
+	self assertSuccess: result.
+	
+
+]
+
+{ #category : 'tests' }
+UmeAPINeoJsonTest >> testNeoJsonPerformanceCount [
+
+	| runner result |
+
+	runner := UmeRunner test: schema times: 2.
+	
+	result := runner run.
+
+	self assertSuccess: result.
+	
+
+]
+
+{ #category : 'tests' }
+UmeAPINeoJsonTest >> testNeoJsonPerformanceNewAPI [
+
+	| runner result |
+
+	runner := UmeRunner test: schema.
+	
+	result := runner run.
+
+	self assertSuccess: result.
+	
+
+]
+
+{ #category : 'tests' }
+UmeAPINeoJsonTest >> testNeoJsonPerformanceTimer [
+
+	| runner result |
+
+	runner := UmeRunner test: schema for: 5 seconds.
 	
 	result := runner run.
 

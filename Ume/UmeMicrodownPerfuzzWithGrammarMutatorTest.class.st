@@ -25,7 +25,7 @@ UmeMicrodownPerfuzzWithGrammarMutatorTest >> markdownGenerator [
 UmeMicrodownPerfuzzWithGrammarMutatorTest >> setUp [
 
 	super setUp.
-	runner := UmeRunner test: Microdown class >> #parse: from: schema for: 5 minutes.
+	runner := UmeRunner test: schema for: 5 minutes.
 ]
 
 { #category : 'tests' }
