@@ -10,6 +10,15 @@
 
 # Ume - Property-Based Testing & Guided Performance Fuzzing
 
+
+```smalltalk
+Metacello new
+    baseline: 'Ume';
+    repository: 'github://FedeLoch/Ume:main';
+    onConflictUseIncoming;
+    load.
+```
+
 Ume is a framework for Pharo designed to discover both functional bugs and performance outliers (Perfuzzing). It combines traditional random generation with grammar-based mutations, feedback-oriented exploration, and automatic regression test generation. To know more about Ume:
 
 - [Getting Started](https://github.com/FedeLoch/Ume/wiki/Getting-Started)
@@ -54,15 +63,16 @@ receiverConstraint := UmeObjectConstraint new
     generator: (UmeGenerator oneOf: (1 to: 100)).
 
 "2. Define the property (Assertion)"
-assert := [ :n :args :result | n * (n - 1) factorial = result ].
+property := [ :n :args :result | n * (n - 1) factorial = result ].
 
 "3. Create the Schema"
 schema := UmeSchema new 
     receiverConstraint: receiverConstraint; 
-    assert: assert.
+    propert: property;
+    method: Integer >> #factorial.
 
 "4. Run the tests"
-UmeRunner test: Integer >> #factorial from: schema.
+UmeRunner test: schema.
 ```
 
 ---
