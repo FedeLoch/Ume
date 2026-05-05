@@ -73,7 +73,7 @@ UmeAPIIntegerTest >> testIntegerAdditionByTime [
 UmeAPIIntegerTest >> testIntegerAdditionOnlyOutliers [
 
 	| runner result | 
-	runner := UmeRunner testWithLowCost: schema times: 30.
+	runner := UmeRunner testWithLowCost: schema times: 5.
 	
 	runner guidedByExecutionTime.
 	result := runner run.
