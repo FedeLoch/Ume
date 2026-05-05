@@ -19,7 +19,7 @@ UmeJSONGrammarWithWeightsTest >> jsonGenerator [
 UmeJSONGrammarWithWeightsTest >> setUp [ 
 
 	super setUp.
-	runner := UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 10 minutes.
+	runner := UmeRunner test: schema for: 10 minutes.
 
 ]
 

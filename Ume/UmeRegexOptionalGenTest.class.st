@@ -31,7 +31,7 @@ UmeRegexOptionalGenTest >> testGivingARegexFuzzerAndAnOptionalGeneratorThenWeFor
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema times: 10000) guidedByAllocatedMemory; run.
+	result := (UmeRunner test: schema times: 10000) guidedByAllocatedMemory; run.
 
 	self assert: (result tests size) equals: 10000.
 
@@ -42,7 +42,7 @@ UmeRegexOptionalGenTest >> testGivingARegexFuzzerAndAnOptionalGeneratorThenWeFor
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema for: 2 minutes) guidedByAllocatedMemory; run.
+	result := (UmeRunner test: schema for: 2 minutes) guidedByAllocatedMemory; run.
 
 	self assert: (result tests size) equals: 10000.
 
@@ -53,7 +53,7 @@ UmeRegexOptionalGenTest >> testGivingARegexFuzzerAndAnOptionalGeneratorThenWeFor
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema times: 10000) guidedByCoverage; run.
+	result := (UmeRunner test: schema times: 10000) guidedByCoverage; run.
 
 	self assert: (result tests size) equals: 10000.
 
@@ -64,7 +64,7 @@ UmeRegexOptionalGenTest >> testGivingARegexFuzzerAndAnOptionalGeneratorThenWeFor
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema for: 10 minutes) guidedByCoverage; run.
+	result := (UmeRunner test: schema for: 10 minutes) guidedByCoverage; run.
 
 	self assert: (result tests size) equals: 10000.
 
@@ -75,7 +75,7 @@ UmeRegexOptionalGenTest >> testGivingARegexFuzzerAndAnOptionalGeneratorThenWeFor
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema times: 10000) guidedByExecutionTime; run.
+	result := (UmeRunner test: schema times: 10000) guidedByExecutionTime; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -86,7 +86,7 @@ UmeRegexOptionalGenTest >> testGivingARegexFuzzerAndAnOptionalGeneratorThenWeFor
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema for: 1 second) guidedByExecutionTime; run.
+	result := (UmeRunner test: schema for: 1 second) guidedByExecutionTime; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -97,7 +97,7 @@ UmeRegexOptionalGenTest >> testGuidingByMethodsCalls [
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema for: 10 minutes) guidedByMethodsCalls ; run.
+	result := (UmeRunner test: schema for: 10 minutes) guidedByMethodsCalls ; run.
 	
 	self assert: (result tests size) equals: 10000.
 

@@ -25,7 +25,7 @@ UmeDataFramePerfuzzWithTreeGrammarMutationTest >> csvGenerator [
 UmeDataFramePerfuzzWithTreeGrammarMutationTest >> setUp [ 
 
 	super setUp.
-	runner := UmeRunner test: DataFrame class >> #readFromCsv: from: schema for: 1.5 hours.
+	runner := UmeRunner test: schema for: 1.5 hours.
 
 ]
 

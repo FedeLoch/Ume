@@ -44,5 +44,6 @@ UmeDataFrameTest >> setUp [
 							  ];
 				           unwrap: #contents) };
 		          score: [ :re :inputs :res | 1 ];
-		          property: [ :regex :input :result | true ]
+		          property: [ :regex :input :result | true ];
+					 method: DataFrame class >> #readFromCsv:.
 ]

@@ -31,7 +31,7 @@ UmeRegexHillClimbingTest >> testGivingARegexFuzzerAndAHillClimbingGeneratorThenW
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema times: 1000) guidedByAllocatedMemory; run.
+	result := (UmeRunner test: schema times: 1000) guidedByAllocatedMemory; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -42,7 +42,7 @@ UmeRegexHillClimbingTest >> testGivingARegexFuzzerAndAHillClimbingGeneratorThenW
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema for: 10 minutes) guidedByAllocatedMemory; run.
+	result := (UmeRunner test: schema for: 10 minutes) guidedByAllocatedMemory; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -53,7 +53,7 @@ UmeRegexHillClimbingTest >> testGivingARegexFuzzerAndAHillClimbingGeneratorThenW
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema times: 10000) guidedByCoverage; run.
+	result := (UmeRunner test: schema times: 10000) guidedByCoverage; run.
 
 	self assert: (result tests size) equals: 10000.
 
@@ -64,7 +64,7 @@ UmeRegexHillClimbingTest >> testGivingARegexFuzzerAndAHillClimbingGeneratorThenW
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema for: 10 minutes) guidedByCoverage; run.
+	result := (UmeRunner test: schema for: 10 minutes) guidedByCoverage; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -75,7 +75,7 @@ UmeRegexHillClimbingTest >> testGivingARegexFuzzerAndAHillClimbingGeneratorThenW
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema times: 10000) guidedByExecutionTime; run.
+	result := (UmeRunner test: schema times: 10000) guidedByExecutionTime; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -86,7 +86,7 @@ UmeRegexHillClimbingTest >> testGivingARegexFuzzerAndAHillClimbingGeneratorThenW
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema for: 10 minutes) guidedByExecutionTime; run.
+	result := (UmeRunner test: schema for: 10 minutes) guidedByExecutionTime; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -97,7 +97,7 @@ UmeRegexHillClimbingTest >> testGivingARegexFuzzerAndAHillClimbingGeneratorThenW
 
 	| result |
 
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema times: 10000) guidedByScore; run.
+	result := (UmeRunner test: schema times: 10000) guidedByScore; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -108,7 +108,7 @@ UmeRegexHillClimbingTest >> testGivingARegexFuzzerAndAHillClimbingGeneratorThenW
 
 	| result |
 	
-	result := (UmeRunner test: RxMatcher >> #matches: from: schema for: 10 minutes) guidedByScore; run.
+	result := (UmeRunner test: schema for: 10 minutes) guidedByScore; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -119,7 +119,7 @@ UmeRegexHillClimbingTest >> testGivingARegexFuzzerAndAHillClimbingGeneratorThenW
 
 	| result |
 	
-	result := (UmeRunner testWithLowCost: RxMatcher >> #matches: from: schema for: 1 minutes) guidedByScore; run.
+	result := (UmeRunner testWithLowCost: schema for: 1 minutes) guidedByScore; run.
 	
 	self assert: (result tests size) equals: 10000.
 
@@ -130,7 +130,7 @@ UmeRegexHillClimbingTest >> testGuidedByMethodsCalled [
 
 	| result |
 
-	result := (UmeRunner testWithLowCost: RxMatcher >> #matches: from: schema for: 10 minutes) guidedByMethodsCalls; run.
+	result := (UmeRunner testWithLowCost: schema for: 10 minutes) guidedByMethodsCalls; run.
 	
 	self assert: (result tests size) equals: 10000.
 

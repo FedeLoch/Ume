@@ -32,7 +32,8 @@ UmeCollectionSortTest >> setUp [
 	          result = coll sort and: result size = coll size ]. "TODO: improve the assertion"
 	schema := UmeSchema new
 		          receiverConstraint: receiverConstraint ;
-		          property: assert
+		          property: assert;
+					 method: SequenceableCollection >> #sort.
 ]
 
 { #category : 'tests' }
@@ -40,7 +41,7 @@ UmeCollectionSortTest >> testGivingACollectionIntegerSchemaThenValidateSortResul
 
 	| result |
 	
-	result := (UmeRunner test: SequenceableCollection >> #sort from: schema times: 100) run.
+	result := (UmeRunner test: schema times: 100) run.
 	
 	self assertSuccess: result.
 	self assert: (result tests size) equals: 100.

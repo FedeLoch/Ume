@@ -30,7 +30,7 @@ UmeJSONPerfuzzTest >> testGuidingByMethodsCalls [
 
 	| runner result |
 	
-	runner := (UmeRunner test: NeoJSONReader class >> #fromString: from: schema for: 5 minutes) guidedByMethodsCalls.
+	runner := (UmeRunner test: schema for: 5 minutes) guidedByMethodsCalls. 
 	result := runner run.
 	
 	self assert: (result tests size) equals: 10000.
