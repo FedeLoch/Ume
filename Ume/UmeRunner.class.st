@@ -217,6 +217,12 @@ UmeRunner >> computingProgressFor: tests since: time [
 	^ stopCriteria computeProgressFor: tests since: time
 ]
 
+{ #category : 'tests' }
+UmeRunner >> computingProgressFor: tests since: time for: iteration [
+	
+	^ stopCriteria computeProgressFor: tests since: time for: iteration
+]
+
 { #category : 'as yet unclassified' }
 UmeRunner >> continue: times from: result [
 
@@ -342,6 +348,13 @@ UmeRunner >> isKernelMethod: method [
 	^ method package name = 'Kernel'
 ]
 
+{ #category : 'accessing' }
+UmeRunner >> isOutlier: aTest [
+
+	^ aTest feedback improvement > 0
+	
+]
+
 { #category : 'tests' }
 UmeRunner >> reRun: result [
 
@@ -376,23 +389,23 @@ UmeRunner >> run [
 ]
 
 { #category : 'tests' }
-UmeRunner >> runCampaign: aJob [
+UmeRunner >> runCampaign: executionJob [
  
-	| tests time collector incrCoverage progress|
+	| tests test iteration time collector incrCoverage progress|
 	
 	time := Time millisecondClockValue.
 	tests := OrderedCollection new.
+	iteration := 0. 
 	collector := C2CoverageCollector new methods: self reachableMethods.
 	incrCoverage := IncrementalCoverageResult for: { target } from: collector.
 
 	collector runOn: [ [
-		self shouldGenNext: tests since: time withCoverage: incrCoverage] whileTrue: [
-		tests add: (self genTest: incrCoverage with: collector).
-		progress := self computingProgressFor: tests since: time.
-		"We update the progress bar with the current campaign status"
-		aJob
-			progress: ( progress );
-			title: 'Running Ume Campaign... (', (progress * 100) rounded asString , '%)'.
+		self shouldGenNext: iteration since: time withCoverage: incrCoverage] whileTrue: [
+		iteration := iteration + 1.
+		test:= (self genTest: incrCoverage with: collector).
+		((shouldSaveAll) or: (self isOutlier: test))  ifTrue: [ tests add: test]. 
+		progress := self computingProgressFor: tests since: time for: iteration.
+		self updateUmeProgress: progress for:executionJob .
 		] ].
 
 	^ self genReport: tests since: time withCoverage: incrCoverage
@@ -449,6 +462,14 @@ UmeRunner >> targetAndPackageCoverage: targetMethod [
 	target := targetMethod.
 	methodsToInstrument := target package methods.
 	
+]
+
+{ #category : 'tests' }
+UmeRunner >> updateUmeProgress: progress for:executionJob [ .
+			
+	executionJob 
+		progress: ( progress );
+		title: 'Running Ume Campaign... (', (progress * 100) rounded asString , '%)'.
 ]
 
 { #category : 'tests' }

@@ -20,6 +20,14 @@ UmeStopCoverageCriteria >> computeProgressFor: tests since: time [
 ]
 
 { #category : 'asserting' }
+UmeStopCoverageCriteria >> computeProgressFor: tests since: time for: iteration [
+	
+	previousCoverage ifNil: [ ^0 ]. 
+
+	^ previousCoverage asPercent
+]
+
+{ #category : 'asserting' }
 UmeStopCoverageCriteria >> improvesCoverage: aCoverage [
 	previousCoverage ifNil: [ ^true ].
 	

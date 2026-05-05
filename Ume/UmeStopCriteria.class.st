@@ -13,6 +13,12 @@ UmeStopCriteria >> computeProgressFor: tests since: time [
 ]
 
 { #category : 'asserting' }
+UmeStopCriteria >> computeProgressFor: tests since: time for: iteration [
+
+	^ self subclassResponsibility 
+]
+
+{ #category : 'asserting' }
 UmeStopCriteria >> shouldGenNext: currentTests since: aTime withCoverage: aCoverage [
 
 	^ self subclassResponsibility 
