@@ -9,7 +9,8 @@ Class {
 		'schema',
 		'lastFeedback',
 		'methodsToInstrument',
-		'feedbackEvaluator'
+		'feedbackEvaluator',
+		'shouldSaveAll'
 	],
 	#category : 'Ume-Runner',
 	#package : 'Ume',
@@ -239,6 +240,7 @@ UmeRunner >> initialize [
 	generator := UmeCaseGenerator new.
 	feedbackEvaluator := UmeFeedbackEvaluator new.
 	stopCriteria := UmeCountCriteria new times: 100.
+	shouldSaveAll := false. 
 	
 	
 ]
@@ -303,6 +305,11 @@ UmeRunner >> runCampaign: aJob [
 		] ].
 
 	^ self genReport: tests since: time withCoverage: incrCoverage
+]
+
+{ #category : 'as yet unclassified' }
+UmeRunner >> saveAll [
+	shouldSaveAll := true. 
 ]
 
 { #category : 'accessing' }
