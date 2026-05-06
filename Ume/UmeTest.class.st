@@ -141,6 +141,12 @@ UmeTest >> installUnitTestIn: aUmeUnitTest [
 ]
 
 { #category : 'accessing' }
+UmeTest >> isOutlier [
+
+	^ self feedback improvement > 0
+]
+
+{ #category : 'accessing' }
 UmeTest >> lastResult [
 	
 	^ lastResult

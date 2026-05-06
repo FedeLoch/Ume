@@ -10,13 +10,7 @@ Class {
 }
 
 { #category : 'asserting' }
-UmeCountCriteria >> computeProgressFor: tests since: time [
-
-	^ tests size / times 
-]
-
-{ #category : 'asserting' }
-UmeCountCriteria >> computeProgressFor: tests since: time for: iteration [
+UmeCountCriteria >> progressFor: tests since: time for: iteration [
 
 	^ iteration / times 
 ]
