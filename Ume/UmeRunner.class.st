@@ -397,7 +397,7 @@ UmeRunner >> runCampaign: executionJob [
 		test:= self genTest: incrCoverage with: collector.
 		(self shouldCollect: test) ifTrue: [ tests add: test ].
 		progress := self progressFor: tests since: time for: iteration.
-		self updateUmeProgress: progress for:executionJob .
+		executionJob updateProgress: progress.
 		] ].
 
 	^ self genReport: tests since: time withCoverage: incrCoverage
@@ -455,14 +455,6 @@ UmeRunner >> targetAndPackageCoverage: targetMethod [
 	target := targetMethod.
 	methodsToInstrument := target package methods.
 	
-]
-
-{ #category : 'tests' }
-UmeRunner >> updateUmeProgress: progress for:executionJob [ .
-			
-	executionJob 
-		progress: ( progress );
-		title: 'Running Ume Campaign... (', (progress * 100) rounded asString , '%)'.
 ]
 
 { #category : 'tests' }
