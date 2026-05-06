@@ -10,8 +10,9 @@
 
 # Ume - Property-Based Testing & Guided Performance Fuzzing
 
+Ume is a framework for Pharo designed to discover both functional bugs and performance outliers (Perfuzzing). It combines traditional random generation with grammar-based mutations, feedback-oriented exploration, and automatic regression test generation.
 
-```smalltalk
+```st
 Metacello new
     baseline: 'Ume';
     repository: 'github://FedeLoch/Ume:main';
@@ -19,7 +20,7 @@ Metacello new
     load.
 ```
 
-Ume is a framework for Pharo designed to discover both functional bugs and performance outliers (Perfuzzing). It combines traditional random generation with grammar-based mutations, feedback-oriented exploration, and automatic regression test generation. To know more about Ume:
+To know more about Ume:
 
 - [Getting Started](https://github.com/FedeLoch/Ume/wiki/Getting-Started)
 - [How Ume Works](https://github.com/FedeLoch/Ume/wiki/How-Ume-Works)
