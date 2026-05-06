@@ -10,15 +10,15 @@ Class {
 }
 
 { #category : 'asserting' }
-UmeCountCriteria >> computeProgressFor: tests since: time [
+UmeCountCriteria >> progressFor: tests since: time for: iteration [
 
-	^ tests size / times 
+	^ iteration / times 
 ]
 
 { #category : 'asserting' }
 UmeCountCriteria >> shouldGenNext: currentTests since: aTime withCoverage: aCoverage [
 
-	^ currentTests size < times
+	^ currentTests < times
 ]
 
 { #category : 'as yet unclassified' }

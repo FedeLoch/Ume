@@ -9,7 +9,8 @@ Class {
 		'schema',
 		'lastFeedback',
 		'methodsToInstrument',
-		'feedbackEvaluator'
+		'feedbackEvaluator',
+		'shouldSaveAll'
 	],
 	#category : 'Ume-Runner',
 	#package : 'Ume',
@@ -210,10 +211,9 @@ UmeRunner class >> testWithPackageCoverage: schema times: times [
 		targetAndPackageCoverage: schema method
 ]
 
-{ #category : 'tests' }
-UmeRunner >> computingProgressFor: tests since: time [
-	
-	^ stopCriteria computeProgressFor: tests since: time
+{ #category : 'as yet unclassified' }
+UmeRunner >> collectAllCases [
+	shouldSaveAll := true. 
 ]
 
 { #category : 'as yet unclassified' }
@@ -330,6 +330,7 @@ UmeRunner >> initialize [
 	generator := UmeCaseGenerator new.
 	feedbackEvaluator := UmeFeedbackEvaluator new.
 	stopCriteria := UmeCountCriteria new times: 100.
+	shouldSaveAll := false. 
 	
 	
 ]
@@ -338,6 +339,12 @@ UmeRunner >> initialize [
 UmeRunner >> isKernelMethod: method [ 
 	
 	^ method package name = 'Kernel'
+]
+
+{ #category : 'tests' }
+UmeRunner >> progressFor: tests since: time for: iteration [
+	
+	^ stopCriteria progressFor: tests since: time for: iteration
 ]
 
 { #category : 'tests' }
@@ -374,23 +381,23 @@ UmeRunner >> run [
 ]
 
 { #category : 'tests' }
-UmeRunner >> runCampaign: aJob [
+UmeRunner >> runCampaign: executionJob [
  
-	| tests time collector incrCoverage progress|
+	| tests test iteration time collector incrCoverage progress|
 	
 	time := Time millisecondClockValue.
 	tests := OrderedCollection new.
+	iteration := 0. 
 	collector := C2CoverageCollector new methods: self reachableMethods.
 	incrCoverage := IncrementalCoverageResult for: { target } from: collector.
 
 	collector runOn: [ [
-		self shouldGenNext: tests since: time withCoverage: incrCoverage] whileTrue: [
-		tests add: (self genTest: incrCoverage with: collector).
-		progress := self computingProgressFor: tests since: time.
-		"We update the progress bar with the current campaign status"
-		aJob
-			progress: ( progress );
-			title: 'Running Ume Campaign... (', (progress * 100) rounded asString , '%)'.
+		self shouldGenNext: iteration since: time withCoverage: incrCoverage] whileTrue: [
+		iteration := iteration + 1.
+		test:= self genTest: incrCoverage with: collector.
+		(self shouldCollect: test) ifTrue: [ tests add: test ].
+		progress := self progressFor: tests since: time for: iteration.
+		executionJob updateProgress: progress.
 		] ].
 
 	^ self genReport: tests since: time withCoverage: incrCoverage
@@ -407,6 +414,12 @@ UmeRunner >> schema: propSchema [
 UmeRunner >> scoreFor: receiver with: arguments and: testResult [
 
 	^ schema score ifNil: [ nil ] ifNotNil: [ schema score value: receiver value: arguments value: testResult ]
+]
+
+{ #category : 'tests' }
+UmeRunner >> shouldCollect: test [
+
+	^ shouldSaveAll or: [ test isOutlier ]
 ]
 
 { #category : 'tests' }

@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'asserting' }
-UmeStopCriteria >> computeProgressFor: tests since: time [
+UmeStopCriteria >> progressFor: tests since: time for: iteration [
 
 	^ self subclassResponsibility 
 ]

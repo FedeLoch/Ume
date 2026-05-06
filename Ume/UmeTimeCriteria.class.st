@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'asserting' }
-UmeTimeCriteria >> computeProgressFor: tests since: time [
+UmeTimeCriteria >> progressFor: tests since: time for: iteration [
 	|duration durationInMs|
 	
 	duration := (Time millisecondClockValue) - time.

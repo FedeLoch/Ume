@@ -48,6 +48,7 @@ UmeAPIIntegerTest >> testIntegerAdditionByCount [
 	runner := UmeRunner testWithLowCost: schema times: 5.
 	
 	runner guidedByExecutionTime.
+	runner collectAllCases.
 	result := runner run.
 	
 	self assertSuccess: result.
@@ -66,4 +67,17 @@ UmeAPIIntegerTest >> testIntegerAdditionByTime [
 	
 	self assertSuccess: result.
 	self assert: (result totalTime >= 2 seconds).
+]
+
+{ #category : 'tests' }
+UmeAPIIntegerTest >> testIntegerAdditionOnlyOutliers [
+
+	| runner result | 
+	runner := UmeRunner testWithLowCost: schema times: 5.
+	
+	runner guidedByExecutionTime.
+	result := runner run.
+	
+	"self assertSuccess: result."
+	(result tests) do: [ :t | self assert: t feedback improvement > 0 ].
 ]

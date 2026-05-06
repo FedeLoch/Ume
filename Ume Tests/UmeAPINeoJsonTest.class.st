@@ -70,7 +70,7 @@ UmeAPINeoJsonTest >> testNeoJsonPerformanceCount [
 	| runner result |
 
 	runner := UmeRunner test: schema times: 2.
-	
+	runner collectAllCases.
 	result := runner run.
 
 	self assertSuccess: result.
@@ -88,6 +88,21 @@ UmeAPINeoJsonTest >> testNeoJsonPerformanceNewAPI [
 	result := runner run.
 
 	self assertSuccess: result.
+	
+
+]
+
+{ #category : 'tests' }
+UmeAPINeoJsonTest >> testNeoJsonPerformanceOutliersOnly [
+
+	| runner result |
+
+	runner := UmeRunner test: schema.
+	
+	result := runner run.
+
+	self assertSuccess: result.
+	(result tests) do: [ :t | self assert: t feedback improvement > 0 ].
 	
 
 ]
