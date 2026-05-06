@@ -49,6 +49,12 @@ UmeGenerator >> feed: feedback [
 ]
 
 { #category : 'as yet unclassified' }
+UmeGenerator >> gen [
+
+	^ self gen: nil
+]
+
+{ #category : 'as yet unclassified' }
 UmeGenerator >> gen: instance [
 	
 	self subclassResponsibility 
