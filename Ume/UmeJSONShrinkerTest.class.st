@@ -15,7 +15,7 @@ UmeJSONShrinkerTest >> setUp [
 	
 	super setUp.
 	self timeLimit: 5 hours.
-	shrinker := UmeShrinker new.
+	shrinker := UmeGrammarBasedShrinker new.
 	shrinker grammar: JSONGrammar new.
 	evaluator := UmeEvaluator new profilingByMethodCalls.
 	shrinker evaluator: evaluator.
