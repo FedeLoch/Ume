@@ -34,8 +34,7 @@ UmeGrammarBasedShrinker >> candidates: root [
 		(reward = worstReward) ifTrue: [ worst add: node ]
 	].
 
-	^ worst.
-
+	^ worst
 ]
 
 { #category : 'testing' }
@@ -123,7 +122,7 @@ UmeGrammarBasedShrinker >> isValidTree: node [
 ]
 
 { #category : 'shrinking' }
-UmeGrammarBasedShrinker >> minimize: tree upperBound: upperBound [
+UmeGrammarBasedShrinker >> minimizeOne: tree upperBound: upperBound [
 
 	| seen allNodes |
 	
@@ -131,7 +130,7 @@ UmeGrammarBasedShrinker >> minimize: tree upperBound: upperBound [
 	allNodes := tree allNodes asSet.
 	
 	"TODO: We need to recompute the candidates each time we accept a new version of out tree input"
-	(self candidates: tree) do: [ :candidate | | parent minimizedFeedback |
+	(self candidates: tree) do: [ :candidate | | parent trigger |
 		(seen includes: candidate) ifFalse: [
 			seen add: candidate.
 			parent := candidate parent.
@@ -139,11 +138,9 @@ UmeGrammarBasedShrinker >> minimize: tree upperBound: upperBound [
 				"TODO: add a memoization to know if the candidate is removable or not"
 				index := parent children indexOf: candidate.
 				parent replaceChildAt: index with: candidate emptyTree.
-			
-				minimizedFeedback := self evalInput: tree asInput.
-				((self isValidTree: tree) and: [ self triggerBug: minimizedFeedback upperBound: upperBound ]) ifFalse: [
-					parent replaceChildAt: index with: candidate.
-				]
+				
+				trigger := self triggerBug: (self evalInput: tree asInput) upperBound: upperBound.
+				((self isValidTree: tree) and: [ trigger ]) ifFalse: [ parent replaceChildAt: index with: candidate ]
 		 	]
 		]
 	].

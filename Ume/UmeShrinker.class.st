@@ -29,36 +29,51 @@ UmeShrinker >> initialize [
 ]
 
 { #category : 'shrinking' }
-UmeShrinker >> minimize: tree upperBound: bound [
+UmeShrinker >> minimizeOne: tree upperBound: bound [
 
 	self subclassResponsibility 
 ]
 
 { #category : 'shrinking' }
-UmeShrinker >> shrink: input [
-	
-    | tree minimizedTree minimizedInput upperBound currentInput |
-    
-    currentInput := input copy.
+UmeShrinker >> minimizeTree: tree upperBound: bound [
 
-    (self tree: input) ifNil: [ ^ input ].
-    upperBound := self evalInput: input.
-        
-    maxIterations timesRepeat: [
-		tree := self tree: currentInput.
-		minimizedTree := self minimize: tree upperBound: upperBound.
-		minimizedInput := self asInput: minimizedTree.
+	| currentTree |
+	
+	"This minimize as much as possible the input".
+	currentTree := tree copy.
+	maxIterations timesRepeat: [ | minimized |
+		minimized := self minimizeOne: currentTree upperBound: bound.
 		
-		(minimizedInput = currentInput) ifTrue: [ ^ currentInput ].
+		(minimized = currentTree) ifTrue: [ ^ currentTree ].
 		
-		currentInput := minimizedInput.
-    ].
-    
-    ^ currentInput
+		currentTree := minimized.
+	].
+
+	^ currentTree
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> shrink: input [
+
+	| tree minimizedTree upperBound |
+
+	(self tree: input) ifNil: [ ^ input ].
+	upperBound := self evalInput: input.
+
+	tree := self tree: input.
+	minimizedTree := self minimizeTree: tree upperBound: upperBound.
+
+	^ self asInput: minimizedTree
 ]
 
 { #category : 'shrinking' }
 UmeShrinker >> tree: input [
 
 	self  subclassResponsibility 
+]
+
+{ #category : 'testing' }
+UmeShrinker >> triggerBug: score upperBound: originalScore [
+
+	self subclassResponsibility 
 ]
