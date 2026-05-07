@@ -1,6 +1,6 @@
 Class {
 	#name : 'UmeRegexShrinkerTest',
-	#superclass : 'UmeShrinkerTest',
+	#superclass : 'UmeGrammarBasedShrinkerTest',
 	#instVars : [
 		'shrinker',
 		'evaluator'

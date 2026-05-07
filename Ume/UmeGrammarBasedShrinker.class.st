@@ -107,6 +107,7 @@ UmeGrammarBasedShrinker >> initialize [
 	classesToProfile := nil.
 	feedbackEvaluator := nil.
 	grammar := nil.
+	memo := Dictionary new.
 ]
 
 { #category : 'testing' }
@@ -124,16 +125,17 @@ UmeGrammarBasedShrinker >> isValidTree: node [
 { #category : 'shrinking' }
 UmeGrammarBasedShrinker >> minimize: tree upperBound: upperBound [
 
-	| seen |
+	| seen allNodes |
 	
 	seen := Set new.
-
-	"We need to recompute the candidates each time we accept a new version of out tree input"
+	allNodes := tree allNodes asSet.
+	
+	"TODO: We need to recompute the candidates each time we accept a new version of out tree input"
 	(self candidates: tree) do: [ :candidate | | parent minimizedFeedback |
 		(seen includes: candidate) ifFalse: [
-			seen put: candidate.
+			seen add: candidate.
 			parent := candidate parent.
-			parent ifNotNil: [ | index |
+			(parent notNil and: [ allNodes includes: candidate ]) ifTrue: [ | index |
 				"TODO: add a memoization to know if the candidate is removable or not"
 				index := parent children indexOf: candidate.
 				parent replaceChildAt: index with: candidate emptyTree.

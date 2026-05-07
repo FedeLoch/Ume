@@ -1,6 +1,6 @@
 Class {
 	#name : 'UmeJSONShrinkerTest',
-	#superclass : 'UmeShrinkerTest',
+	#superclass : 'UmeGrammarBasedShrinkerTest',
 	#instVars : [
 		'shrinker',
 		'evaluator'
@@ -29,7 +29,6 @@ UmeJSONShrinkerTest >> setUp [
 UmeJSONShrinkerTest >> testShrinkNestedArraysToNormalForm [
 
 	self assert: (shrinker shrink: '[[[[1,2,3]]],{"a":null}]') equals: '[[[[1,3]]],{}]'.
-
 ]
 
 { #category : 'tests' }
