@@ -127,22 +127,24 @@ UmeShrinker >> isValidTree: node [
 ]
 
 { #category : 'shrinking' }
-UmeShrinker >> minimize: node upperBound: bound [
-	
-	(self candidates: node) do: [ :child | | parent |
-		parent := child parent.
+UmeShrinker >> minimize: tree upperBound: bound [
+	1halt.
+	(self candidates: tree) do: [ :candidate | | parent minimizedFeedback |
+		parent := candidate parent.
 		parent ifNotNil: [ | index |
-			"TODO: add a memoization to know if the child is removable or not"
-			index := parent children indexOf: child.
-			parent replaceChildAt: index with: child emptyTree.
-
-			((self isValidTree: node) and: [ self isStillValuable: (self evalInput: node asInput) original: bound ]) ifFalse: [
-				parent replaceChildAt: index with: child.
+			"TODO: add a memoization to know if the candidate is removable or not"
+			index := parent children indexOf: candidate.
+			parent replaceChildAt: index with: candidate emptyTree.
+			"do we remove the child? we are replacing it for the minimal expression based on the grammar"
+			
+			minimizedFeedback := self evalInput: tree asInput.
+			((self isValidTree: tree) and: [ self isStillValuable: minimizedFeedback original: bound ]) ifFalse: [
+				parent replaceChildAt: index with: candidate.
 			]
 		].
 	].
 
-	^ node
+	^ tree
 ]
 
 { #category : 'testing' }
@@ -172,19 +174,19 @@ UmeShrinker >> resetMemoization [
 { #category : 'shrinking' }
 UmeShrinker >> shrink: input [
 	
-    | node minimizedNode feedback currentInput |
+    | tree minimizedNode feedback currentInput |
     
-    currentInput := input.
+    currentInput := input copy.
 
     (self parse: input) ifNil: [ ^ input ].
     feedback := self evalInput: input.
         
     maxIterations timesRepeat: [
-        node := self parse: currentInput.
-        minimizedNode := self minimize: node upperBound: feedback.
+        tree := self parse: currentInput.
+        minimizedNode := self minimize: tree upperBound: feedback.
         
         (minimizedNode asInput = currentInput) ifTrue: [ ^ currentInput ].
-        self evalInput: minimizedNode.
+        "self evalInput: minimizedNode."
         currentInput := minimizedNode asInput.
     ].
     
