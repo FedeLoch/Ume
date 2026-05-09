@@ -309,6 +309,13 @@ UmeRunner >> guidedByExecutionTime [
 ]
 
 { #category : 'as yet unclassified' }
+UmeRunner >> guidedByGCs [
+	
+	evaluator profilingByGCs.
+	feedbackEvaluator feedbackByCGs
+]
+
+{ #category : 'as yet unclassified' }
 UmeRunner >> guidedByMethodsCalls [
 	
 	evaluator profilingByMethodCalls.

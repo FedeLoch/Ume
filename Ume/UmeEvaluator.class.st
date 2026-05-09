@@ -100,6 +100,15 @@ UmeEvaluator >> profilingByExecutionTime [
 ]
 
 { #category : 'initialization' }
+UmeEvaluator >> profilingByGCs [
+
+	analyzer profilers: {
+			self executionTimeProfiler.
+			PBACallBacksProfiler new measuringOnlyCGs
+	}
+]
+
+{ #category : 'initialization' }
 UmeEvaluator >> profilingByMethodCalls [
 
 	analyzer profilers: {

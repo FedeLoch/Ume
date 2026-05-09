@@ -9,7 +9,8 @@ Class {
 		'coverageTable',
 		'performanceTable',
 		'customMetricsTable',
-		'bytecodesTable'
+		'bytecodesTable',
+		'gcTable'
 	],
 	#category : 'Ume-Feedback',
 	#package : 'Ume',
@@ -117,6 +118,12 @@ UmeFeedbackEvaluator >> feedbackByBytecodes [
 ]
 
 { #category : 'as yet unclassified' }
+UmeFeedbackEvaluator >> feedbackByCGs [
+
+	guide := UmeGCsGuide new evaluator: self
+]
+
+{ #category : 'as yet unclassified' }
 UmeFeedbackEvaluator >> feedbackByCoverage [
 
 	guide := UmeCoverageGuide new evaluator: self
@@ -141,6 +148,12 @@ UmeFeedbackEvaluator >> feedbackByScore [
 ]
 
 { #category : 'accessing' }
+UmeFeedbackEvaluator >> gcTable [
+
+	^ gcTable 
+]
+
+{ #category : 'accessing' }
 UmeFeedbackEvaluator >> guide [
 
 	^ guide
@@ -157,6 +170,7 @@ UmeFeedbackEvaluator >> initialize [
 	performanceTable := Dictionary new.
 	customMetricsTable := Dictionary new.
 	bytecodesTable := Dictionary new.
+	gcTable := Dictionary new.
 	
 	topCases := OrderedCollection new.
 
