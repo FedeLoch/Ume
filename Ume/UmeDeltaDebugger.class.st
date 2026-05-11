@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeReductionShrinker',
+	#name : 'UmeDeltaDebugger',
 	#superclass : 'UmeShrinker',
 	#instVars : [
 		'oracle',
@@ -12,26 +12,26 @@ Class {
 }
 
 { #category : 'shrinking' }
-UmeReductionShrinker >> asInput: tree [
+UmeDeltaDebugger >> asInput: tree [
 
 	^ tree "a changer"
 ]
 
 { #category : 'shrinking' }
-UmeReductionShrinker >> evalInput: input [
+UmeDeltaDebugger >> evalInput: input [
 
 	^ [ self method input ] on: Error do: [ ^ nil ]. "todo"
 ]
 
 { #category : 'testing' }
-UmeReductionShrinker >> initialize [ 
+UmeDeltaDebugger >> initialize [ 
 	
 	super initialize.
 	splitingValue := 2.
 ]
 
 { #category : 'shrinking' }
-UmeReductionShrinker >> minimizeOne: string upperBound: bound [
+UmeDeltaDebugger >> minimizeOne: string upperBound: bound [
 	| currentInput parts|
 	
 	currentInput := string.
@@ -51,19 +51,19 @@ UmeReductionShrinker >> minimizeOne: string upperBound: bound [
 ]
 
 { #category : 'shrinking' }
-UmeReductionShrinker >> oracle [ 
+UmeDeltaDebugger >> oracle [ 
 	
 	^ oracle 
 ]
 
 { #category : 'shrinking' }
-UmeReductionShrinker >> oracle: anOracle [
+UmeDeltaDebugger >> oracle: anOracle [
 
 	oracle := anOracle
 ]
 
 { #category : 'private' }
-UmeReductionShrinker >> split: aString into: aValue [
+UmeDeltaDebugger >> split: aString into: aValue [
 "maybe add that as an extension"
 
 	| result size start limit|
@@ -80,25 +80,25 @@ UmeReductionShrinker >> split: aString into: aValue [
 ]
 
 { #category : 'accessing' }
-UmeReductionShrinker >> splitingValue [
+UmeDeltaDebugger >> splitingValue [
 
 	^splitingValue
 ]
 
 { #category : 'accessing' }
-UmeReductionShrinker >> splitingValue: aValue [
+UmeDeltaDebugger >> splitingValue: aValue [
 
 	splitingValue := aValue 
 ]
 
 { #category : 'shrinking' }
-UmeReductionShrinker >> tree: input [
+UmeDeltaDebugger >> tree: input [
 
 	^ input. 
 ]
 
 { #category : 'testing' }
-UmeReductionShrinker >> triggerBug: string upperBound: _ [
+UmeDeltaDebugger >> triggerBug: string upperBound: _ [
 	
 	"[ method value: string  ] on: Error do: [^true.].
 	"

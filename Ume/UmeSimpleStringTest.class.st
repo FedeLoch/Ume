@@ -2,17 +2,26 @@ Class {
 	#name : 'UmeSimpleStringTest',
 	#superclass : 'UmeReductionShrinkerTest',
 	#instVars : [
-		'shrinker'
+		'shrinker',
+		'grammar'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
 	#tag : 'Shrinking'
 }
 
+{ #category : 'as yet unclassified' }
+UmeSimpleStringTest >> checkGrammar: aInput [
+
+	UmeGrammarParser accept: aInput from: grammar. 
+
+	
+]
+
 { #category : 'running' }
 UmeSimpleStringTest >> setUp [
 	super setUp.
-	shrinker := UmeReductionShrinker new.
+	shrinker := UmeDeltaDebugger new.
 	
 	shrinker oracle: [ :string | (string includes: $e) not].
 

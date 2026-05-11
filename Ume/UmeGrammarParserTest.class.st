@@ -68,7 +68,6 @@ UmeGrammarParserTest >> testParseJsonObject05 [
 	| node |
 
 	node := UmeGrammarParser parse: '[42,true]' from: JSONGrammar new.
-	
 	self assert: node generate equals: '[42,true]'
 ]
 

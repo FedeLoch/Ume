@@ -11,6 +11,12 @@ Class {
 }
 
 { #category : 'instance creation' }
+UmeGrammarParser class >> accept: string from: grammar [
+
+	^ (self parse: string from: grammar) isNil not 
+]
+
+{ #category : 'instance creation' }
 UmeGrammarParser class >> parse: string from: grammar [
 
 	| parsingResult |
