@@ -23,6 +23,13 @@ UmeReductionShrinker >> evalInput: input [
 	^ [ self method input ] on: Error do: [ ^ nil ]. "todo"
 ]
 
+{ #category : 'testing' }
+UmeReductionShrinker >> initialize [ 
+	
+	super initialize.
+	splitingValue := 2.
+]
+
 { #category : 'shrinking' }
 UmeReductionShrinker >> minimizeOne: string upperBound: bound [
 	| currentInput parts|
