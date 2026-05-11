@@ -51,3 +51,21 @@ UmeSimpleStringTest >> testString03 [
 
 	self assert: (shrinker shrink: 'eq') equals: 'e'
 ]
+
+{ #category : 'running' }
+UmeSimpleStringTest >> testString04 [
+	
+	self assert: (shrinker shrink: 'eeeeeeeeeeeeeeeeeeeeeeeeee') equals: 'e'
+]
+
+{ #category : 'running' }
+UmeSimpleStringTest >> testString05 [
+	
+	self assert: (shrinker shrink: 'eqlbfkdjbkj') equals: 'e'
+]
+
+{ #category : 'running' }
+UmeSimpleStringTest >> testString06 [
+	
+	self assert: (shrinker shrink: 'gjnjconjcome') equals: 'e'
+]

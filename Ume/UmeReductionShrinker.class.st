@@ -35,7 +35,6 @@ UmeReductionShrinker >> minimizeOne: string upperBound: bound [
 	| currentInput parts|
 	
 	currentInput := string.
-	1 halt.
 	(0 < string size) ifTrue: [ 
 		| foundbetterInput |
 		foundbetterInput := false.
