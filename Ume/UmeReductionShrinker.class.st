@@ -2,7 +2,9 @@ Class {
 	#name : 'UmeReductionShrinker',
 	#superclass : 'UmeShrinker',
 	#instVars : [
-		'method'
+		'oracle',
+		'splitingValue',
+		'shrinker'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -12,52 +14,89 @@ Class {
 { #category : 'shrinking' }
 UmeReductionShrinker >> asInput: tree [
 
-	^ tree asInput
-]
-
-{ #category : 'as yet unclassified' }
-UmeReductionShrinker >> computeTree: subtree with: bound [
-
-	"on regarde si le subtree produit bien l'erreur "
+	^ tree "a changer"
 ]
 
 { #category : 'shrinking' }
-UmeReductionShrinker >> method [ 
-	
-	^method. 
+UmeReductionShrinker >> evalInput: input [
+
+	^ [ self method input ] on: Error do: [ ^ nil ]. "todo"
 ]
 
 { #category : 'shrinking' }
-UmeReductionShrinker >> method: aMethod [
+UmeReductionShrinker >> minimizeOne: string upperBound: bound [
+	| currentInput parts|
+	
+	currentInput := string.
+	1 halt.
+	(0 < string size) ifTrue: [ 
+		| foundbetterInput |
+		foundbetterInput := false.
+		parts := self split: string into: splitingValue.
+		parts do: [ :each |
+			(self triggerBug: each upperBound:bound ) ifTrue: [ 
+				currentInput := each.
+				foundbetterInput := true.
+				^ currentInput .]].
+				"^ self minimizeOne: currentInput upperBound: bound. ]]."
+	].
+	^ currentInput .
 
-	method := aMethod. 
 ]
 
 { #category : 'shrinking' }
-UmeReductionShrinker >> minimize: tree upperBound: bound [
+UmeReductionShrinker >> oracle [ 
+	
+	^ oracle 
+]
 
-	"1- on garde en memoire la plus petite input"
-	| allNodes reductionSet|
-	"todo regarder si il a bien des enfants"
+{ #category : 'shrinking' }
+UmeReductionShrinker >> oracle: anOracle [
+
+	oracle := anOracle
+]
+
+{ #category : 'private' }
+UmeReductionShrinker >> split: aString into: aValue [
+"maybe add that as an extension"
+
+	| result size start limit|
 	
-	reductionSet := tree. 
-	allNodes := tree allNodes asSet. 
-	"True whileTrue: [ "
-		allNodes do: [ :subtree |
-			| result success | 
-			( subtree size < reductionSet size ) ifTrue: [ 
-				result := self computeTree: subtree with: bound.
-				success := result first.
-				success ifFalse: [ reductionSet:= result second ].
-				]	
-			]. "todo: ne pas avoir les memes resultats 2 fois"
-		"]"
-	^reductionSet. 
-	
+	result := OrderedCollection new. 
+	( aString size == 2) ifTrue: [ result add: (aString copyFrom: 1 to: 1 ); add: (aString copyFrom: 2 to: 2). ^result].
+	size := (aString size / aValue ) ceiling .
+	1 to: aValue do:[ :i |
+		start := ((i -1) * size ) + 1.
+		limit := (start + size - 1) min: aString size.
+		start <= aString size ifTrue: [ result add: (aString copyFrom: start to: limit )  ].
+		].
+	^result. 
+]
+
+{ #category : 'accessing' }
+UmeReductionShrinker >> splitingValue [
+
+	^splitingValue
+]
+
+{ #category : 'accessing' }
+UmeReductionShrinker >> splitingValue: aValue [
+
+	splitingValue := aValue 
 ]
 
 { #category : 'shrinking' }
 UmeReductionShrinker >> tree: input [
 
-	^ self parse: input
+	^ input. 
+]
+
+{ #category : 'testing' }
+UmeReductionShrinker >> triggerBug: string upperBound: _ [
+	
+	"[ method value: string  ] on: Error do: [^true.].
+	"
+	^ (oracle value: string) not "à modif"
+	
+
 ]
