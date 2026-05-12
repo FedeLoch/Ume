@@ -18,20 +18,26 @@ UmeGrammarBasedReducerTest >> setUp [
 	
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 UmeGrammarBasedReducerTest >> testJSON [
 
 	self assert: (shrinker shrink: '{"name": "Timo", "session": "2026", "score": 4, "completed": true}') equals: '4'
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 UmeGrammarBasedReducerTest >> testJSON02 [
 
 	self assert: (shrinker shrink: '[[[[1,2,4]]],{"a":null}]') equals: '4'
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 UmeGrammarBasedReducerTest >> testJSON03 [
 
 	self assert: (shrinker shrink: '[4]') equals: '4'
+]
+
+{ #category : 'tests' }
+UmeGrammarBasedReducerTest >> testJSON04 [
+
+	self assert: (shrinker shrink: '[{"a":null}, [[[1,2,4]]]]') equals: '4'
 ]

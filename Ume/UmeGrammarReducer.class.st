@@ -40,6 +40,17 @@ UmeGrammarReducer >> evalInput: input [
 ]
 
 { #category : 'shrinking' }
+UmeGrammarReducer >> getSymbol: aNode [
+	
+	| fragments res|
+	
+	res := OrderedCollection new. 
+	fragments :=  aNode grammarRule fragments.
+	fragments do: [ :fragment | res add: fragment rules ].
+	^res.
+]
+
+{ #category : 'shrinking' }
 UmeGrammarReducer >> grammar: aGrammar [
 
 	grammar := aGrammar
@@ -52,15 +63,20 @@ UmeGrammarReducer >> minimizeOne: tree upperBound: bound [
 	allNodes := tree allNodes.
 	allNodes  do: [ :node | |parent symbol index|
 		parent := node parent. 
-		symbol := node grammarRule . 
+		symbol := self getSymbol: node. 
+		1 halt.
 		parent ifNotNil: [ 
+			1 halt.
 			index := parent children indexOf: node.
-			(self alternateReductions: node symbol: symbol ) do: [ :reduction |
+			(self symbolReduction: node for: symbol ) do: [ :reduction |
+				1 halt.
 				(reduction allNodes size < node allNodes size) ifTrue:[
 					parent replaceChildAt: index with: reduction.
-					(self triggerBug: tree upperBound: bound ) "should also check grammar"
+					1 halt.
+					(self triggerBug: tree upperBound: bound ) 
 					ifTrue: [ ^tree.] 
 					ifFalse: [ parent replaceChildAt: index with: node.].
+					1 halt.
 				].
 			].
 		].
@@ -96,7 +112,7 @@ UmeGrammarReducer >> subtreeWithSymbol: aTree symbol: aSymbol [
 	
 	res := OrderedCollection new.
 	aTree allNodes do: [ :node |
-		(node grammarRule = aSymbol ) ifTrue: [ res add: node ] ].
+		(aSymbol includes: node ) ifTrue: [ res add: node ] ].
 	^res.
 ]
 
@@ -121,6 +137,5 @@ UmeGrammarReducer >> triggerBug: aTree upperBound: bound [
 
 	|input|
 	input := (self asInput: aTree).
-	1 halt.
 	^ (self evalInput: input) = bound.
 ]
