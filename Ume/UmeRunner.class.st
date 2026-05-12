@@ -257,11 +257,14 @@ UmeRunner >> genReport: tests since: time withCoverage: totalCoverageResult with
 { #category : 'tests' }
 UmeRunner >> genTest: incrCoverage with: collector [
 
-	| arguments receiver result score caseFeedback test |
+	| arguments receiver result score caseFeedback test safeReceiver safeArguments |
 	
 	"Setup based on the enriched schema"
 	receiver := generator genReceiverFor: target from: schema.
 	arguments := generator genArgumentsFor: target from: schema.
+	
+	safeReceiver := receiver veryDeepCopy.
+	safeArguments := arguments veryDeepCopy.
 	
 	"Target call and eval result"
 	result := evaluator eval: receiver method: target from: schema with: arguments andCoverage: incrCoverage collectingWith: collector.
@@ -274,8 +277,8 @@ UmeRunner >> genTest: incrCoverage with: collector [
 
 	"Generate Test case"
 	test := UmeTest new target: target;
-		arguments: arguments;
-		receiver: receiver;
+		arguments: safeArguments;
+		receiver: safeReceiver;
 		score: score;
 		result: result.
 	
