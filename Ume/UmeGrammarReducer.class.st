@@ -2,7 +2,8 @@ Class {
 	#name : 'UmeGrammarReducer',
 	#superclass : 'UmeShrinker',
 	#instVars : [
-		'grammar'
+		'grammar',
+		'oracle'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -12,9 +13,11 @@ Class {
 { #category : 'shrinking' }
 UmeGrammarReducer >> alternateReductions: aTree symbol: aSymbol [
 
-	| reduction expansion |
+	| reduction |
 	reduction := OrderedCollection new. 
-	expansion := grammar get: aSymbol .
+	aTree children do: [ :child |
+		reduction addAll: (self subtreeWithSymbol: child symbol: aSymbol ) ].
+	^reduction .
 ]
 
 { #category : 'shrinking' }
@@ -24,26 +27,51 @@ UmeGrammarReducer >> asInput: tree [
 ]
 
 { #category : 'shrinking' }
+UmeGrammarReducer >> checkGrammar: aInput [
+
+	^UmeGrammarParser accept: aInput from: grammar. 
+]
+
+{ #category : 'shrinking' }
+UmeGrammarReducer >> evalInput: input [
+
+	(self checkGrammar: input ) ifFalse: [ ^false ].
+	^[ oracle value: input. false] on: Error do: [ :e | true ].
+]
+
+{ #category : 'shrinking' }
+UmeGrammarReducer >> grammar: aGrammar [
+
+	grammar := aGrammar
+]
+
+{ #category : 'shrinking' }
 UmeGrammarReducer >> minimizeOne: tree upperBound: bound [
 
-	| allNodes reduced |
-	allNodes := tree allNodes asSet.
-	reduced := false. 
-	
-	allNodes  do: [ :node | |parent reducedChild symbol index|
-		reducedChild := false.
+	| allNodes |
+	allNodes := tree allNodes.
+	allNodes  do: [ :node | |parent symbol index|
 		parent := node parent. 
-		symbol := node symbol. 
-		(self symbolReduction: tree for: symbol ) do: [ :reduction |
-			 	( reduction size >= node size ) ifTrue: [ 
-					index := parent children indexof: node.
-					parent replaceChildAt: index with: reduction ].
-					(self triggerBug: tree upperBound: bound) ifTrue: [ 
-						reduced:= reducedChild := true. 
-					]]"ajouter le else"
+		symbol := node grammarRule . 
+		parent ifNotNil: [ 
+			index := parent children indexOf: node.
+			(self alternateReductions: node symbol: symbol ) do: [ :reduction |
+				(reduction allNodes size < node allNodes size) ifTrue:[
+					parent replaceChildAt: index with: reduction.
+					(self triggerBug: tree upperBound: bound ) "should also check grammar"
+					ifTrue: [ ^tree.] 
+					ifFalse: [ parent replaceChildAt: index with: node.].
 				].
-	^ tree 
-	
+			].
+		].
+	].
+	^ tree.
+]
+
+{ #category : 'shrinking' }
+UmeGrammarReducer >> oracle: aMethod [
+
+	oracle := aMethod. 
 ]
 
 { #category : 'shrinking' }
@@ -62,36 +90,37 @@ UmeGrammarReducer >> possibleCombinations: aList [
 ]
 
 { #category : 'shrinking' }
-UmeGrammarReducer >> subTreeWithSymbol: aTree symbol: aSymbol [
+UmeGrammarReducer >> subtreeWithSymbol: aTree symbol: aSymbol [
 
-	| res children|
+	| res |
 	
 	res := OrderedCollection new.
-	children := aTree allNodes.
-	((children symbol) equals: aSymbol ) ifTrue: [ res add: children ].
-	
-	(children equals: nil ) ifFalse: [ 
-		 children do: [ :each |
-			res add: (self subTreeWithSymbol:children symbol:aSymbol). ]].
-	
+	aTree allNodes do: [ :node |
+		(node grammarRule = aSymbol ) ifTrue: [ res add: node ] ].
 	^res.
 ]
 
 { #category : 'shrinking' }
 UmeGrammarReducer >> symbolReduction: aTree for: aSymbol [
 
-	| reduction uniqueReduction|
-	reduction := OrderedCollection new.
-	reduction add: (self subTreeWithSymbol: aTree symbol:aSymbol) ; add: (self alternateReductions: aTree symbol: aSymbol) . 
-	uniqueReduction:= OrderedCollection new.
-	(reduction ) do: [  :each |
-		(each in: uniqueReduction ) ifFalse: (uniqueReduction add: each). 
-	].
-	^uniqueReduction. 
+	| reduction |
+	reduction := Set new.
+	reduction addAll: (self subtreeWithSymbol: aTree symbol: aSymbol ).
+	reduction addAll: (self alternateReductions: aTree symbol: aSymbol ).
+	^reduction asOrderedCollection.
 ]
 
 { #category : 'shrinking' }
 UmeGrammarReducer >> tree: input [
 
 	^ self parse: input
+]
+
+{ #category : 'testing' }
+UmeGrammarReducer >> triggerBug: aTree upperBound: bound [
+
+	|input|
+	input := (self asInput: aTree).
+	1 halt.
+	^ (self evalInput: input) = bound.
 ]

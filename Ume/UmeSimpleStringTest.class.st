@@ -10,14 +10,6 @@ Class {
 	#tag : 'Shrinking'
 }
 
-{ #category : 'as yet unclassified' }
-UmeSimpleStringTest >> checkGrammar: aInput [
-
-	UmeGrammarParser accept: aInput from: grammar. 
-
-	
-]
-
 { #category : 'running' }
 UmeSimpleStringTest >> setUp [
 	super setUp.
