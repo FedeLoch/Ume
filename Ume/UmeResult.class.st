@@ -3,7 +3,7 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'tests',
-		'totalTest',
+		'numberOfGeneratedTests',
 		'totalTime',
 		'totalCoverage',
 		'performanceResult',
@@ -40,22 +40,8 @@ UmeResult class >> resultFrom: tests since: time withCoverage: totalCoverageResu
 { #category : 'as yet unclassified' }
 UmeResult class >> resultFrom: tests since: time withCoverage: totalCoverageResult runner: runner with: aNumberOfTest [
 
-	| totalTime totalTest perfResult topCases |
 	
-	totalTime := Duration milliSeconds: (Time millisecondsSince: time).
-	totalTest := aNumberOfTest.
-	perfResult := PerformanceResult from: tests withTime: totalTime.
-	topCases := runner feedbackEvaluator topCases.
-
-	^ self new tests: tests;
-		totalTest: totalTest;
-		totalTime: totalTime;
-		totalCoverage: totalCoverageResult;
-		topCases: topCases;
-		runner: runner;
-		feedbackEvaluator: runner feedbackEvaluator;
-		ranking: (tests collect: [ :test | test score ifNil: [ 0 ] ifNotNil: [ test score ] ]) asSortedCollection reverse;
-		performanceResult: perfResult
+	^ (self resultFrom: tests since: time  withCoverage: totalCoverageResult  runner: runner) numberOfGeneratedTests: aNumberOfTest 
 ]
 
 { #category : 'as yet unclassified' }
@@ -164,6 +150,19 @@ UmeResult >> minimumTimeNeeded [
 UmeResult >> mutalkTest [
 
 	^ MTTestUmeCaseReference for: (UmeTestsuit from: tests)
+]
+
+{ #category : 'getter' }
+UmeResult >> numberOfGeneratedTests [ 
+
+	^ numberOfGeneratedTests 
+]
+
+{ #category : 'setter' }
+UmeResult >> numberOfGeneratedTests: aTotalTests [
+
+	numberOfGeneratedTests  := aTotalTests 
+
 ]
 
 { #category : 'outliers' }
@@ -403,19 +402,6 @@ UmeResult >> totalCoverage [
 UmeResult >> totalCoverage: aTotalCoverage [
 
 	totalCoverage := aTotalCoverage
-
-]
-
-{ #category : 'getter' }
-UmeResult >> totalTest [ 
-
-	^ totalTest 
-]
-
-{ #category : 'setter' }
-UmeResult >> totalTest: aTotalTests [
-
-	totalTest  := aTotalTests 
 
 ]
 

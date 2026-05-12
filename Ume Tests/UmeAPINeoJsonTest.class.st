@@ -103,7 +103,7 @@ UmeAPINeoJsonTest >> testNeoJsonPerformanceOutliersOnly [
 
 	self assertSuccess: result.
 	(result tests) do: [ :t | self assert: t feedback improvement > 0 ].
-	self assert: (result totalTest) > 0. 
+	self assert: (result numberOfGeneratedTests ) > 0. 
 	
 
 ]
