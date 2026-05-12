@@ -3,6 +3,7 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'tests',
+		'totalTest',
 		'totalTime',
 		'totalCoverage',
 		'performanceResult',
@@ -27,6 +28,27 @@ UmeResult class >> resultFrom: tests since: time withCoverage: totalCoverageResu
 	topCases := runner feedbackEvaluator topCases.
 
 	^ self new tests: tests;
+		totalTime: totalTime;
+		totalCoverage: totalCoverageResult;
+		topCases: topCases;
+		runner: runner;
+		feedbackEvaluator: runner feedbackEvaluator;
+		ranking: (tests collect: [ :test | test score ifNil: [ 0 ] ifNotNil: [ test score ] ]) asSortedCollection reverse;
+		performanceResult: perfResult
+]
+
+{ #category : 'as yet unclassified' }
+UmeResult class >> resultFrom: tests since: time withCoverage: totalCoverageResult runner: runner with: aNumberOfTest [
+
+	| totalTime totalTest perfResult topCases |
+	
+	totalTime := Duration milliSeconds: (Time millisecondsSince: time).
+	totalTest := aNumberOfTest.
+	perfResult := PerformanceResult from: tests withTime: totalTime.
+	topCases := runner feedbackEvaluator topCases.
+
+	^ self new tests: tests;
+		totalTest: totalTest;
 		totalTime: totalTime;
 		totalCoverage: totalCoverageResult;
 		topCases: topCases;
@@ -381,6 +403,19 @@ UmeResult >> totalCoverage [
 UmeResult >> totalCoverage: aTotalCoverage [
 
 	totalCoverage := aTotalCoverage
+
+]
+
+{ #category : 'getter' }
+UmeResult >> totalTest [ 
+
+	^ totalTest 
+]
+
+{ #category : 'setter' }
+UmeResult >> totalTest: aTotalTests [
+
+	totalTest  := aTotalTests 
 
 ]
 

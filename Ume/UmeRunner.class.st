@@ -249,6 +249,12 @@ UmeRunner >> genReport: tests since: time withCoverage: totalCoverageResult [
 ]
 
 { #category : 'tests' }
+UmeRunner >> genReport: tests since: time withCoverage: totalCoverageResult with: aNumberOfTest [
+
+	^ UmeResult resultFrom: tests since: time withCoverage: totalCoverageResult runner: self with: aNumberOfTest
+]
+
+{ #category : 'tests' }
 UmeRunner >> genTest: incrCoverage with: collector [
 
 	| arguments receiver result score caseFeedback test |
@@ -407,7 +413,7 @@ UmeRunner >> runCampaign: executionJob [
 		executionJob updateProgress: progress.
 		] ].
 
-	^ self genReport: tests since: time withCoverage: incrCoverage
+	^ self genReport: tests since: time withCoverage: incrCoverage with: iteration.
 ]
 
 { #category : 'accessing' }

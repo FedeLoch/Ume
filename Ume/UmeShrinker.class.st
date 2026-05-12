@@ -2,13 +2,6 @@ Class {
 	#name : 'UmeShrinker',
 	#superclass : 'Object',
 	#instVars : [
-		'grammar',
-		'evaluator',
-		'feedbackEvaluator',
-		'threshold',
-		'programBlock',
-		'classesToProfile',
-		'memo',
 		'maxIterations'
 	],
 	#category : 'Ume-Shrinking',
