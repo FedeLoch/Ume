@@ -16,6 +16,7 @@ UmeGCsGuide >> tableOfValue [
 UmeGCsGuide >> values: case [
 
 	^ case result profilingResult ifNil: [ Dictionary new ] ifNotNil: [ {
-		'#gc' -> (evaluator category: case result profilingResult numberOfGCs)
+		1 halt.
+		'gcs' -> (self category: case result profilingResult numberOfGCs)
 	} asDictionary ]
 ]

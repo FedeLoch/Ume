@@ -16,6 +16,12 @@ UmeEvalError class >> stonAllInstVarNames [
 	^ super stonAllInstVarNames copyWithoutAll: #( stack )
 ]
 
+{ #category : 'testing' }
+UmeEvalError >> isError [
+
+	^ true
+]
+
 { #category : 'accessing' }
 UmeEvalError >> message [
 

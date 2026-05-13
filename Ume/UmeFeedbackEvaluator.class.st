@@ -41,14 +41,6 @@ UmeFeedbackEvaluator >> bytecodesTable: aBytecodesTable [
 	bytecodesTable := aBytecodesTable
 ]
 
-{ #category : 'accessing' }
-UmeFeedbackEvaluator >> category: value [
-	
-	value isZero ifTrue: [ ^ 0 ].
-	
-	^ value ln rounded
-]
-
 { #category : 'as yet unclassified' }
 UmeFeedbackEvaluator >> clear [
 

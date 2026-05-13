@@ -16,6 +16,6 @@ UmeExecutionTimeGuide >> tableOfValue [
 UmeExecutionTimeGuide >> values: case [
 
 	^ case result profilingResult ifNil: [ Dictionary new ] ifNotNil: [ {
-		'executionTime' -> (evaluator category: case result profilingResult executionTime)
+		'executionTime' -> (self category: case result profilingResult executionTime)
 	} asDictionary ]
 ]

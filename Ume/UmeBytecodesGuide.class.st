@@ -16,6 +16,6 @@ UmeBytecodesGuide >> tableOfValue [
 UmeBytecodesGuide >> values: case [
 
 	^ case result profilingResult ifNil: [ Dictionary new ] ifNotNil: [
-		case result profilingResult bytecodes collect: [ :value | evaluator category: value ]
+		case result profilingResult bytecodes collect: [ :value | self category: value ]
 	]
 ]

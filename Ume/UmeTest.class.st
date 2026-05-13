@@ -140,10 +140,16 @@ UmeTest >> installUnitTestIn: aUmeUnitTest [
     ^ selector
 ]
 
+{ #category : 'testing' }
+UmeTest >> isError [
+
+	^ result isError
+]
+
 { #category : 'accessing' }
 UmeTest >> isOutlier [
 
-	^ self feedback improvement > 0
+	^ (self feedback improvement > 0) or: [ self isError ]
 ]
 
 { #category : 'accessing' }
