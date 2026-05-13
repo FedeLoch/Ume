@@ -6,6 +6,12 @@ Class {
 	#tag : 'Feedback'
 }
 
+{ #category : 'accessing' }
+UmeScoreGuide >> category: value [
+
+	^ value
+]
+
 { #category : 'as yet unclassified' }
 UmeScoreGuide >> tableOfValue [
 
@@ -15,5 +21,5 @@ UmeScoreGuide >> tableOfValue [
 { #category : 'accessing' }
 UmeScoreGuide >> values: case [
 
-	^ { 'score' -> (evaluator category: case score) } asDictionary
+	^ { 'score' -> (self category: case score) } asDictionary
 ]

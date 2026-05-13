@@ -10,6 +10,14 @@ Class {
 }
 
 { #category : 'accessing' }
+UmeFeedbackGuide >> category: value [
+	
+	value isZero ifTrue: [ ^ 0 ].
+	
+	^ value ln rounded
+]
+
+{ #category : 'accessing' }
 UmeFeedbackGuide >> evaluator: anEvaluator [
 
 	evaluator := anEvaluator

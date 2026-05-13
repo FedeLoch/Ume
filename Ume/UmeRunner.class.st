@@ -249,13 +249,22 @@ UmeRunner >> genReport: tests since: time withCoverage: totalCoverageResult [
 ]
 
 { #category : 'tests' }
+UmeRunner >> genReport: tests since: time withCoverage: totalCoverageResult with: aNumberOfTest [
+
+	^ UmeResult resultFrom: tests since: time withCoverage: totalCoverageResult runner: self with: aNumberOfTest
+]
+
+{ #category : 'tests' }
 UmeRunner >> genTest: incrCoverage with: collector [
 
-	| arguments receiver result score caseFeedback test |
+	| arguments receiver result score caseFeedback test safeReceiver safeArguments |
 	
 	"Setup based on the enriched schema"
 	receiver := generator genReceiverFor: target from: schema.
 	arguments := generator genArgumentsFor: target from: schema.
+	
+	safeReceiver := receiver veryDeepCopy.
+	safeArguments := arguments veryDeepCopy.
 	
 	"Target call and eval result"
 	result := evaluator eval: receiver method: target from: schema with: arguments andCoverage: incrCoverage collectingWith: collector.
@@ -268,8 +277,8 @@ UmeRunner >> genTest: incrCoverage with: collector [
 
 	"Generate Test case"
 	test := UmeTest new target: target;
-		arguments: arguments;
-		receiver: receiver;
+		arguments: safeArguments;
+		receiver: safeReceiver;
 		score: score;
 		result: result.
 	
@@ -306,6 +315,13 @@ UmeRunner >> guidedByExecutionTime [
 	
 	evaluator profilingByExecutionTime.
 	feedbackEvaluator feedbackByExecutionTime
+]
+
+{ #category : 'as yet unclassified' }
+UmeRunner >> guidedByGCs [
+	
+	evaluator profilingByGCs.
+	feedbackEvaluator feedbackByCGs
 ]
 
 { #category : 'as yet unclassified' }
@@ -400,7 +416,7 @@ UmeRunner >> runCampaign: executionJob [
 		executionJob updateProgress: progress.
 		] ].
 
-	^ self genReport: tests since: time withCoverage: incrCoverage
+	^ self genReport: tests since: time withCoverage: incrCoverage with: iteration.
 ]
 
 { #category : 'accessing' }

@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeExecutionTimeGuide',
+	#name : 'UmeGCsGuide',
 	#superclass : 'UmeFeedbackGuide',
 	#category : 'Ume-Feedback',
 	#package : 'Ume',
@@ -7,15 +7,16 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-UmeExecutionTimeGuide >> tableOfValue [
+UmeGCsGuide >> tableOfValue [
 
-	^ evaluator performanceTable
+	^ evaluator gcTable
 ]
 
 { #category : 'accessing' }
-UmeExecutionTimeGuide >> values: case [
+UmeGCsGuide >> values: case [
 
 	^ case result profilingResult ifNil: [ Dictionary new ] ifNotNil: [ {
-		'executionTime' -> (self category: case result profilingResult executionTime)
+		1 halt.
+		'gcs' -> (self category: case result profilingResult numberOfGCs)
 	} asDictionary ]
 ]

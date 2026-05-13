@@ -23,6 +23,6 @@ UmeMethodsCallsGuide >> tableOfValue [
 UmeMethodsCallsGuide >> values: case [
 
 	^ case result profilingResult ifNil: [ Dictionary new ] ifNotNil: [
-		case result profilingResult methodsCalled collect: [ :value | evaluator category: value ]
+		case result profilingResult methodsCalled collect: [ :value | self category: value ]
 	]
 ]

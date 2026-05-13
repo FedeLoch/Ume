@@ -46,6 +46,12 @@ UmeEvalResult >> coverageResult: aCoverageResult [
 	
 ]
 
+{ #category : 'testing' }
+UmeEvalResult >> isError [
+
+	^ false
+]
+
 { #category : 'accessing' }
 UmeEvalResult >> profilingResult [
 

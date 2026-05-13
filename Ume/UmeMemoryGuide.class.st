@@ -16,6 +16,6 @@ UmeMemoryGuide >> tableOfValue [
 UmeMemoryGuide >> values: case [
 
 	^ case result profilingResult ifNil: [ Dictionary new ] ifNotNil: [
-		case result profilingResult memory collect: [ :value | evaluator category: value ]
+		case result profilingResult memory collect: [ :value | self category: value ]
 	]
 ]
