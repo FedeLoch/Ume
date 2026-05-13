@@ -59,6 +59,8 @@ UmeGrammarReducer >> grammar: aGrammar [
 { #category : 'shrinking' }
 UmeGrammarReducer >> minimizeOne: tree upperBound: bound [
 
+	^ UmeSimplifyGrammarSubtreeReducer reduce: tree
+"
 	| allNodes |
 	allNodes := tree allNodes.
 	allNodes  do: [ :node | |parent symbol index|
@@ -66,7 +68,6 @@ UmeGrammarReducer >> minimizeOne: tree upperBound: bound [
 		symbol := self getSymbol: node. 
 		1 halt.
 		parent ifNotNil: [ 
-			1 halt.
 			index := parent children indexOf: node.
 			(self symbolReduction: node for: symbol ) do: [ :reduction |
 				1 halt.
@@ -81,7 +82,7 @@ UmeGrammarReducer >> minimizeOne: tree upperBound: bound [
 			].
 		].
 	].
-	^ tree.
+	^ tree."
 ]
 
 { #category : 'shrinking' }
