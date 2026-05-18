@@ -116,6 +116,17 @@ UmeResult >> feed: someTests time: aTime [
 	ranking := (tests collect: [ :test | test score ifNil: [ 0 ] ifNotNil: [ test score ] ]) asSortedCollection reverse.
 ]
 
+{ #category : 'as yet unclassified' }
+UmeResult >> feed: someTests time: aTime tests: aNumberOfTests [
+
+	tests := tests, someTests.
+	totalTime := totalTime  + (Duration milliSeconds: (Time millisecondsSince: aTime)).
+	numberOfGeneratedTests := numberOfGeneratedTests + aNumberOfTests.
+	performanceResult := PerformanceResult from: tests withTime: totalTime.
+	topCases := runner feedbackEvaluator topCases.
+	ranking := (tests collect: [ :test | test score ifNil: [ 0 ] ifNotNil: [ test score ] ]) asSortedCollection reverse.
+]
+
 { #category : 'accessing' }
 UmeResult >> feedbackEvaluator [
 	

@@ -374,20 +374,30 @@ UmeRunner >> progressFor: tests since: time for: iteration [
 { #category : 'tests' }
 UmeRunner >> reRun: result [
 
-	| tests time collector incrCoverage |
+	^ [ :job | self reRunCampaign: job from: result ] asJob run.
+]
+
+{ #category : 'tests' }
+UmeRunner >> reRunCampaign: executionJob from: aResult [
+ 
+	| tests test iteration time collector incrCoverage progress |
 	
 	time := Time millisecondClockValue.
 	tests := OrderedCollection new.
-	collector := result totalCoverage collector.
-	incrCoverage := result totalCoverage.
+	iteration := 0. 
+	collector := aResult totalCoverage collector.
+	incrCoverage := aResult totalCoverage.
 
 	collector runOn: [ [
-		self shouldGenNext: tests since: time withCoverage: incrCoverage] whileTrue: [
-			tests add: (self genTest: incrCoverage with: collector).
-		]
-	].
+		self shouldGenNext: iteration since: time withCoverage: incrCoverage] whileTrue: [
+		iteration := iteration + 1.
+		test:= self genTest: incrCoverage with: collector.
+		(self shouldCollect: test) ifTrue: [ tests add: test ].
+		progress := self progressFor: tests since: time for: iteration.
+		executionJob updateProgress: progress.
+		] ].
 
-	^ result feed: tests time: time
+	^ aResult feed: tests time: time tests: iteration
 ]
 
 { #category : 'tests' }
