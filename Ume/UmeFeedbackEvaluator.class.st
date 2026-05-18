@@ -10,7 +10,8 @@ Class {
 		'performanceTable',
 		'customMetricsTable',
 		'bytecodesTable',
-		'gcTable'
+		'gcTable',
+		'errorTable'
 	],
 	#category : 'Ume-Feedback',
 	#package : 'Ume',
@@ -85,6 +86,12 @@ UmeFeedbackEvaluator >> customMetricsTable: dict [
 ]
 
 { #category : 'accessing' }
+UmeFeedbackEvaluator >> errorTable [
+
+	^ errorTable 
+]
+
+{ #category : 'accessing' }
 UmeFeedbackEvaluator >> eval: case [
 	
 	| improvement caseValues |
@@ -119,6 +126,12 @@ UmeFeedbackEvaluator >> feedbackByCGs [
 UmeFeedbackEvaluator >> feedbackByCoverage [
 
 	guide := UmeCoverageGuide new evaluator: self
+]
+
+{ #category : 'as yet unclassified' }
+UmeFeedbackEvaluator >> feedbackByErrors [
+
+	guide := UmeErrorsGuide new evaluator: self
 ]
 
 { #category : 'as yet unclassified' }
@@ -163,7 +176,8 @@ UmeFeedbackEvaluator >> initialize [
 	customMetricsTable := Dictionary new.
 	bytecodesTable := Dictionary new.
 	gcTable := Dictionary new.
-	
+	errorTable := Dictionary new.
+
 	topCases := OrderedCollection new.
 
 	self feedbackByMethodsCalls
