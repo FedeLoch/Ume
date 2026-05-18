@@ -9,9 +9,10 @@ Class {
 { #category : 'tests' }
 UmeSimplifyGrammarSubtreeReducerTest >> testMinimizingAnExpressionSubree [
 
-	| expressionTree expected grammar |
-	grammar := nil.
-	expressionTree := UmeGrammarParser parse: '1 + ( 2 * 3 )' from: grammar.
-	expected := UmeGrammarParser parse: '( 2 * 3 )' from: grammar.
-	self assert: (UmeSimplifyGrammarSubtreeReducer reduce: expressionTree) equals: expected 
+	| expressionTree grammar res1|
+	grammar := AritExpressionGrammar new.
+
+	expressionTree := UmeGrammarParser parse: '1+(2*3)' from: grammar.
+	res1:= (UmeSimplifyGrammarSubtreeReducer reduce: expressionTree).
+	self assert:  res1 asInput equals: '(2*3)'. 
 ]

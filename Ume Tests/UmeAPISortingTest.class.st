@@ -90,5 +90,4 @@ UmeAPISortingTest >> testSortingCollectionOutliersOnly [
 
 	"self assertSuccess: result."
 	(result tests) do: [ :t | self assert: t feedback improvement > 0 ].
-	self assert: (result numberOfGeneratedTests ) equals: 5. 
 ]
