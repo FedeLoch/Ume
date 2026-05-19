@@ -38,6 +38,15 @@ UmeStrategyShrinkerTest >> testUsingTheAlternateExpansionStrategy02 [
 ]
 
 { #category : 'tests' }
+UmeStrategyShrinkerTest >> testUsingTheAlternateExpansionStrategy03 [
+	
+	shrinker oracle: [ :string | (string includes: $1) not].
+	shrinker reductionStrategy: UmeSimplifyGrammarAlternateReduction.
+	
+	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '1+(2*3)'
+]
+
+{ #category : 'tests' }
 UmeStrategyShrinkerTest >> testUsingTheSubtreeStrategy [ 
 
 	shrinker oracle: [ :string | (string includes: $2) not].
@@ -53,4 +62,22 @@ UmeStrategyShrinkerTest >> testUsingTheSubtreeStrategy02 [
 	shrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer.
 	
 	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '(3)'
+]
+
+{ #category : 'tests' }
+UmeStrategyShrinkerTest >> testUsingTheSubtreeStrategy03 [
+
+	shrinker oracle: [ :string | (string includes: $1) not].
+	shrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer.
+	
+	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '1+(2*3)'
+]
+
+{ #category : 'tests' }
+UmeStrategyShrinkerTest >> testUsingTheTagReducingStrategy [ 
+
+	shrinker oracle: [ :string | (string includes: $3) not].
+	shrinker reductionStrategy: UmeSimplifyGrammarTagReducer.
+	
+	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '3'
 ]
