@@ -10,7 +10,8 @@ Class {
 		'performanceTable',
 		'customMetricsTable',
 		'bytecodesTable',
-		'gcTable'
+		'gcTable',
+		'errorTable'
 	],
 	#category : 'Ume-Feedback',
 	#package : 'Ume',
@@ -50,13 +51,14 @@ UmeFeedbackEvaluator >> clear [
 { #category : 'accessing' }
 UmeFeedbackEvaluator >> compareAndUpdateValues: caseValues [
 
-	^ caseValues keys inject: 0 into: [ :improvement :key | | difference |
-		difference := (caseValues at: key) - (self valueAt: key).
+	^ caseValues keys inject: 0 into: [ :improvement :key | | difference caseValue |
+		caseValue := caseValues at: key.
+		difference := (self has: key) ifTrue:
+			[ caseValue - (self valueAt: key) ] ifFalse: [ caseValue abs ].
 		difference positive ifTrue: [
 			self updateKey: key value: (caseValues at: key)
 		].
-	
-		improvement + (difference > 0 ifTrue: [ caseValues at: key ] ifFalse: [ 0 ])
+		improvement + (difference > 0 ifTrue: [ caseValue abs ] ifFalse: [ 0 ])
 	]
 ]
 
@@ -82,6 +84,12 @@ UmeFeedbackEvaluator >> customMetricsTable [
 UmeFeedbackEvaluator >> customMetricsTable: dict [
 
 	customMetricsTable := dict
+]
+
+{ #category : 'accessing' }
+UmeFeedbackEvaluator >> errorTable [
+
+	^ errorTable 
 ]
 
 { #category : 'accessing' }
@@ -122,6 +130,12 @@ UmeFeedbackEvaluator >> feedbackByCoverage [
 ]
 
 { #category : 'as yet unclassified' }
+UmeFeedbackEvaluator >> feedbackByErrors [
+
+	guide := UmeErrorsGuide new evaluator: self
+]
+
+{ #category : 'as yet unclassified' }
 UmeFeedbackEvaluator >> feedbackByExecutionTime [
 
 	guide := UmeExecutionTimeGuide new evaluator: self
@@ -151,6 +165,12 @@ UmeFeedbackEvaluator >> guide [
 	^ guide
 ]
 
+{ #category : 'testing' }
+UmeFeedbackEvaluator >> has: key [
+
+	^ guide tableOfValue includesKey: key
+]
+
 { #category : 'accessing' }
 UmeFeedbackEvaluator >> initialize [ 
 
@@ -163,7 +183,8 @@ UmeFeedbackEvaluator >> initialize [
 	customMetricsTable := Dictionary new.
 	bytecodesTable := Dictionary new.
 	gcTable := Dictionary new.
-	
+	errorTable := Dictionary new.
+
 	topCases := OrderedCollection new.
 
 	self feedbackByMethodsCalls
@@ -220,7 +241,10 @@ UmeFeedbackEvaluator >> updateKey: key value: value [
 { #category : 'accessing' }
 UmeFeedbackEvaluator >> valueAt: key [
 
-	^ guide tableOfValue at: key ifPresent: [ guide tableOfValue at: key ] ifAbsentPut: [ 0 ]
+	^ guide tableOfValue at: key ifPresent: [ guide tableOfValue at: key ] ifAbsentPut: [
+		"TODO: Experimental"
+		1 halt.
+	]
 ]
 
 { #category : 'accessing' }
