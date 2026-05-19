@@ -17,7 +17,7 @@ UmeAPINeoJsonTest >> setUp [
 	| mutator generator|
 	super setUp.
 	
-	mutator := UmeGrammarLiteralsMutator  from: JSONGrammar new.
+	mutator := UmeGrammarDerivationMutator  from: JSONGrammar new.
 	mutator maxInputSize: 30.
 
 	"Corpus-based generator starts with a seed and evolves it."
@@ -96,16 +96,15 @@ UmeAPINeoJsonTest >> testNeoJsonPerformanceNewAPI [
 UmeAPINeoJsonTest >> testNeoJsonPerformanceOutliersOnly [
 
 	| runner result |
-
 	runner := UmeRunner test: schema.
-	
+
 	result := runner run.
 
 	self assertSuccess: result.
-	(result tests select: [ :test | test isError not ]) do: [ :test | self assert: test feedback improvement > 0 ].
-	self assert: result numberOfGeneratedTests > 0
-	
 
+	(result tests select: [ :test | test isError not ]) do: [ :test |
+		self assert: test feedback improvement > 0 ].
+	self assert: result numberOfGeneratedTests > 0
 ]
 
 { #category : 'tests' }

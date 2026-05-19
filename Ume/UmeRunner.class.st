@@ -263,6 +263,7 @@ UmeRunner >> genTest: incrCoverage with: collector [
 	receiver := generator genReceiverFor: target from: schema.
 	arguments := generator genArgumentsFor: target from: schema.
 	
+	"Creating safe copies to avoid object mutability"
 	safeReceiver := receiver veryDeepCopy.
 	safeArguments := arguments veryDeepCopy.
 	
@@ -308,6 +309,13 @@ UmeRunner >> guidedByCoverage [
 
 	evaluator profilingByCoverage.
 	feedbackEvaluator feedbackByCoverage
+]
+
+{ #category : 'as yet unclassified' }
+UmeRunner >> guidedByErrors [
+	
+	evaluator profilingByErrors.
+	feedbackEvaluator feedbackByErrors
 ]
 
 { #category : 'as yet unclassified' }

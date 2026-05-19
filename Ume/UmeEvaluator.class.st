@@ -52,7 +52,7 @@ UmeEvaluator >> eval: receiver method: methodToPerform from: schema with: args a
 			stack: (error signalerContext stackOfSize: 10);
 			profilingResult: profilingResult;
 			coverageResult: localCoverageResult;
-			message: error messageText
+			message: self asString"error messageText"
 	].
 
 	^ (assertResult ifTrue: [ UmeEvalSuccess ] ifFalse: [ UmeEvalFail ]) new
@@ -91,6 +91,13 @@ UmeEvaluator >> profilingByBytecodes [
 UmeEvaluator >> profilingByCoverage [
 
 	analyzer profilers: { self executionTimeProfiler . PBACoverageCollectorProfiler new }
+]
+
+{ #category : 'initialization' }
+UmeEvaluator >> profilingByErrors [
+
+	"TODO: I am not sure about this"
+	analyzer profilers: { }
 ]
 
 { #category : 'as yet unclassified' }
