@@ -25,7 +25,7 @@ UmeStrategyShrinkerTest >> testUsingTheAlternateExpansionStrategy [
 	shrinker oracle: [ :string | (string includes: $2) not].
 	shrinker reductionStrategy: UmeSimplifyGrammarAlternateReduction.
 	
-	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '(2*3)'
+	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '2*3'
 ]
 
 { #category : 'tests' }

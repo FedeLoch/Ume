@@ -44,7 +44,6 @@ UmeShrinker >> minimizeTree: tree upperBound: bound [
 	maxIterations timesRepeat: [ | minimized |
 		minimized := self minimizeOne: currentTree upperBound: bound.
 		(minimized = currentTree) ifTrue: [ ^ currentTree ].
-		
 		currentTree := minimized.
 	].
 

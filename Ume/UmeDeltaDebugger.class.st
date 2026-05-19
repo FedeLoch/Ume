@@ -20,7 +20,7 @@ UmeDeltaDebugger >> asInput: aString [
 { #category : 'shrinking' }
 UmeDeltaDebugger >> evalInput: input [
 
-	^ [ self oracle input ]
+	^ ( oracle value: input )
 ]
 
 { #category : 'testing' }
@@ -36,7 +36,6 @@ UmeDeltaDebugger >> minimizeOne: aInput upperBound: bound [
 	
 	(0 < aInput size and: splitingValue <= aInput size) ifTrue: [ 
 		inputSlice := self split: aInput into: splitingValue. 
-		1 halt. 
 		inputSlice do: [ :aSubInput |
 			(self triggerBug: aSubInput upperBound:bound ) ifTrue: [ 
 				^ aSubInput]].
@@ -100,7 +99,7 @@ UmeDeltaDebugger >> tree: aString [
 { #category : 'testing' }
 UmeDeltaDebugger >> triggerBug: string upperBound: _ [
 	
-	^ (oracle value: string) not
+	^ (self evalInput: string) not
 	
 
 ]

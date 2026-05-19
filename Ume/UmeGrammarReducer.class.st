@@ -32,8 +32,7 @@ UmeGrammarReducer >> copyTree: tree [
 { #category : 'shrinking' }
 UmeGrammarReducer >> evalInput: input [
 
-	(self checkGrammar: input ) ifFalse: [ ^false ].
-	^ [ oracle value: input. false] on: Error do: [ :e | true ]
+	^ ( oracle value: input )
 ]
 
 { #category : 'shrinking' }
@@ -51,6 +50,12 @@ UmeGrammarReducer >> minimizeOne: originalTree upperBound: bound [
 	( self triggerBug: reducedTree upperBound: bound ) ifTrue: [ ^ reducedTree ].
 
 	^ originalTree
+]
+
+{ #category : 'shrinking' }
+UmeGrammarReducer >> oracle [
+
+	^ oracle
 ]
 
 { #category : 'shrinking' }
@@ -84,9 +89,12 @@ UmeGrammarReducer >> tree: input [
 ]
 
 { #category : 'testing' }
-UmeGrammarReducer >> triggerBug: aTree upperBound: bound [
+UmeGrammarReducer >> triggerBug: aTree upperBound: _ [
 
 	|input|
+	
 	input := (self asInput: aTree).
-	^ (self evalInput: input) = bound
+	(self checkGrammar: input ) ifFalse: [ ^false ].
+
+	^ (self evalInput: input ) not
 ]
