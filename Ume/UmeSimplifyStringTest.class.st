@@ -62,13 +62,13 @@ UmeSimplifyStringTest >> testString04 [
 { #category : 'running' }
 UmeSimplifyStringTest >> testString05 [
 	
-	shrinker splitingValue: 3.
+	shrinker splittingValue: 3.
 	self assert: (shrinker shrink: 'eqlbfkdjbkj') equals: 'eq'
 ]
 
 { #category : 'running' }
 UmeSimplifyStringTest >> testString06 [
 	
-	shrinker splitingValue: 20.
+	shrinker splittingValue: 20.
 	self assert: (shrinker shrink: 'gjnjconjcome') equals: 'gjnjconjcome'
 ]

@@ -3,8 +3,8 @@ Class {
 	#superclass : 'UmeShrinker',
 	#instVars : [
 		'oracle',
-		'splitingValue',
-		'shrinker'
+		'shrinker',
+		'splittingValue'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -27,15 +27,15 @@ UmeDeltaDebugger >> evalInput: input [
 UmeDeltaDebugger >> initialize [ 
 	
 	super initialize.
-	splitingValue := 2.
+	splittingValue := 2.
 ]
 
 { #category : 'shrinking' }
 UmeDeltaDebugger >> minimizeOne: aInput upperBound: bound [
 	| inputSlice|
 	
-	(0 < aInput size and: splitingValue <= aInput size) ifTrue: [ 
-		inputSlice := self split: aInput into: splitingValue. 
+	(0 < aInput size and: splittingValue <= aInput size) ifTrue: [ 
+		inputSlice := self split: aInput into: splittingValue. 
 		inputSlice do: [ :aSubInput |
 			(self triggerBug: aSubInput upperBound:bound ) ifTrue: [ 
 				^ aSubInput]].
@@ -65,7 +65,7 @@ UmeDeltaDebugger >> split: subInput into: aValue [
 	"
 	subInput size == splitingValue ifTrue: [ ^ subInput collect: #toString ]. ""?"""
 
-	subInput size == splitingValue ifTrue: [ result add: (subInput copyFrom: 1 to: 1 ); add: (subInput copyFrom: 2 to: 2). ^result ].
+	subInput size == splittingValue ifTrue: [ result add: (subInput copyFrom: 1 to: 1 ); add: (subInput copyFrom: 2 to: 2). ^result ].
 	
 	sliceSize := (subInput size / aValue ) ceiling.
 	1 to: aValue do:[ :i |
@@ -79,15 +79,15 @@ UmeDeltaDebugger >> split: subInput into: aValue [
 ]
 
 { #category : 'accessing' }
-UmeDeltaDebugger >> splitingValue [
+UmeDeltaDebugger >> splittingValue [
 
-	^splitingValue
+	^splittingValue
 ]
 
 { #category : 'accessing' }
-UmeDeltaDebugger >> splitingValue: aValue [
+UmeDeltaDebugger >> splittingValue: aValue [
 
-	splitingValue := aValue 
+	splittingValue := aValue 
 ]
 
 { #category : 'shrinking' }
