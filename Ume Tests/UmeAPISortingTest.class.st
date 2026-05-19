@@ -92,3 +92,23 @@ UmeAPISortingTest >> testSortingCollectionOutliersOnly [
 	(result tests) do: [ :t | self assert: t feedback improvement > 0 ].
 	self assert: (result numberOfGeneratedTests ) equals: 5. 
 ]
+
+{ #category : 'tests' }
+UmeAPISortingTest >> testSortingCollectionOutliersOnlyreRun [
+
+	| runner result result2 |
+	
+	runner := UmeRunner testWithLowCost: schema times: 5.
+	
+	runner guidedByExecutionTime.
+	result := runner run.
+
+	(result tests) do: [ :t | self assert: t feedback improvement > 0 ].
+	self assert: (result numberOfGeneratedTests ) equals: 5. 
+	
+	result2 := result continue: 5.
+	
+	(result2 tests) do: [ :t | self assert: t feedback improvement > 0 ].
+	self assert: (result2 numberOfGeneratedTests ) equals: 10. 
+	
+]

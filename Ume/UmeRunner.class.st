@@ -394,7 +394,7 @@ UmeRunner >> reRunCampaign: executionJob from: aResult [
 		test:= self genTest: incrCoverage with: collector.
 		(self shouldCollect: test) ifTrue: [ tests add: test ].
 		progress := self progressFor: tests since: time for: iteration.
-		executionJob updateProgress: progress.
+		executionJob updateProgress: progress with:iteration saved: tests size .
 		] ].
 
 	^ aResult feed: tests time: time tests: iteration
@@ -430,8 +430,8 @@ UmeRunner >> runCampaign: executionJob [
 		iteration := iteration + 1.
 		test:= self genTest: incrCoverage with: collector.
 		(self shouldCollect: test) ifTrue: [ tests add: test ].
-		progress := self progressFor: tests since: time for: iteration.
-		executionJob updateProgress: progress.
+		progress := self progressFor: tests since: time for: iteration .
+		executionJob updateProgress: progress with: iteration saved: tests size.
 		] ].
 
 	^ self genReport: tests since: time withCoverage: incrCoverage with: iteration.
