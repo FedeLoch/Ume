@@ -365,6 +365,18 @@ UmeRunner >> isKernelMethod: method [
 	^ method package name = 'Kernel'
 ]
 
+{ #category : 'accessing' }
+UmeRunner >> methodsToInstrument [
+
+	^ methodsToInstrument
+]
+
+{ #category : 'accessing' }
+UmeRunner >> methodsToInstrument: methods [
+
+	methodsToInstrument := methods
+]
+
 { #category : 'tests' }
 UmeRunner >> progressFor: tests since: time for: iteration [
 	
