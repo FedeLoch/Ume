@@ -3,7 +3,8 @@ Class {
 	#superclass : 'UmeShrinker',
 	#instVars : [
 		'grammar',
-		'oracle'
+		'oracle',
+		'reductionStrategy'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -38,7 +39,11 @@ UmeGrammarReducer >> grammar: aGrammar [
 { #category : 'shrinking' }
 UmeGrammarReducer >> minimizeOne: tree upperBound: bound [
 
-	^ UmeSimplifyGrammarSubtreeReducer reduce: tree
+	| reduceTree |
+	
+	reduceTree:= reductionStrategy reduce: tree.
+	( self triggerBug: reduceTree upperBound: bound ) ifTrue: [ ^ reduceTree ]. 
+	^ tree. 
 ]
 
 { #category : 'shrinking' }
@@ -51,6 +56,18 @@ UmeGrammarReducer >> oracle: aOracle [
 UmeGrammarReducer >> parse: input [
 
 	^ UmeGrammarParser parse: input from: grammar
+]
+
+{ #category : 'accessing' }
+UmeGrammarReducer >> reductionStrategy [
+
+	^ reductionStrategy
+]
+
+{ #category : 'accessing' }
+UmeGrammarReducer >> reductionStrategy: aStrategy [
+
+	reductionStrategy := aStrategy
 ]
 
 { #category : 'shrinking' }

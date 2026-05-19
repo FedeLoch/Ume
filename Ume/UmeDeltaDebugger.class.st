@@ -12,15 +12,15 @@ Class {
 }
 
 { #category : 'shrinking' }
-UmeDeltaDebugger >> asInput: tree [
+UmeDeltaDebugger >> asInput: aString [
 
-	^ tree "a changer"
+	^ aString
 ]
 
 { #category : 'shrinking' }
 UmeDeltaDebugger >> evalInput: input [
 
-	^ [ self method input ] on: Error do: [ ^ nil ]. "todo"
+	^ [ self oracle input ]
 ]
 
 { #category : 'testing' }
@@ -31,22 +31,17 @@ UmeDeltaDebugger >> initialize [
 ]
 
 { #category : 'shrinking' }
-UmeDeltaDebugger >> minimizeOne: string upperBound: bound [
-	| currentInput parts|
+UmeDeltaDebugger >> minimizeOne: aInput upperBound: bound [
+	| inputSlice|
 	
-	currentInput := string.
-	(0 < string size) ifTrue: [ 
-		| foundbetterInput |
-		foundbetterInput := false.
-		parts := self split: string into: splitingValue.
-		parts do: [ :each |
-			(self triggerBug: each upperBound:bound ) ifTrue: [ 
-				currentInput := each.
-				foundbetterInput := true.
-				^ currentInput .]].
-				"^ self minimizeOne: currentInput upperBound: bound. ]]."
+	(0 < aInput size and: splitingValue <= aInput size) ifTrue: [ 
+		inputSlice := self split: aInput into: splitingValue. 
+		1 halt. 
+		inputSlice do: [ :aSubInput |
+			(self triggerBug: aSubInput upperBound:bound ) ifTrue: [ 
+				^ aSubInput]].
 	].
-	^ currentInput .
+	^ aInput .
 
 ]
 
@@ -63,20 +58,25 @@ UmeDeltaDebugger >> oracle: anOracle [
 ]
 
 { #category : 'private' }
-UmeDeltaDebugger >> split: aString into: aValue [
-"maybe add that as an extension"
+UmeDeltaDebugger >> split: subInput into: aValue [
 
-	| result size start limit|
+	| result sliceSize start end |
 	
 	result := OrderedCollection new. 
-	( aString size == 2) ifTrue: [ result add: (aString copyFrom: 1 to: 1 ); add: (aString copyFrom: 2 to: 2). ^result].
-	size := (aString size / aValue ) ceiling .
+	"
+	subInput size == splitingValue ifTrue: [ ^ subInput collect: #toString ]. ""?"""
+
+	subInput size == splitingValue ifTrue: [ result add: (subInput copyFrom: 1 to: 1 ); add: (subInput copyFrom: 2 to: 2). ^result ].
+	
+	sliceSize := (subInput size / aValue ) ceiling.
 	1 to: aValue do:[ :i |
-		start := ((i -1) * size ) + 1.
-		limit := (start + size - 1) min: aString size.
-		start <= aString size ifTrue: [ result add: (aString copyFrom: start to: limit )  ].
+		start := ((i -1) * sliceSize ) + 1.
+		end := (start + sliceSize - 1) min: subInput size.
+		start <= subInput size ifTrue:
+			[ result add: (subInput copyFrom: start to: end )]
 		].
-	^result. 
+	
+	^ result 
 ]
 
 { #category : 'accessing' }
@@ -92,17 +92,15 @@ UmeDeltaDebugger >> splitingValue: aValue [
 ]
 
 { #category : 'shrinking' }
-UmeDeltaDebugger >> tree: input [
+UmeDeltaDebugger >> tree: aString [
 
-	^ input. 
+	^ aString. 
 ]
 
 { #category : 'testing' }
 UmeDeltaDebugger >> triggerBug: string upperBound: _ [
 	
-	"[ method value: string  ] on: Error do: [^true.].
-	"
-	^ (oracle value: string) not "à modif"
+	^ (oracle value: string) not
 	
 
 ]

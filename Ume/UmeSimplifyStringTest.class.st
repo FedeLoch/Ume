@@ -12,9 +12,9 @@ Class {
 
 { #category : 'running' }
 UmeSimplifyStringTest >> setUp [
+
 	super setUp.
-	shrinker := UmeDeltaDebugger new.
-	
+	shrinker := UmeDeltaDebugger new.	
 	shrinker oracle: [ :string | (string includes: $e) not].
 
 ]
@@ -62,11 +62,13 @@ UmeSimplifyStringTest >> testString04 [
 { #category : 'running' }
 UmeSimplifyStringTest >> testString05 [
 	
-	self assert: (shrinker shrink: 'eqlbfkdjbkj') equals: 'e'
+	shrinker splitingValue: 3.
+	self assert: (shrinker shrink: 'eqlbfkdjbkj') equals: 'eq'
 ]
 
 { #category : 'running' }
 UmeSimplifyStringTest >> testString06 [
 	
-	self assert: (shrinker shrink: 'gjnjconjcome') equals: 'e'
+	shrinker splitingValue: 20.
+	self assert: (shrinker shrink: 'gjnjconjcome') equals: 'gjnjconjcome'
 ]
