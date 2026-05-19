@@ -23,6 +23,12 @@ UmeGrammarReducer >> checkGrammar: aInput [
 	^ UmeGrammarParser accept: aInput from: grammar
 ]
 
+{ #category : 'copying' }
+UmeGrammarReducer >> copyTree: tree [
+ 
+	^ self tree: tree asInput
+]
+
 { #category : 'shrinking' }
 UmeGrammarReducer >> evalInput: input [
 
@@ -37,13 +43,14 @@ UmeGrammarReducer >> grammar: aGrammar [
 ]
 
 { #category : 'shrinking' }
-UmeGrammarReducer >> minimizeOne: tree upperBound: bound [
+UmeGrammarReducer >> minimizeOne: originalTree upperBound: bound [
 
-	| reduceTree |
+	| reducedTree |
 	
-	reduceTree:= reductionStrategy reduce: tree.
-	( self triggerBug: reduceTree upperBound: bound ) ifTrue: [ ^ reduceTree ]. 
-	^ tree. 
+	reducedTree := reductionStrategy reduce: (self copyTree: originalTree).
+	( self triggerBug: reducedTree upperBound: bound ) ifTrue: [ ^ reducedTree ].
+
+	^ originalTree
 ]
 
 { #category : 'shrinking' }
