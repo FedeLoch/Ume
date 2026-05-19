@@ -1,6 +1,6 @@
 Class {
 	#name : 'UmeSimplifyGrammarAlternateReductionTest',
-	#superclass : 'TestCase',
+	#superclass : 'UmeReductionShrinkerTest',
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
 	#tag : 'Shrinking'
@@ -14,6 +14,6 @@ UmeSimplifyGrammarAlternateReductionTest >> testMinimizingATreeWithAAlternativeE
 	grammar := AritExpressionGrammar new.
 
 	expressionTree := UmeGrammarParser parse: '2*3' from: grammar.
-	res1:= (UmeSimplifyGrammarAleternateReduction reduce: expressionTree).
+	res1:= (UmeSimplifyGrammarAlternateReduction reduce: expressionTree).
 	self assert:  res1 asInput equals: '3'. 
 ]

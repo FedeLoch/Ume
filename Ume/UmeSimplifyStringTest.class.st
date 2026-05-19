@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeSimpleStringTest',
+	#name : 'UmeSimplifyStringTest',
 	#superclass : 'UmeReductionShrinkerTest',
 	#instVars : [
 		'shrinker',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : 'running' }
-UmeSimpleStringTest >> setUp [
+UmeSimplifyStringTest >> setUp [
 	super setUp.
 	shrinker := UmeDeltaDebugger new.
 	
@@ -20,7 +20,7 @@ UmeSimpleStringTest >> setUp [
 ]
 
 { #category : 'running' }
-UmeSimpleStringTest >> testSplit [ 
+UmeSimplifyStringTest >> testSplit [ 
 
 	| string string2 res res2|
 	string := 'abcde'.
@@ -36,37 +36,37 @@ UmeSimpleStringTest >> testSplit [
 ]
 
 { #category : 'running' }
-UmeSimpleStringTest >> testString [ 
+UmeSimplifyStringTest >> testString [ 
 	
 	self assert: (shrinker shrink: 'asqjjkqsbdvieqvsbdoivbq') equals: 'e'
 ]
 
 { #category : 'running' }
-UmeSimpleStringTest >> testString02 [
+UmeSimplifyStringTest >> testString02 [
 
 	self assert: (shrinker shrink: 'e') equals: 'e'
 ]
 
 { #category : 'running' }
-UmeSimpleStringTest >> testString03 [
+UmeSimplifyStringTest >> testString03 [
 
 	self assert: (shrinker shrink: 'eq') equals: 'e'
 ]
 
 { #category : 'running' }
-UmeSimpleStringTest >> testString04 [
+UmeSimplifyStringTest >> testString04 [
 	
 	self assert: (shrinker shrink: 'eeeeeeeeeeeeeeeeeeeeeeeeee') equals: 'e'
 ]
 
 { #category : 'running' }
-UmeSimpleStringTest >> testString05 [
+UmeSimplifyStringTest >> testString05 [
 	
 	self assert: (shrinker shrink: 'eqlbfkdjbkj') equals: 'e'
 ]
 
 { #category : 'running' }
-UmeSimpleStringTest >> testString06 [
+UmeSimplifyStringTest >> testString06 [
 	
 	self assert: (shrinker shrink: 'gjnjconjcome') equals: 'e'
 ]

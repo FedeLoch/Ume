@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeSimplifyGrammarAleternateReduction',
+	#name : 'UmeSimplifyGrammarAlternateReduction',
 	#superclass : 'UmeShrinkingStrategy',
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'enumerating' }
-UmeSimplifyGrammarAleternateReduction class >> reduce: aTree [
+UmeSimplifyGrammarAlternateReduction class >> reduce: aTree [
 
 	| allNodes targetIndex targetNode replacementIndex replacementNode |
 	

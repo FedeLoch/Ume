@@ -1,6 +1,6 @@
 Class {
 	#name : 'UmeSimplifyGrammarSubtreeReducerTest',
-	#superclass : 'TestCase',
+	#superclass : 'UmeReductionShrinkerTest',
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
 	#tag : 'Shrinking'
