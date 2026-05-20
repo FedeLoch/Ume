@@ -47,10 +47,12 @@ UmeGrammarReducer >> minimizeOne: originalTree upperBound: bound [
 	| reducedTrees |
 	
 	reducedTrees := UmeSimplifyGrammarSubtreeReducer findCandidates: originalTree using: grammar.
+	1 halt.
 	reducedTrees do: [ :candidate |
 		(self triggerBug: candidate upperBound: bound) ifTrue: [ ^ candidate ] 
 	].
 	reducedTrees := UmeSimplifyGrammarAlternateReduction findCandidates: originalTree using: grammar .
+	1 halt.
 	reducedTrees do: [ :candidate |
 		(self triggerBug: candidate upperBound: bound) ifTrue: [ ^ candidate ] 
 	].

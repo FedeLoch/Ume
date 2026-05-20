@@ -24,7 +24,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer00 [
 
 	shrinker oracle: [ :string | (string includes: $2) not].
 	
-	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '2'
+	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '(2)'
 ]
 
 { #category : 'tests' }
@@ -32,7 +32,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer01 [
 
 	shrinker oracle: [ :string | (string includes: $1) not].
 	
-	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '1' "currently return '1+(2*3)'"
+	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '1'
 ]
 
 { #category : 'tests' }
@@ -40,5 +40,5 @@ UmeStrategyShrinkerTest >> testGrammarReducer02 [
 
 	shrinker oracle: [ :string | (string includes: $3) not].
 	
-	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '3'
+	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '(3)'
 ]
