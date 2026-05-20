@@ -7,6 +7,12 @@ Class {
 }
 
 { #category : 'enumerating' }
+UmeSimplifyGrammarSubtreeReducer class >> copyTree: aTree with: aGrammar [
+
+	^ UmeGrammarParser parse: (aTree asInput ) from: aGrammar
+]
+
+{ #category : 'enumerating' }
 UmeSimplifyGrammarSubtreeReducer class >> findCandidates: aTree [
 
 	| candidates |
@@ -16,7 +22,29 @@ UmeSimplifyGrammarSubtreeReducer class >> findCandidates: aTree [
 	aTree allNodes doWithIndex: [ :node :index |
 		(node parent isNotNil and: [ node isLeaf not and: [ node parent tag = node tag ] ]) ifTrue: [ 
 			| treeCopy allNodesCopy theOne |
-			treeCopy := aTree copy. 
+			treeCopy := aTree deepCopy . 
+			allNodesCopy := treeCopy allNodes.
+			theOne := allNodesCopy at: index.
+			
+			theOne grandParent replaceChild: (theOne parent) with: theOne. 
+			candidates add: treeCopy. 
+		 ]
+	].
+
+	^ candidates
+]
+
+{ #category : 'enumerating' }
+UmeSimplifyGrammarSubtreeReducer class >> findCandidates: aTree using: aGrammar [
+
+	| candidates |
+	
+	candidates := OrderedCollection new. 
+	
+	aTree allNodes doWithIndex: [ :node :index |
+		(node parent isNotNil and: [ node isLeaf not and: [ node parent tag = node tag ] ]) ifTrue: [ 
+			| treeCopy allNodesCopy theOne |
+			treeCopy := self copyTree: aTree with: aGrammar . 
 			allNodesCopy := treeCopy allNodes.
 			theOne := allNodesCopy at: index.
 			

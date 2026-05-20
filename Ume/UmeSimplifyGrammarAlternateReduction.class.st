@@ -7,6 +7,12 @@ Class {
 }
 
 { #category : 'enumerating' }
+UmeSimplifyGrammarAlternateReduction class >> copyTree: aTree with: aGrammar [
+
+	^ UmeGrammarParser parse: (aTree asInput ) from: aGrammar
+]
+
+{ #category : 'enumerating' }
 UmeSimplifyGrammarAlternateReduction class >> findCandidates: aTree [
 
 	| candidates |
@@ -18,7 +24,32 @@ UmeSimplifyGrammarAlternateReduction class >> findCandidates: aTree [
 			node allNodes do: [ :nodeSon :sonIndex| 
 				(self isRepleceable: nodeSon in: node ) ifTrue: [ 
 					| treeCopy allNodesCopy targetNode replacementNode |
-					treeCopy := aTree copy.
+					treeCopy := aTree deepCopy .
+					allNodesCopy := treeCopy allNodes.
+					targetNode := allNodesCopy at: index. 
+					replacementNode := targetNode allNodes at: sonIndex.
+					targetNode parent replaceChild: targetNode with: replacementNode. 
+				]
+			] 
+		] 
+	].
+
+	^ candidates 
+]
+
+{ #category : 'enumerating' }
+UmeSimplifyGrammarAlternateReduction class >> findCandidates: aTree using: aGrammar [
+
+	| candidates |
+	
+	candidates := OrderedCollection new. 
+	
+	aTree allNodes doWithIndex: [ :node :index | 
+		(self findTarget: node) ifTrue: [ 
+			node allNodes doWithIndex: [ :nodeSon :sonIndex| 
+				(self isRepleceable: nodeSon in: node ) ifTrue: [ 
+					| treeCopy allNodesCopy targetNode replacementNode |
+					treeCopy := self copyTree: aTree with: aGrammar .
 					allNodesCopy := treeCopy allNodes.
 					targetNode := allNodesCopy at: index. 
 					replacementNode := targetNode allNodes at: sonIndex.
