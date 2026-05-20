@@ -6,6 +6,31 @@ Class {
 	#tag : 'Shrinking'
 }
 
+{ #category : 'enumerating' }
+UmeSimplifyGrammarAlternateReduction class >> findCandidates: aTree [
+
+	| candidates |
+	
+	candidates := OrderedCollection new. 
+	
+	aTree allNodes doWithIndex: [ :node :index | 
+		(self findTarget: node) ifTrue: [ 
+			node allNodes do: [ :nodeSon :sonIndex| 
+				(self isRepleceable: nodeSon in: node ) ifTrue: [ 
+					| treeCopy allNodesCopy targetNode replacementNode |
+					treeCopy := aTree copy.
+					allNodesCopy := treeCopy allNodes.
+					targetNode := allNodesCopy at: index. 
+					replacementNode := targetNode allNodes at: sonIndex.
+					targetNode parent replaceChild: targetNode with: replacementNode. 
+				]
+			] 
+		] 
+	].
+
+	^ candidates 
+]
+
 { #category : 'as yet unclassified' }
 UmeSimplifyGrammarAlternateReduction class >> findTarget: aNode [
 
@@ -20,7 +45,7 @@ UmeSimplifyGrammarAlternateReduction class >> isRepleceable: aNode in: aTree [
 
 { #category : 'enumerating' }
 UmeSimplifyGrammarAlternateReduction class >> reduce: aTree [
-
+	"alternate reduction"
 	| allNodes targetIndex targetNode replacementIndex replacementNode |
 	
 	allNodes := aTree allNodes .

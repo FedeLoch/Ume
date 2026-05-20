@@ -7,8 +7,30 @@ Class {
 }
 
 { #category : 'enumerating' }
-UmeSimplifyGrammarSubtreeReducer class >> reduce: aTree [
+UmeSimplifyGrammarSubtreeReducer class >> findCandidates: aTree [
 
+	| candidates |
+	
+	candidates := OrderedCollection new. 
+	
+	aTree allNodes doWithIndex: [ :node :index |
+		(node parent isNotNil and: [ node isLeaf not and: [ node parent tag = node tag ] ]) ifTrue: [ 
+			| treeCopy allNodesCopy theOne |
+			treeCopy := aTree copy. 
+			allNodesCopy := treeCopy allNodes.
+			theOne := allNodesCopy at: index.
+			
+			theOne grandParent replaceChild: (theOne parent) with: theOne. 
+			candidates add: treeCopy. 
+		 ]
+	].
+
+	^ candidates
+]
+
+{ #category : 'enumerating' }
+UmeSimplifyGrammarSubtreeReducer class >> reduce: aTree [
+	"subtree reductions"
 	| allNodes theOne theOneIndex |
 	
 	allNodes := aTree allNodes.
