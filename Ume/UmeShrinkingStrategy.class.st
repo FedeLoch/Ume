@@ -5,3 +5,9 @@ Class {
 	#package : 'Ume',
 	#tag : 'Shrinking'
 }
+
+{ #category : 'copying' }
+UmeShrinkingStrategy class >> copyTree: aTree with: aGrammar [
+
+	^ UmeGrammarParser parse: (aTree asInput ) from: aGrammar
+]

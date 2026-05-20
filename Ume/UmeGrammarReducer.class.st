@@ -44,20 +44,11 @@ UmeGrammarReducer >> grammar: aGrammar [
 { #category : 'shrinking' }
 UmeGrammarReducer >> minimizeOne: originalTree upperBound: bound [
 
-	| reducedTrees |
+	| reducedTree |
 	
-	reducedTrees := UmeSimplifyGrammarSubtreeReducer findCandidates: originalTree using: grammar.
-	1 halt.
-	reducedTrees do: [ :candidate |
-		(self triggerBug: candidate upperBound: bound) ifTrue: [ ^ candidate ] 
-	].
-	reducedTrees := UmeSimplifyGrammarAlternateReduction findCandidates: originalTree using: grammar .
-	1 halt.
-	reducedTrees do: [ :candidate |
-		(self triggerBug: candidate upperBound: bound) ifTrue: [ ^ candidate ] 
-	].
+	reducedTree:= self reductionOn: originalTree with: bound.
 	
-    ^ originalTree 
+    ^ originalTree
 ]
 
 { #category : 'shrinking' }
@@ -76,6 +67,19 @@ UmeGrammarReducer >> oracle: aOracle [
 UmeGrammarReducer >> parse: input [
 
 	^ UmeGrammarParser parse: input from: grammar
+]
+
+{ #category : 'as yet unclassified' }
+UmeGrammarReducer >> reductionOn: originalTree with: bound [
+	
+	| reducedTrees |
+
+	reducedTrees := reductionStrategy findCandidates: originalTree using: grammar.
+	reducedTrees do: [ :candidate |
+		(self triggerBug: candidate upperBound: bound) ifTrue: [ ^ candidate ] 
+	].
+
+	^ nil
 ]
 
 { #category : 'accessing' }
