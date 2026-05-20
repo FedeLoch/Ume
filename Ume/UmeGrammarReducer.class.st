@@ -44,12 +44,23 @@ UmeGrammarReducer >> grammar: aGrammar [
 { #category : 'shrinking' }
 UmeGrammarReducer >> minimizeOne: originalTree upperBound: bound [
 
-	| reducedTree |
+	| canBeReduced currentTree reducedTree |
 	
-	reducedTree := reductionStrategy reduce: (self copyTree: originalTree).
-	( self triggerBug: reducedTree upperBound: bound ) ifTrue: [ ^ reducedTree ].
-
-	^ originalTree
+	currentTree := self copyTree: originalTree.  
+	canBeReduced := false.
+	
+	reducedTree := UmeSimplifyGrammarSubtreeReducer reduce: (self copyTree: currentTree).
+	reducedTree ifNotNil: [ 
+		(self triggerBug: reducedTree upperBound: bound ) ifTrue: [ 
+			currentTree := reducedTree.
+			canBeReduced := true]].
+	
+	canBeReduced ifFalse: [ 
+		reducedTree := UmeSimplifyGrammarAlternateReduction reduce: (self copyTree: currentTree).
+		reducedTree ifNotNil: [ 
+			(self triggerBug: reducedTree upperBound: bound ) ifTrue: [ 
+				currentTree := reducedTree ]]].
+    ^ currentTree
 ]
 
 { #category : 'shrinking' }

@@ -26,7 +26,7 @@ UmeSimplifyGrammarAlternateReduction class >> reduce: aTree [
 	allNodes := aTree allNodes .
 	
 	targetIndex := allNodes findFirst: [ :node | self findTarget: node  ].
-	(targetIndex = 0) ifTrue: [ ^aTree ].
+	(targetIndex = 0) ifTrue: [ ^ nil ].
 	targetNode := allNodes at: targetIndex.
 	
 	replacementIndex := targetNode allNodes findFirst: [ :next | self isRepleceable: next in: targetNode ].
@@ -34,5 +34,5 @@ UmeSimplifyGrammarAlternateReduction class >> reduce: aTree [
 	
 	
 	targetNode parent replaceChild: targetNode with: replacementNode.
-	^aTree. 
+	^ aTree 
 ]

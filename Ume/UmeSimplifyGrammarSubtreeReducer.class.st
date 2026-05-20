@@ -17,7 +17,7 @@ UmeSimplifyGrammarSubtreeReducer class >> reduce: aTree [
 		node parent isNotNil and: [ node isLeaf not and: [ node parent tag = node tag ] ]
 	].
 
-	theOneIndex = 0 ifTrue: [ ^ aTree ]. 
+	theOneIndex = 0 ifTrue: [ ^ nil ]. 
 	
 	theOne := allNodes at: theOneIndex.
 

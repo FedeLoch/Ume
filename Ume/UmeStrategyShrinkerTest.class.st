@@ -20,64 +20,25 @@ UmeStrategyShrinkerTest >> setUp [
 ]
 
 { #category : 'tests' }
-UmeStrategyShrinkerTest >> testUsingTheAlternateExpansionStrategy [ 
-	
+UmeStrategyShrinkerTest >> testGrammarReducer00 [ 
+
 	shrinker oracle: [ :string | (string includes: $2) not].
-	shrinker reductionStrategy: UmeSimplifyGrammarAlternateReduction.
 	
 	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '2'
 ]
 
 { #category : 'tests' }
-UmeStrategyShrinkerTest >> testUsingTheAlternateExpansionStrategy02 [
-	
-	shrinker oracle: [ :string | (string includes: $3) not].
-	shrinker reductionStrategy: UmeSimplifyGrammarAlternateReduction.
-	
-	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '3'
-]
+UmeStrategyShrinkerTest >> testGrammarReducer01 [
 
-{ #category : 'tests' }
-UmeStrategyShrinkerTest >> testUsingTheAlternateExpansionStrategy03 [
-	
 	shrinker oracle: [ :string | (string includes: $1) not].
-	shrinker reductionStrategy: UmeSimplifyGrammarAlternateReduction.
 	
 	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '1'
 ]
 
 { #category : 'tests' }
-UmeStrategyShrinkerTest >> testUsingTheSubtreeStrategy [ 
-
-	shrinker oracle: [ :string | (string includes: $2) not].
-	shrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer.
-	
-	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '(2)'
-]
-
-{ #category : 'tests' }
-UmeStrategyShrinkerTest >> testUsingTheSubtreeStrategy02 [
+UmeStrategyShrinkerTest >> testGrammarReducer02 [
 
 	shrinker oracle: [ :string | (string includes: $3) not].
-	shrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer.
-	
-	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '(3)'
-]
-
-{ #category : 'tests' }
-UmeStrategyShrinkerTest >> testUsingTheSubtreeStrategy03 [
-
-	shrinker oracle: [ :string | (string includes: $1) not].
-	shrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer.
-	
-	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '1'
-]
-
-{ #category : 'tests' }
-UmeStrategyShrinkerTest >> testUsingTheTagReducingStrategy [ 
-
-	shrinker oracle: [ :string | (string includes: $3) not].
-	shrinker reductionStrategy: UmeSimplifyGrammarTagReducer.
 	
 	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '3'
 ]
