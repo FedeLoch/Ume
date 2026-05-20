@@ -6,6 +6,12 @@ Class {
 	#tag : 'Feedback'
 }
 
+{ #category : 'accessing' }
+UmeCoverageGuide >> category: value [
+	"TODO: not sure"
+	^ value
+]
+
 { #category : 'as yet unclassified' }
 UmeCoverageGuide >> tableOfValue [
 

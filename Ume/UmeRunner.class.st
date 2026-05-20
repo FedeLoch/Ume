@@ -211,6 +211,12 @@ UmeRunner class >> testWithPackageCoverage: schema times: times [
 		targetAndPackageCoverage: schema method
 ]
 
+{ #category : 'tests' }
+UmeRunner >> classesToInstrument [
+
+	^ (methodsToInstrument collect: #methodClass) asSet
+]
+
 { #category : 'as yet unclassified' }
 UmeRunner >> collectAllCases [
 	shouldSaveAll := true. 
@@ -350,7 +356,7 @@ UmeRunner >> guidedByScore [
 { #category : 'tests' }
 UmeRunner >> initialize [ 
 	super initialize.
-	evaluator := UmeEvaluator new.
+	evaluator := UmeEvaluator new runner: self.
 	generator := UmeCaseGenerator new.
 	feedbackEvaluator := UmeFeedbackEvaluator new.
 	stopCriteria := UmeCountCriteria new times: 100.
