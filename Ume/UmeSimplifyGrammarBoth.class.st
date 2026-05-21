@@ -9,11 +9,13 @@ Class {
 { #category : 'enumerating' }
 UmeSimplifyGrammarBoth class >> findCandidates: aTree using: aGrammar [
 
-	| candidates |
+	| candidatesSubtree candidatesAlternate candidates|
 	
-	candidates := OrderedCollection new. 
-	candidates add: (UmeSimplifyGrammarAlternateReduction findCandidates: aTree using: aGrammar).
-	candidates add: (UmeSimplifyGrammarSubtreeReducer findCandidates: aTree using: aGrammar).
+	candidates := OrderedCollection new.
+	 
+	candidatesSubtree := (UmeSimplifyGrammarAlternateReduction findCandidates: aTree using: aGrammar).
+	candidatesAlternate := (UmeSimplifyGrammarSubtreeReducer findCandidates: aTree using: aGrammar).
+	candidates := candidatesSubtree, candidatesAlternate.  
 	
-	^ candidates "il faut check si j'ai pas de doublons"
+	^ candidates 
 ]

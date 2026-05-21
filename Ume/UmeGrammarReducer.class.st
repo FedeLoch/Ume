@@ -47,6 +47,7 @@ UmeGrammarReducer >> minimizeOne: originalTree upperBound: bound [
 	| reducedTree |
 	
 	reducedTree:= self reductionOn: originalTree with: bound.
+	reducedTree ifNotNil: [^ reducedTree].
 	
     ^ originalTree
 ]
