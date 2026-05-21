@@ -28,6 +28,23 @@ UmeSimplifyGrammarSubtreeReducer class >> findCandidates: aTree using: aGrammar 
 ]
 
 { #category : 'enumerating' }
+UmeSimplifyGrammarSubtreeReducer class >> findSubtree: aTree mathchingWith: aNode [
+	" return all the reduction candidates"
+	| candidates |
+	
+	candidates := OrderedCollection new. 
+	
+	aTree allNodes doWithIndex: [ :node :index |
+		(node parent isNotNil and: [ node isLeaf not and: [ aNode tag = node tag ] ]) ifTrue: [ 
+			
+			candidates add: node. 
+		 ]
+	].
+
+	^ candidates
+]
+
+{ #category : 'enumerating' }
 UmeSimplifyGrammarSubtreeReducer class >> reduce: aTree [
 	"subtree reductions"
 	| allNodes theOne theOneIndex |

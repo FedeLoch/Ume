@@ -14,7 +14,7 @@ Class {
 UmeStrategyShrinkerTest >> setUp [
 
 	super setUp.
-	shrinker := UmeGrammarReducer new.
+	shrinker := UmeGRABRShrinker new.
 	grammar := AritExpressionGrammar new.
 	shrinker grammar: grammar.
 ]

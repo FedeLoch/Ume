@@ -31,6 +31,28 @@ UmeSimplifyGrammarAlternateReduction class >> findCandidates: aTree using: aGram
 	^ candidates 
 ]
 
+{ #category : 'enumerating' }
+UmeSimplifyGrammarAlternateReduction class >> findSubtree: aTree with: aGrammar [ 
+	" return all the reduction candidates"
+	| reduction |
+	
+	reduction := OrderedCollection new. 
+	
+	aTree allNodes doWithIndex: [ :node :index | 
+		| reductionCandidates |
+		reductionCandidates := UmeSimplifyGrammarSubtreeReducer findSubtree: aTree mathchingWith: node.
+		reductionCandidates do: [ :subtree | | treeCopy allNodesCopy targetNode |
+			1 halt. 
+			treeCopy := self copyTree: aTree with: aGrammar .
+			allNodesCopy := treeCopy allNodes.
+			targetNode := allNodesCopy at: index. 
+			treeCopy replaceChild: targetNode with: subtree.
+			reduction add: treeCopy. ]
+			].
+
+	^ reduction 
+]
+
 { #category : 'as yet unclassified' }
 UmeSimplifyGrammarAlternateReduction class >> findTarget: aNode [
 
@@ -56,7 +78,6 @@ UmeSimplifyGrammarAlternateReduction class >> reduce: aTree [
 	
 	replacementIndex := targetNode allNodes findFirst: [ :next | self isRepleceable: next in: targetNode ].
 	replacementNode := targetNode allNodes at: replacementIndex.
-	
 	
 	targetNode parent replaceChild: targetNode with: replacementNode.
 	^ aTree 
