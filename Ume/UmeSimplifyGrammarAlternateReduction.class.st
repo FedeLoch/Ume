@@ -8,7 +8,7 @@ Class {
 
 { #category : 'enumerating' }
 UmeSimplifyGrammarAlternateReduction class >> findCandidates: aTree using: aGrammar [
-
+	" return all the reduction candidates"
 	| candidates |
 	
 	candidates := OrderedCollection new. 
@@ -50,7 +50,7 @@ UmeSimplifyGrammarAlternateReduction class >> reduce: aTree [
 	
 	allNodes := aTree allNodes .
 	
-	targetIndex := allNodes findFirst: [ :node | self findTarget: node  ].
+	targetIndex := allNodes findFirst: [ :node | (node isLeaf not) and: [self findTarget: node]  ].
 	(targetIndex = 0) ifTrue: [ ^ nil ].
 	targetNode := allNodes at: targetIndex.
 	

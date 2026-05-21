@@ -8,7 +8,7 @@ Class {
 
 { #category : 'enumerating' }
 UmeSimplifyGrammarSubtreeReducer class >> findCandidates: aTree using: aGrammar [
-
+	" return all the reduction candidates"
 	| candidates |
 	
 	candidates := OrderedCollection new. 
