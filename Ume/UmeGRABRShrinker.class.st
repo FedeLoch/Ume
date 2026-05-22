@@ -47,6 +47,7 @@ UmeGRABRShrinker >> minimizeOne: originalTree upperBound: bound [
 	| reducedTree |
 	
 	reducedTree:= self reductionOn: originalTree with: bound.
+	1 halt. 
 
 	"originalTree children do: [ :child | reducedTrees := reductionStrategy findCandidates: child using: grammar. ].
 	reducedTrees do: [ :subtree |
@@ -87,7 +88,7 @@ UmeGRABRShrinker >> reductionOn: originalTree with: bound [
 		(self triggerBug: candidate upperBound: bound) ifTrue: [ ^ candidate ] 
 	].
 
-	^ nil
+	^ originalTree 
 ]
 
 { #category : 'accessing' }

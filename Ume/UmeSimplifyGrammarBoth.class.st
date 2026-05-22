@@ -38,8 +38,11 @@ UmeSimplifyGrammarBoth class >> reduce: aTree using: aGrammar [
 	| reducedSubTrees | 
 	1 halt. 
 	
-	reducedSubTrees:= UmeSimplifyGrammarAlternateReduction findSubtree: aTree with: aGrammar  .
+	aTree allNodes findFirst: [ :node |
+		1 halt. 
+		(reducedSubTrees:= UmeSimplifyGrammarAlternateReduction alternateReduction: node using: aGrammar) notNil ].
+
 	reducedSubTrees ifNotNil: [ ^ reducedSubTrees ].
 	
-	^ nil
+	^ aTree 
 ]

@@ -34,9 +34,25 @@ UmeSimplifyGrammarSubtreeReducer class >> findSubtree: aTree mathchingWith: aSym
 	
 	candidates := OrderedCollection new. 
 	
-	aTree allNodes doWithIndex: [ :node :index |
+	aTree allNodes do: [ :node  |
 		(node parent isNotNil and: [ node isLeaf not and: [ aSymbol = node tag ] ]) ifTrue: [ 
 			candidates add: node. 
+		 ]
+	].
+
+	^ candidates
+]
+
+{ #category : 'enumerating' }
+UmeSimplifyGrammarSubtreeReducer class >> findSubtreesIndex: aTree mathchingWith: aSymbol [
+	" return all the reduction candidates"
+	| candidates |
+	
+	candidates := OrderedCollection new. 
+	
+	aTree allNodes doWithIndex: [ :node :index |
+		(node parent isNotNil and: [ node isLeaf not and: [ aSymbol = node tag ] ]) ifTrue: [ 
+			candidates add: index. 
 		 ]
 	].
 
