@@ -7,6 +7,32 @@ Class {
 }
 
 { #category : 'enumerating' }
+UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: aGrammar [
+	" return all the reduction candidates"
+	| rules candidates reductions  |
+	
+	candidates := OrderedCollection new. 
+	reductions := OrderedCollection new.
+	rules := aTree grammarRule fragments .
+
+	rules do: [ :rule | | match newChild validSubtrees |
+		match := true.
+		newChild := OrderedCollection new.
+		validSubtrees := UmeSimplifyGrammarSubtreeReducer findSubtree: aTree mathchingWith: rule name.
+		(validSubtrees isNil) ifTrue: [ match := false ].
+		1 halt. 
+		match ifTrue: [ 
+			 validSubtrees do: [ :subtree | | newTree |
+				newTree := self updateTree: aTree with: subtree using: aGrammar.
+				1 halt. 
+				( newTree treeSize ) < ( aTree treeSize) ifTrue: [ 
+					reductions add: newTree ] ] ]  
+		].
+	1 halt. 
+    ^ reductions sorted: [ :treeA :treeB | (treeA treeSize ) < (treeB treeSize ) ] 
+]
+
+{ #category : 'enumerating' }
 UmeSimplifyGrammarAlternateReduction class >> findCandidates: aTree using: aGrammar [
 	" return all the reduction candidates"
 	| candidates |
@@ -81,4 +107,22 @@ UmeSimplifyGrammarAlternateReduction class >> reduce: aTree [
 	
 	targetNode parent replaceChild: targetNode with: replacementNode.
 	^ aTree 
+]
+
+{ #category : 'enumerating' }
+UmeSimplifyGrammarAlternateReduction class >> updateTree: aTree with: aSubTree using: aGrammar [
+
+	| treeCopy replacementNodeInCopy allNodesCopy allNodes targetIndex targetNodeInCopy|
+	
+	1 halt.
+	treeCopy := self copyTree: aTree with: aGrammar.
+	allNodes := aTree allNodes.
+	targetIndex := allNodes identityIndexOf: aSubTree. 
+	targetIndex = 0 ifTrue: [ ^ treeCopy ].
+ 	allNodesCopy := treeCopy allNodes.
+	targetNodeInCopy := allNodesCopy at: targetIndex.   
+	replacementNodeInCopy := self copyTree: aSubTree with: aGrammar. 
+	1 halt. 
+	targetNodeInCopy parent ifNil: [ ^ replacementNodeInCopy ] ifNotNil: [ :parent | parent replaceChild: targetNodeInCopy with: aSubTree . ].
+   ^ treeCopy.
 ]

@@ -82,7 +82,7 @@ UmeGRABRShrinker >> reductionOn: originalTree with: bound [
 	
 	| reducedTrees |
 
-	reducedTrees := reductionStrategy reduce: originalTree.
+	reducedTrees := reductionStrategy reduce: originalTree using: grammar.
 	reducedTrees do: [ :candidate |
 		(self triggerBug: candidate upperBound: bound) ifTrue: [ ^ candidate ] 
 	].
