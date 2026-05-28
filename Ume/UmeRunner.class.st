@@ -212,6 +212,12 @@ UmeRunner class >> testWithPackageCoverage: schema times: times [
 		targetAndPackageCoverage: schema method
 ]
 
+{ #category : 'tests' }
+UmeRunner >> classesToInstrument [
+
+	^ (methodsToInstrument collect: #methodClass) asSet
+]
+
 { #category : 'as yet unclassified' }
 UmeRunner >> collectAllCases [
 	shouldSaveAll := true. 
@@ -358,7 +364,7 @@ UmeRunner >> guidedByScore [
 { #category : 'tests' }
 UmeRunner >> initialize [ 
 	super initialize.
-	evaluator := UmeEvaluator new.
+	evaluator := UmeEvaluator new runner: self.
 	generator := UmeCaseGenerator new.
 	feedbackEvaluator := UmeFeedbackEvaluator new.
 	stopCriteria := UmeCountCriteria new times: 100.
@@ -376,7 +382,25 @@ UmeRunner >> isKernelMethod: method [
 { #category : 'accessing' }
 UmeRunner >> previousResult [
 
-	^ previousResult 
+  ^ previousResult 
+]
+
+{ #category : 'accessing' }
+UmeRunner >> methodsToInstrument [
+
+	^ methodsToInstrument
+]
+
+{ #category : 'accessing' }
+UmeRunner >> methodsToInstrument: methods [
+
+	methodsToInstrument := methods
+]
+
+{ #category : 'tests' }
+UmeRunner >> progressFor: tests since: time for: iteration [
+	
+	^ stopCriteria progressFor: tests since: time for: iteration
 ]
 
 { #category : 'accessing' }

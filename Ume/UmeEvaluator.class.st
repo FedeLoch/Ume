@@ -3,7 +3,8 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'analyzer',
-		'targetClasses'
+		'classesToInstrument',
+		'runner'
 	],
 	#category : 'Ume-Evaluation',
 	#package : 'Ume',
@@ -25,9 +26,9 @@ UmeEvaluator >> analyzer [
 { #category : 'as yet unclassified' }
 UmeEvaluator >> classesFor: target [
 
-	targetClasses ifNil: [ targetClasses := target package definedClasses ].
+	classesToInstrument ifNil: [ classesToInstrument := target package definedClasses ].
 
-	^ targetClasses
+	^ classesToInstrument
 ]
 
 { #category : 'as yet unclassified' }
@@ -38,10 +39,12 @@ UmeEvaluator >> eval: receiver method: methodToPerform from: schema with: args a
 	[
 		"Reset the coverage result to avoid interference between tests"
 		collector resetResult.
-		
+
 		"Executing PB Analyzer"
 		case := PBAProgram from:
 			[ result := receiver perform: methodToPerform selector withArguments: args ] forClasses: (self classesFor: methodToPerform).
+		
+		case methodsToInstrument: runner methodsToInstrument.
 
 		profilingResult := analyzer analyze: case.
 
@@ -128,4 +131,10 @@ UmeEvaluator >> profilingByMethodCalls [
 UmeEvaluator >> profilingByScore [
 
 	self profilingByExecutionTime 
+]
+
+{ #category : 'accessing' }
+UmeEvaluator >> runner: aRunner [
+
+	runner := aRunner
 ]

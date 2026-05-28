@@ -6,6 +6,18 @@ Class {
 	#tag : 'Feedback'
 }
 
+{ #category : 'accessing' }
+UmeCoverageGuide >> category: value [
+	"TODO: not sure"
+	^ value
+]
+
+{ #category : 'as yet unclassified' }
+UmeCoverageGuide >> coverageGuidingTable: table [ 
+	"todo: improve later"
+	^ table
+]
+
 { #category : 'as yet unclassified' }
 UmeCoverageGuide >> tableOfValue [
 
@@ -16,6 +28,7 @@ UmeCoverageGuide >> tableOfValue [
 UmeCoverageGuide >> values: case [
 
 	^ case result profilingResult ifNil: [ Dictionary new ] ifNotNil: [
-		case result profilingResult coverage collect: [ :value | self category: value ]
+		self coverageGuidingTable: case result profilingResult coverage
+"		case result profilingResult coverage collect: [ :value | self category: value ]"
 	]
 ]
