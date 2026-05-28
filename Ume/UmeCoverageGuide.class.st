@@ -13,9 +13,14 @@ UmeCoverageGuide >> category: value [
 ]
 
 { #category : 'as yet unclassified' }
-UmeCoverageGuide >> coverageGuidingTable: table [ 
-	"todo: improve later"
-	^ table
+UmeCoverageGuide >> coverageGuidingTable: result [
+
+"	^ result profilingResult coverage"
+	^ {
+		'methods' -> result coverageResult methods size.
+		'nodes' -> result coverageResult nodes size.
+		'percentage' -> result coverageResult percentage
+	} asDictionary
 ]
 
 { #category : 'as yet unclassified' }
@@ -28,7 +33,6 @@ UmeCoverageGuide >> tableOfValue [
 UmeCoverageGuide >> values: case [
 
 	^ case result profilingResult ifNil: [ Dictionary new ] ifNotNil: [
-		self coverageGuidingTable: case result profilingResult coverage
-"		case result profilingResult coverage collect: [ :value | self category: value ]"
+		self coverageGuidingTable: case result
 	]
 ]

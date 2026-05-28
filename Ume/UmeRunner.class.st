@@ -313,7 +313,8 @@ UmeRunner >> guidedByBytecodes [
 { #category : 'as yet unclassified' }
 UmeRunner >> guidedByCoverage [
 
-	evaluator profilingByCoverage.
+"	evaluator profilingByCoverage."
+	evaluator profilingByExecutionTime.
 	feedbackEvaluator feedbackByCoverage
 ]
 
