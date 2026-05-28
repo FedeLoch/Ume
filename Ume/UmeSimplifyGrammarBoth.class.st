@@ -40,7 +40,7 @@ UmeSimplifyGrammarBoth class >> reduce: aTree using: aGrammar [
 	
 	aTree allNodes findFirst: [ :node |
 		1 halt. 
-		(reducedSubTrees:= UmeSimplifyGrammarAlternateReduction alternateReduction: node using: aGrammar) notNil ].
+		(reducedSubTrees:= UmeSimplifyGrammarAlternateReduction alternateReduction: node using: aGrammar) isNotNil ].
 
 	reducedSubTrees ifNotNil: [ ^ reducedSubTrees ].
 	
