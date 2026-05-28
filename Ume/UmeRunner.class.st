@@ -426,7 +426,7 @@ UmeRunner >> run [
 { #category : 'tests' }
 UmeRunner >> runCampaign: executionJob [
  
-	| tests test iteration time collector incrCoverage progress|
+	| tests test iteration time collector incrCoverage progress |
 	
 	time := Time millisecondClockValue.
 	tests := OrderedCollection new.
@@ -441,7 +441,7 @@ UmeRunner >> runCampaign: executionJob [
 		test iteration: iteration.
 		(self shouldCollect: test) ifTrue: [ tests add: test ].
 		progress := self progressFor: tests since: time for: iteration.
-		executionJob updateProgress: progress.
+		executionJob updateProgress: progress forTests: tests iteration: iteration.
 		] ].
 
 	^ self genReport: tests since: time withCoverage: incrCoverage with: iteration.
