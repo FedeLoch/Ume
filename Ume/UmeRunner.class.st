@@ -437,7 +437,8 @@ UmeRunner >> runCampaign: executionJob [
 	collector runOn: [ [
 		self shouldGenNext: iteration since: time withCoverage: incrCoverage] whileTrue: [
 		iteration := iteration + 1.
-		test:= self genTest: incrCoverage with: collector.
+		test := self genTest: incrCoverage with: collector.
+		test iteration: iteration.
 		(self shouldCollect: test) ifTrue: [ tests add: test ].
 		progress := self progressFor: tests since: time for: iteration.
 		executionJob updateProgress: progress.

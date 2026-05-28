@@ -10,6 +10,7 @@ Class {
 		'feedback',
 		'assert',
 		'lastResult',
+		'iteration',
 		'autoTunedIterations',
 		'id',
 		'targetSelector'
@@ -150,6 +151,18 @@ UmeTest >> isError [
 UmeTest >> isOutlier [
 
 	^ (self feedback improvement > 0) or: [ self isError ]
+]
+
+{ #category : 'accessing' }
+UmeTest >> iteration [
+
+	^ iteration
+]
+
+{ #category : 'accessing' }
+UmeTest >> iteration: aIteration [
+
+	iteration := aIteration
 ]
 
 { #category : 'accessing' }
