@@ -57,13 +57,13 @@ UmeResult >> bloxplotByTime [
 { #category : 'as yet unclassified' }
 UmeResult >> continue: numberOfCases [
 
-	^ runner continue: numberOfCases from: self
+	^ runner continue: numberOfCases
 ]
 
 { #category : 'as yet unclassified' }
 UmeResult >> continueFor: time [
 
-	^ runner continueFor: time from: self
+	^ runner continueFor: time
 ]
 
 { #category : 'as yet unclassified' }

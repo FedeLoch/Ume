@@ -10,7 +10,8 @@ Class {
 		'lastFeedback',
 		'methodsToInstrument',
 		'feedbackEvaluator',
-		'shouldSaveAll'
+		'shouldSaveAll',
+		'previousResult'
 	],
 	#category : 'Ume-Runner',
 	#package : 'Ume',
@@ -216,14 +217,21 @@ UmeRunner >> collectAllCases [
 	shouldSaveAll := true. 
 ]
 
-{ #category : 'as yet unclassified' }
-UmeRunner >> continue: times from: result [
+{ #category : 'tests' }
+UmeRunner >> continue: times [
 
 	self withCriteria: (UmeCountCriteria new times: times).
-	^ self reRun: result.
+	^ self run
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
+UmeRunner >> continueFor: time [
+	
+	self withCriteria: (UmeTimeCriteria new timeout: time).
+	^ self run.
+]
+
+{ #category : 'tests' }
 UmeRunner >> continueFor: time from: result [
 	
 	self withCriteria: (UmeTimeCriteria new timeout: time).
@@ -365,39 +373,22 @@ UmeRunner >> isKernelMethod: method [
 	^ method package name = 'Kernel'
 ]
 
+{ #category : 'accessing' }
+UmeRunner >> previousResult [
+
+	^ previousResult 
+]
+
+{ #category : 'accessing' }
+UmeRunner >> previousResult: aResult [
+
+	previousResult := aResult
+]
+
 { #category : 'tests' }
 UmeRunner >> progressFor: tests since: time for: iteration [
 	
 	^ stopCriteria progressFor: tests since: time for: iteration
-]
-
-{ #category : 'tests' }
-UmeRunner >> reRun: result [
-
-	^ [ :job | self reRunCampaign: job from: result ] asJob run.
-]
-
-{ #category : 'tests' }
-UmeRunner >> reRunCampaign: executionJob from: aResult [
- 
-	| tests test iteration time collector incrCoverage progress |
-	
-	time := Time millisecondClockValue.
-	tests := OrderedCollection new.
-	iteration := 0. 
-	collector := aResult totalCoverage collector.
-	incrCoverage := aResult totalCoverage.
-
-	collector runOn: [ [
-		self shouldGenNext: iteration since: time withCoverage: incrCoverage] whileTrue: [
-		iteration := iteration + 1.
-		test:= self genTest: incrCoverage with: collector.
-		(self shouldCollect: test) ifTrue: [ tests add: test ].
-		progress := self progressFor: tests since: time for: iteration.
-		executionJob updateProgress: progress with:iteration saved: tests size .
-		] ].
-
-	^ aResult feed: tests time: time tests: iteration
 ]
 
 { #category : 'tests' }
@@ -417,13 +408,15 @@ UmeRunner >> run [
 { #category : 'tests' }
 UmeRunner >> runCampaign: executionJob [
  
-	| tests test iteration time collector incrCoverage progress|
+	| tests test iteration time collector incrCoverage progress |
 	
 	time := Time millisecondClockValue.
 	tests := OrderedCollection new.
 	iteration := 0. 
-	collector := C2CoverageCollector new methods: self reachableMethods.
-	incrCoverage := IncrementalCoverageResult for: { target } from: collector.
+	collector := previousResult ifNotNil: [ previousResult totalCoverage collector ] 
+	ifNil: [ C2CoverageCollector new methods: self reachableMethods].
+	incrCoverage := previousResult ifNotNil: [ previousResult totalCoverage ] 
+	ifNil: [ IncrementalCoverageResult for: { target } from: collector].
 
 	collector runOn: [ [
 		self shouldGenNext: iteration since: time withCoverage: incrCoverage] whileTrue: [
@@ -434,7 +427,9 @@ UmeRunner >> runCampaign: executionJob [
 		executionJob updateProgress: progress with: iteration saved: tests size.
 		] ].
 
-	^ self genReport: tests since: time withCoverage: incrCoverage with: iteration.
+	previousResult ifNotNil: [ ^ previousResult feed: tests time: time tests: iteration ]  
+	ifNil: [ previousResult := self genReport: tests since: time withCoverage: incrCoverage with: iteration ].
+	^ previousResult. 
 ]
 
 { #category : 'accessing' }
