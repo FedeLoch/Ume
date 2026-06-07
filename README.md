@@ -69,7 +69,7 @@ property := [ :n :args :result | n * (n - 1) factorial = result ].
 "3. Create the Schema"
 schema := UmeSchema new 
     receiverConstraint: receiverConstraint; 
-    propert: property;
+    property: property;
     method: Integer >> #factorial.
 
 "4. Run the tests"
