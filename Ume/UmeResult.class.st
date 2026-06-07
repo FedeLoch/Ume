@@ -18,6 +18,64 @@ Class {
 	#tag : 'Result'
 }
 
+{ #category : 'localization' }
+UmeResult >> generateBugReport [
+
+	| localizer reportStream categories |
+	localizer := UmeBugLocalizer on: self.
+	localizer localize: self.
+	localizer reports ifEmpty: [ ^ 'No bugs or outliers found to localize.' ].
+
+	reportStream := String new writeStream.
+	reportStream
+		nextPutAll: '=== Ume Bug Localization Report ===';
+		cr; nextPutAll: 'Total test cases: '; print: tests size; cr;
+		nextPutAll: 'Top cases (interesting): '; print: topCases size; cr;
+		cr.
+
+	categories := (localizer reports collect: #type) asSet sorted.
+	categories do: [ :catType |
+		| catReports |
+		catReports := localizer reports select: [ :r | r type = catType ].
+		reportStream
+			nextPutAll: '--- '; nextPutAll: catType asString; nextPutAll: ' ('; print: catReports size; nextPutAll: ' cases) ---'; cr.
+		catReports doWithIndex: [ :report :idx |
+			reportStream
+				nextPutAll: '  '; print: idx; nextPutAll: '. Test: '; print: report test name; cr.
+			report errorMessage ifNotNil: [ :msg |
+				reportStream nextPutAll: '     Error: '; nextPutAll: msg; cr ].
+			report metric ifNotNil: [ :m |
+				reportStream nextPutAll: '     Metric: '; nextPutAll: m asString; cr ].
+			report suspectedMethods ifNotNil: [ :methods |
+				reportStream nextPutAll: '     Top suspects:'; cr.
+				(methods first: (methods size min: 5)) do: [ :method |
+					| scoreStr |
+					scoreStr := report suspiciousnessScores
+						ifNotNil: [ (report suspiciousnessScores at: method ifAbsent: [ 0.0 ]) printString ]
+						ifNil: [ 'n/a' ].
+					reportStream
+						tab; tab; print: method;
+						nextPutAll: ' (score: '; nextPutAll: scoreStr; nextPutAll: ')'; cr ] ].
+			report stackTrace ifNotNil: [ :stack |
+				reportStream nextPutAll: '     Stack (top 3):'; cr.
+				(stack first: (stack size min: 3)) do: [ :frame |
+					reportStream tab; tab; nextPutAll: frame asString; cr ] ].
+			report executedMethods ifNotNil: [ :exec |
+				reportStream nextPutAll: '     Methods executed: '; print: exec size; cr ].
+			cr ] ].
+
+	reportStream
+		cr; nextPutAll: '=== End of Report ==='; cr.
+
+	^ reportStream contents
+]
+
+{ #category : 'localization' }
+UmeResult >> localizeBugs [
+
+	^ (UmeBugLocalizer on: self) localize: self
+]
+
 { #category : 'as yet unclassified' }
 UmeResult class >> resultFrom: tests since: time withCoverage: totalCoverageResult runner: runner [
 
