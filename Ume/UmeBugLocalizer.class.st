@@ -1,10 +1,6 @@
 Class {
 	#name : 'UmeBugLocalizer',
 	#superclass : 'Object',
-	#instVars : [
-		'result',
-		'bugs'
-	],
 	#category : 'Ume-Localization',
 	#package : 'Ume',
 	#tag : 'Localization'
@@ -14,12 +10,6 @@ Class {
 UmeBugLocalizer class >> localize: aUmeResult [
 
 	^ self new localize: aUmeResult
-]
-
-{ #category : 'accessing' }
-UmeBugLocalizer >> bugs [
-
-	^ bugs
 ]
 
 { #category : 'localization' }
@@ -97,84 +87,98 @@ UmeBugLocalizer >> computeProfilingDeltaForOutliers: outlierTests normal: normal
 ]
 
 { #category : 'localization' }
-UmeBugLocalizer >> localize: aUmeResult [
+UmeBugLocalizer >> localize: umeResult [
 
-	result := aUmeResult.
+	^ {
+		'Errors' -> (self localizeErrors: umeResult).
+		'Failures' -> (self localizeFailures: umeResult).
+		'OutlierCauses' -> (self localizePerformanceOutliers: umeResult)
+	} asDictionary
+]
+
+{ #category : 'localization' }
+UmeBugLocalizer >> localizeErrors: umeResult [
+
+	^ umeResult tests inject: OrderedCollection new into: [ :bugs :test |
+		test result isError ifTrue: [ bugs add: (UmeBugReport errorReport: test) ].
+		bugs
+	]
+]
+
+{ #category : 'localization' }
+UmeBugLocalizer >> localizeFailures: umeResult [
+
+	| failingTests passingTests suspiciousness |
+
+	failingTests := umeResult tests select: [ :t | t result isFail ].
+	failingTests ifEmpty: [ ^ failingTests ].
+
+	passingTests := umeResult tests select: [ :t | t result isSuccess ].
+	passingTests ifEmpty: [ ^ passingTests ].
+
+	suspiciousness := self computeOchiaiForPassing: passingTests failing: failingTests.
+
+	^ failingTests collect: [ :test | UmeBugReport failReport: test from: suspiciousness ]
+]
+
+{ #category : 'localization' }
+UmeBugLocalizer >> localizeOutliers: umeResult [
+
+	| outlierTests normalTests deltas bugs |
+	
 	bugs := OrderedCollection new.
+	1 halt.
+	outlierTests := umeResult outliersByCoverage.
+	outlierTests ifEmpty: [ ^ bugs ].
 
-	self localizeErrors.
-	self localizeFailures.
-	self localizePerformanceOutliers.
+	normalTests := umeResult tests select: [ :t |
+		(outlierTests includes: t) not and: [ t result isKindOf: UmeEvalSuccess ] ].
+	normalTests ifEmpty: [ ^ bugs ].
 
+	deltas := self computeProfilingDeltaForOutliers: outlierTests normal: normalTests valueBlock: [ :test |
+		test result profilingResult ifNil: [ Dictionary new ] ifNotNil: [ :pr |
+			(pr respondsTo: #methodsCalled) ifTrue: [ pr methodsCalled ] ifFalse: [ Dictionary new ] ] ].
+
+	deltas ifEmpty: [ ^ bugs ].
+
+	outlierTests do: [ :test |
+		| bug orderedSuspects |
+		bug := UmeBugReport for: test type: #performanceOutlier.
+		bug metric: #coverage.
+		bug suspiciousnessScores: deltas.
+
+		orderedSuspects := (deltas keys asSortedCollection: [ :a :b |
+			(deltas at: a) > (deltas at: b) ]) asOrderedCollection.
+		bug suspectedMethods: orderedSuspects.
+
+		test result coverageResult ifNotNil: [ :cov |
+			bug executedMethods: cov methods ].
+
+		bugs add: bug ].
+	
 	^ bugs
 ]
 
 { #category : 'localization' }
-UmeBugLocalizer >> localizeErrors [
+UmeBugLocalizer >> localizePerformanceOutliers: umeResult [
 
-	result tests do: [ :test |
-		(test result isKindOf: UmeEvalError) ifTrue: [ | bug topFrames |
-			bug := UmeBugReport for: test type: #error.
-			bug errorMessage: test result message.
-
-			test result stack ifNotNil: [ :frames |
-				bug stackTrace: frames.
-				topFrames := frames first: ((frames size) min: 3).
-				bug suspectedMethods: (topFrames collect: [ :frame | frame asString ]) asOrderedCollection ].
-
-			test result coverageResult ifNotNil: [ :cov |
-				bug executedMethods: cov methods.
-				bug uncoveredMethods: cov uncoveredMethods ].
-
-			bugs add: bug ] ]
+	^ self localizeOutliers: umeResult
+"	self localizePerformanceOutliersByExecutionTime: umeResult.
+	self localizePerformanceOutliersByMemory: umeResult.
+	self localizePerformanceOutliersByCoverage: umeResult.
+	self localizePerformanceOutliersByScore: umeResult"
 ]
 
 { #category : 'localization' }
-UmeBugLocalizer >> localizeFailures [
+UmeBugLocalizer >> localizePerformanceOutliersByCoverage: umeResult [
 
-	| failingTests passingTests suspiciousness |
-	failingTests := result tests select: [ :t | t result isKindOf: UmeEvalFail ].
-	failingTests ifEmpty: [ ^ self ].
-
-	passingTests := result tests select: [ :t | t result isKindOf: UmeEvalSuccess ].
-	passingTests ifEmpty: [ ^ self ].
-
-	suspiciousness := self computeOchiaiForPassing: passingTests failing: failingTests.
-	suspiciousness ifEmpty: [ ^ self ].
-
-	failingTests do: [ :test |
-		| bug orderedSuspects |
-		bug := UmeBugReport for: test type: #propertyFail.
-		bug suspiciousnessScores: suspiciousness.
-
-		orderedSuspects := (suspiciousness keys asSortedCollection: [ :a :b |
-			(suspiciousness at: a) > (suspiciousness at: b) ]) asOrderedCollection.
-		bug suspectedMethods: orderedSuspects.
-
-		test result coverageResult ifNotNil: [ :cov |
-			bug executedMethods: cov methods.
-			bug uncoveredMethods: cov uncoveredMethods ].
-
-		bugs add: bug ]
-]
-
-{ #category : 'localization' }
-UmeBugLocalizer >> localizePerformanceOutliers [
-
-	self localizePerformanceOutliersByExecutionTime.
-	self localizePerformanceOutliersByMemory.
-	self localizePerformanceOutliersByCoverage.
-	self localizePerformanceOutliersByScore
-]
-
-{ #category : 'localization' }
-UmeBugLocalizer >> localizePerformanceOutliersByCoverage [
-
-	| outlierTests normalTests deltas |
-	outlierTests := result outliersByCoverage.
+	| outlierTests normalTests deltas bugs |
+	
+	bugs := OrderedCollection new.
+	outlierTests := umeResult outliersByCoverage.
 	outlierTests ifEmpty: [ ^ self ].
 
-	normalTests := result tests select: [ :t |
+	normalTests := umeResult tests select: [ :t |
 		(outlierTests includes: t) not and: [ t result isKindOf: UmeEvalSuccess ] ].
 	normalTests ifEmpty: [ ^ self ].
 
@@ -197,17 +201,21 @@ UmeBugLocalizer >> localizePerformanceOutliersByCoverage [
 		test result coverageResult ifNotNil: [ :cov |
 			bug executedMethods: cov methods ].
 
-		bugs add: bug ]
+		bugs add: bug ].
+	
+	^ bugs
 ]
 
 { #category : 'localization' }
-UmeBugLocalizer >> localizePerformanceOutliersByExecutionTime [
+UmeBugLocalizer >> localizePerformanceOutliersByExecutionTime: umeResult [
 
-	| outlierTests normalTests deltas |
-	outlierTests := result outliersByExecutionTime.
+	| outlierTests normalTests deltas bugs |
+	
+	bugs := OrderedCollection new.
+	outlierTests := umeResult outliersByExecutionTime.
 	outlierTests ifEmpty: [ ^ self ].
 
-	normalTests := result tests select: [ :t |
+	normalTests := umeResult tests select: [ :t |
 		(outlierTests includes: t) not and: [ t result isKindOf: UmeEvalSuccess ] ].
 	normalTests ifEmpty: [ ^ self ].
 
@@ -230,17 +238,21 @@ UmeBugLocalizer >> localizePerformanceOutliersByExecutionTime [
 		test result coverageResult ifNotNil: [ :cov |
 			bug executedMethods: cov methods ].
 
-		bugs add: bug ]
+		bugs add: bug ].
+	
+	^ bugs
 ]
 
 { #category : 'localization' }
-UmeBugLocalizer >> localizePerformanceOutliersByMemory [
+UmeBugLocalizer >> localizePerformanceOutliersByMemory: umeResult [
 
-	| outlierTests normalTests deltas |
-	outlierTests := result outliersByAllocatedMemory.
+	| outlierTests normalTests deltas bugs |
+	
+	bugs := OrderedCollection new.
+	outlierTests := umeResult outliersByAllocatedMemory.
 	outlierTests ifEmpty: [ ^ self ].
 
-	normalTests := result tests select: [ :t |
+	normalTests := umeResult tests select: [ :t |
 		(outlierTests includes: t) not and: [ t result isKindOf: UmeEvalSuccess ] ].
 	normalTests ifEmpty: [ ^ self ].
 
@@ -263,17 +275,21 @@ UmeBugLocalizer >> localizePerformanceOutliersByMemory [
 		test result coverageResult ifNotNil: [ :cov |
 			report executedMethods: cov methods ].
 
-		bugs add: report ]
+		bugs add: report ].
+	
+	^ bugs
 ]
 
 { #category : 'localization' }
-UmeBugLocalizer >> localizePerformanceOutliersByScore [
+UmeBugLocalizer >> localizePerformanceOutliersByScore: umeResult [
 
-	| outlierTests normalTests deltas |
-	outlierTests := result outliersByScore.
+	| outlierTests normalTests deltas bugs |
+	
+	bugs := OrderedCollection new.
+	outlierTests := umeResult outliersByScore.
 	outlierTests ifEmpty: [ ^ self ].
 
-	normalTests := result tests select: [ :t |
+	normalTests := umeResult tests select: [ :t |
 		(outlierTests includes: t) not and: [ t result isKindOf: UmeEvalSuccess ] ].
 	normalTests ifEmpty: [ ^ self ].
 
@@ -296,17 +312,7 @@ UmeBugLocalizer >> localizePerformanceOutliersByScore [
 		test result coverageResult ifNotNil: [ :cov |
 			bug executedMethods: cov methods ].
 
-		bugs add: bug ]
-]
-
-{ #category : 'accessing' }
-UmeBugLocalizer >> result [
-
-	^ result
-]
-
-{ #category : 'accessing' }
-UmeBugLocalizer >> result: aUmeResult [
-
-	result := aUmeResult
+		bugs add: bug ].
+	
+	^ bugs
 ]

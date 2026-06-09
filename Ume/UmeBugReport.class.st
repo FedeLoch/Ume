@@ -18,6 +18,51 @@ Class {
 }
 
 { #category : 'instance creation' }
+UmeBugReport class >> errorReport: test [
+
+	| bug topFrames |
+
+	bug := self new test: test; type: #error.
+
+	bug errorMessage: test result message.
+
+	test result stack ifNotNil: [ :frames |
+			bug stackTrace: frames.
+			topFrames := frames first: (frames size min: 3).
+			bug suspectedMethods:
+				(topFrames collect: [ :frame | frame asString ])
+					asOrderedCollection ].
+
+	test result coverageResult ifNotNil: [ :cov |
+			bug executedMethods: cov methods.
+			bug uncoveredMethods: cov uncoveredMethods ].
+	^ bug
+]
+
+{ #category : 'instance creation' }
+UmeBugReport class >> failReport: test from: suspiciousness [
+
+	| bug orderedSuspects |
+
+	bug := self new
+		       test: test;
+		       type: #propertyFail.
+	bug suspiciousnessScores: suspiciousness.
+
+	orderedSuspects := (suspiciousness keys asSortedCollection: [ :a :b |
+		                    (suspiciousness at: a) > (suspiciousness at: b) ])
+		                   asOrderedCollection.
+
+	bug suspectedMethods: orderedSuspects.
+
+	test result coverageResult ifNotNil: [ :cov |
+			bug executedMethods: cov methods.
+			bug uncoveredMethods: cov uncoveredMethods ].
+
+	^ bug
+]
+
+{ #category : 'instance creation' }
 UmeBugReport class >> for: aTest type: aSymbol [
 	^ self new
 		test: aTest;

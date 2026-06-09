@@ -11,3 +11,9 @@ UmeEvalSuccess class >> stonAllInstVarNames [
 
 	^ super stonAllInstVarNames copyWithoutAll: #( )
 ]
+
+{ #category : 'testing' }
+UmeEvalSuccess >> isSuccess [
+
+	^ true
+]
