@@ -34,8 +34,7 @@ UmeBugLocalizer >> computeOchiaiForPassing: passingTests failing: failingTests [
 			methodFailedCount at: method put: (methodFailedCount at: method ifAbsent: [ 0 ]) + 1 ] ].
 
 	suspiciousness := Dictionary new.
-	allMethods do: [ :method |
-		| failed passed divisor score |
+	allMethods do: [ :method | | failed passed divisor score |
 		failed := methodFailedCount at: method ifAbsent: [ 0 ].
 		passed := methodPassedCount at: method ifAbsent: [ 0 ].
 		divisor := totalFailed * (failed + passed) asFloat.
@@ -48,42 +47,25 @@ UmeBugLocalizer >> computeOchiaiForPassing: passingTests failing: failingTests [
 ]
 
 { #category : 'localization' }
-UmeBugLocalizer >> computeProfilingDeltaForOutliers: outlierTests normal: normalTests valueBlock: valueBlock [
+UmeBugLocalizer >> coveredMethodDeltaBetween: baseline and: test [
 
-	| outlierValues normalValues allKeys deltas |
-	outlierValues := Dictionary new.
-	normalValues := Dictionary new.
-	allKeys := Set new.
+	| baselineMethods testMethods |
+	
+	baselineMethods := baseline result coverageResult methods.
+	testMethods := test result coverageResult methods.
 
-	outlierTests do: [ :test | | values |
-		values := valueBlock value: test.
-		values keysAndValuesDo: [ :key :val |
-			allKeys add: key.
-			outlierValues at: key put: (outlierValues at: key ifAbsent: [ 0 ]) + val ] ].
+	^ testMethods difference: baselineMethods
+]
 
-	outlierTests ifNotEmpty: [
-		outlierValues keysAndValuesDo: [ :key :sum |
-			outlierValues at: key put: sum / outlierTests size ] ].
+{ #category : 'localization' }
+UmeBugLocalizer >> coveredNodesDeltaBetween: baseline and: test [
+	
+	| baselineNodes testNodes |
+	
+	baselineNodes := baseline result coverageResult nodes.
+	testNodes := test result coverageResult nodes.
 
-	normalTests do: [ :test | | values |
-		values := valueBlock value: test.
-		values keysAndValuesDo: [ :key :val |
-			allKeys add: key.
-			normalValues at: key put: (normalValues at: key ifAbsent: [ 0 ]) + val ] ].
-
-	normalTests ifNotEmpty: [
-		normalValues keysAndValuesDo: [ :key :sum |
-			normalValues at: key put: sum / normalTests size ] ].
-
-	deltas := Dictionary new.
-	allKeys do: [ :key |
-		| outlierAvg normalAvg delta |
-		outlierAvg := outlierValues at: key ifAbsent: [ 0.0 ].
-		normalAvg := normalValues at: key ifAbsent: [ 0.0 ].
-		delta := outlierAvg - normalAvg.
-		delta > 0 ifTrue: [ deltas at: key put: delta ] ].
-
-	^ deltas
+	^ testNodes difference: baselineNodes
 ]
 
 { #category : 'localization' }
@@ -92,7 +74,7 @@ UmeBugLocalizer >> localize: umeResult [
 	^ {
 		'Errors' -> (self localizeErrors: umeResult).
 		'Failures' -> (self localizeFailures: umeResult).
-		'OutlierCauses' -> (self localizePerformanceOutliers: umeResult)
+		'OutlierCauses' -> (self localizeOutliers: umeResult)
 	} asDictionary
 ]
 
@@ -124,195 +106,36 @@ UmeBugLocalizer >> localizeFailures: umeResult [
 { #category : 'localization' }
 UmeBugLocalizer >> localizeOutliers: umeResult [
 
-	| outlierTests normalTests deltas bugs |
+	| outliers baseline |
+
+	umeResult topCases ifEmpty: [ ^ OrderedCollection new ].
+	outliers := umeResult topCases allButFirst select: [ :test | test result isSuccess ].
+	baseline := umeResult topCases first.
 	
-	bugs := OrderedCollection new.
-	1 halt.
-	outlierTests := umeResult outliersByCoverage.
-	outlierTests ifEmpty: [ ^ bugs ].
-
-	normalTests := umeResult tests select: [ :t |
-		(outlierTests includes: t) not and: [ t result isKindOf: UmeEvalSuccess ] ].
-	normalTests ifEmpty: [ ^ bugs ].
-
-	deltas := self computeProfilingDeltaForOutliers: outlierTests normal: normalTests valueBlock: [ :test |
-		test result profilingResult ifNil: [ Dictionary new ] ifNotNil: [ :pr |
-			(pr respondsTo: #methodsCalled) ifTrue: [ pr methodsCalled ] ifFalse: [ Dictionary new ] ] ].
-
-	deltas ifEmpty: [ ^ bugs ].
-
-	outlierTests do: [ :test |
-		| bug orderedSuspects |
-		bug := UmeBugReport for: test type: #performanceOutlier.
-		bug metric: #coverage.
-		bug suspiciousnessScores: deltas.
-
-		orderedSuspects := (deltas keys asSortedCollection: [ :a :b |
-			(deltas at: a) > (deltas at: b) ]) asOrderedCollection.
-		bug suspectedMethods: orderedSuspects.
-
-		test result coverageResult ifNotNil: [ :cov |
-			bug executedMethods: cov methods ].
-
-		bugs add: bug ].
-	
-	^ bugs
+	^ outliers collect: [ :test | | bug delta deltaMethods deltaNodes |
+		delta := self profilingDeltaBetween: baseline and: test.
+		deltaMethods := self coveredMethodDeltaBetween: baseline and: test.
+		deltaNodes :=  self coveredNodesDeltaBetween: baseline and: test.
+		bug := UmeBugReport outlierReport: test delta: delta suspectedMethods: deltaMethods suspectedNodes: deltaNodes.
+		baseline := test.
+		bug
+	]
 ]
 
 { #category : 'localization' }
-UmeBugLocalizer >> localizePerformanceOutliers: umeResult [
+UmeBugLocalizer >> profilingDeltaBetween: baseline and: test [
 
-	^ self localizeOutliers: umeResult
-"	self localizePerformanceOutliersByExecutionTime: umeResult.
-	self localizePerformanceOutliersByMemory: umeResult.
-	self localizePerformanceOutliersByCoverage: umeResult.
-	self localizePerformanceOutliersByScore: umeResult"
-]
-
-{ #category : 'localization' }
-UmeBugLocalizer >> localizePerformanceOutliersByCoverage: umeResult [
-
-	| outlierTests normalTests deltas bugs |
+	| baselineValues testValues |
 	
-	bugs := OrderedCollection new.
-	outlierTests := umeResult outliersByCoverage.
-	outlierTests ifEmpty: [ ^ self ].
+	baselineValues := baseline feedback values.
+	testValues := test feedback values.
 
-	normalTests := umeResult tests select: [ :t |
-		(outlierTests includes: t) not and: [ t result isKindOf: UmeEvalSuccess ] ].
-	normalTests ifEmpty: [ ^ self ].
-
-	deltas := self computeProfilingDeltaForOutliers: outlierTests normal: normalTests valueBlock: [ :test |
-		test result profilingResult ifNil: [ Dictionary new ] ifNotNil: [ :pr |
-			(pr respondsTo: #methodsCalled) ifTrue: [ pr methodsCalled ] ifFalse: [ Dictionary new ] ] ].
-
-	deltas ifEmpty: [ ^ self ].
-
-	outlierTests do: [ :test |
-		| bug orderedSuspects |
-		bug := UmeBugReport for: test type: #performanceOutlier.
-		bug metric: #coverage.
-		bug suspiciousnessScores: deltas.
-
-		orderedSuspects := (deltas keys asSortedCollection: [ :a :b |
-			(deltas at: a) > (deltas at: b) ]) asOrderedCollection.
-		bug suspectedMethods: orderedSuspects.
-
-		test result coverageResult ifNotNil: [ :cov |
-			bug executedMethods: cov methods ].
-
-		bugs add: bug ].
-	
-	^ bugs
-]
-
-{ #category : 'localization' }
-UmeBugLocalizer >> localizePerformanceOutliersByExecutionTime: umeResult [
-
-	| outlierTests normalTests deltas bugs |
-	
-	bugs := OrderedCollection new.
-	outlierTests := umeResult outliersByExecutionTime.
-	outlierTests ifEmpty: [ ^ self ].
-
-	normalTests := umeResult tests select: [ :t |
-		(outlierTests includes: t) not and: [ t result isKindOf: UmeEvalSuccess ] ].
-	normalTests ifEmpty: [ ^ self ].
-
-	deltas := self computeProfilingDeltaForOutliers: outlierTests normal: normalTests valueBlock: [ :test |
-		test result profilingResult ifNil: [ Dictionary new ] ifNotNil: [ :pr |
-			(pr respondsTo: #methodsCalled) ifTrue: [ pr methodsCalled ] ifFalse: [ Dictionary new ] ] ].
-
-	deltas ifEmpty: [ ^ self ].
-
-	outlierTests do: [ :test |
-		| bug orderedSuspects |
-		bug := UmeBugReport for: test type: #performanceOutlier.
-		bug metric: #executionTime.
-		bug suspiciousnessScores: deltas.
-
-		orderedSuspects := (deltas keys asSortedCollection: [ :a :b |
-			(deltas at: a) > (deltas at: b) ]) asOrderedCollection.
-		bug suspectedMethods: orderedSuspects.
-
-		test result coverageResult ifNotNil: [ :cov |
-			bug executedMethods: cov methods ].
-
-		bugs add: bug ].
-	
-	^ bugs
-]
-
-{ #category : 'localization' }
-UmeBugLocalizer >> localizePerformanceOutliersByMemory: umeResult [
-
-	| outlierTests normalTests deltas bugs |
-	
-	bugs := OrderedCollection new.
-	outlierTests := umeResult outliersByAllocatedMemory.
-	outlierTests ifEmpty: [ ^ self ].
-
-	normalTests := umeResult tests select: [ :t |
-		(outlierTests includes: t) not and: [ t result isKindOf: UmeEvalSuccess ] ].
-	normalTests ifEmpty: [ ^ self ].
-
-	deltas := self computeProfilingDeltaForOutliers: outlierTests normal: normalTests valueBlock: [ :test |
-		test result profilingResult ifNil: [ Dictionary new ] ifNotNil: [ :pr |
-			(pr respondsTo: #methodsCalled) ifTrue: [ pr methodsCalled ] ifFalse: [ Dictionary new ] ] ].
-
-	deltas ifEmpty: [ ^ self ].
-
-	outlierTests do: [ :test |
-		| report orderedSuspects |
-		report := UmeBugReport for: test type: #performanceOutlier.
-		report metric: #allocatedMemory.
-		report suspiciousnessScores: deltas.
-
-		orderedSuspects := (deltas keys asSortedCollection: [ :a :b |
-			(deltas at: a) > (deltas at: b) ]) asOrderedCollection.
-		report suspectedMethods: orderedSuspects.
-
-		test result coverageResult ifNotNil: [ :cov |
-			report executedMethods: cov methods ].
-
-		bugs add: report ].
-	
-	^ bugs
-]
-
-{ #category : 'localization' }
-UmeBugLocalizer >> localizePerformanceOutliersByScore: umeResult [
-
-	| outlierTests normalTests deltas bugs |
-	
-	bugs := OrderedCollection new.
-	outlierTests := umeResult outliersByScore.
-	outlierTests ifEmpty: [ ^ self ].
-
-	normalTests := umeResult tests select: [ :t |
-		(outlierTests includes: t) not and: [ t result isKindOf: UmeEvalSuccess ] ].
-	normalTests ifEmpty: [ ^ self ].
-
-	deltas := self computeProfilingDeltaForOutliers: outlierTests normal: normalTests valueBlock: [ :test |
-		test result profilingResult ifNil: [ Dictionary new ] ifNotNil: [ :pr |
-			(pr respondsTo: #methodsCalled) ifTrue: [ pr methodsCalled ] ifFalse: [ Dictionary new ] ] ].
-
-	deltas ifEmpty: [ ^ self ].
-
-	outlierTests do: [ :test |
-		| bug orderedSuspects |
-		bug := UmeBugReport for: test type: #performanceOutlier.
-		bug metric: #score.
-		bug suspiciousnessScores: deltas.
-
-		orderedSuspects := (deltas keys asSortedCollection: [ :a :b |
-			(deltas at: a) > (deltas at: b) ]) asOrderedCollection.
-		bug suspectedMethods: orderedSuspects.
-
-		test result coverageResult ifNotNil: [ :cov |
-			bug executedMethods: cov methods ].
-
-		bugs add: bug ].
-	
-	^ bugs
+	^ testValues keys inject: Dictionary new into: [ :diff :key | | currentValue baselineValue |
+		currentValue := testValues at: key.
+		baselineValue := baselineValues at: key ifAbsent: [ 0 ].
+		(currentValue > baselineValue) ifTrue: [
+			diff at: key put: (currentValue - baselineValue)
+		].
+		diff
+	]
 ]

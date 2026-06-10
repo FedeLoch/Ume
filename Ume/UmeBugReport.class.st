@@ -2,15 +2,11 @@ Class {
 	#name : 'UmeBugReport',
 	#superclass : 'Object',
 	#instVars : [
-		'type',
 		'test',
 		'metric',
 		'suspectedMethods',
-		'suspiciousnessScores',
-		'stackTrace',
-		'errorMessage',
-		'executedMethods',
-		'uncoveredMethods'
+		'delta',
+		'executedMethods'
 	],
 	#category : 'Ume-Localization',
 	#package : 'Ume',
@@ -22,8 +18,7 @@ UmeBugReport class >> errorReport: test [
 
 	| bug topFrames |
 
-	bug := self new test: test; type: #error.
-
+	bug := UmeErrorBugReport new test: test.
 	bug errorMessage: test result message.
 
 	test result stack ifNotNil: [ :frames |
@@ -33,9 +28,8 @@ UmeBugReport class >> errorReport: test [
 				(topFrames collect: [ :frame | frame asString ])
 					asOrderedCollection ].
 
-	test result coverageResult ifNotNil: [ :cov |
-			bug executedMethods: cov methods.
-			bug uncoveredMethods: cov uncoveredMethods ].
+	test result coverageResult ifNotNil: [ :cov | bug executedMethods: cov methods ].
+	
 	^ bug
 ]
 
@@ -44,10 +38,8 @@ UmeBugReport class >> failReport: test from: suspiciousness [
 
 	| bug orderedSuspects |
 
-	bug := self new
-		       test: test;
-		       type: #propertyFail.
-	bug suspiciousnessScores: suspiciousness.
+	bug := UmeFailBugReport new test: test.
+	bug delta: suspiciousness.
 
 	orderedSuspects := (suspiciousness keys asSortedCollection: [ :a :b |
 		                    (suspiciousness at: a) > (suspiciousness at: b) ])
@@ -55,31 +47,56 @@ UmeBugReport class >> failReport: test from: suspiciousness [
 
 	bug suspectedMethods: orderedSuspects.
 
-	test result coverageResult ifNotNil: [ :cov |
-			bug executedMethods: cov methods.
-			bug uncoveredMethods: cov uncoveredMethods ].
+	test result coverageResult ifNotNil: [ :cov | bug executedMethods: cov methods ].
 
 	^ bug
 ]
 
 { #category : 'instance creation' }
-UmeBugReport class >> for: aTest type: aSymbol [
-	^ self new
-		test: aTest;
-		type: aSymbol;
-		yourself
+UmeBugReport class >> outlierReport: test delta: delta suspectedMethods: suspectedMethods [
+
+	| bug |
+	
+	bug := UmeOutlierBugReport new test: test.
+	bug delta: delta.
+	bug suspectedMethods: suspectedMethods.
+
+	test result coverageResult ifNotNil: [ :cov | bug executedMethods: cov methods ].
+
+	^ bug
+]
+
+{ #category : 'instance creation' }
+UmeBugReport class >> outlierReport: test delta: delta suspectedMethods: deltaMethods suspectedNodes: deltaNodes [
+
+	| bug |
+	
+	bug := UmeOutlierBugReport new test: test.
+	bug delta: delta.
+	bug suspectedMethods: deltaMethods.
+	bug suspectedNodes: deltaNodes.
+
+	test result coverageResult ifNotNil: [ :cov | bug executedMethods: cov methods ].
+
+	^ bug
 ]
 
 { #category : 'accessing' }
+UmeBugReport >> delta [
+
+	^ delta
+]
+
+{ #category : 'accessing' }
+UmeBugReport >> delta: aDelta [
+
+	delta := aDelta
+]
+
+{ #category : 'printing' }
 UmeBugReport >> errorMessage [
 
-	^ errorMessage
-]
-
-{ #category : 'accessing' }
-UmeBugReport >> errorMessage: aString [
-
-	errorMessage := aString
+	^ nil
 ]
 
 { #category : 'accessing' }
@@ -94,43 +111,19 @@ UmeBugReport >> executedMethods: aSet [
 	executedMethods := aSet
 ]
 
-{ #category : 'accessing' }
-UmeBugReport >> metric [
-
-	^ metric
-]
-
-{ #category : 'accessing' }
-UmeBugReport >> metric: aSymbol [
-
-	metric := aSymbol
-]
-
 { #category : 'printing' }
 UmeBugReport >> printOn: aStream [
 
 	super printOn: aStream.
 	aStream
 		nextPutAll: ' type: ';
-		nextPutAll: type asString.
+		nextPutAll: self type asString.
 	metric ifNotNil: [ aStream nextPutAll: ' metric: '; nextPutAll: metric asString ].
 	aStream nextPutAll: ' test: '; print: test name.
 	suspectedMethods ifNotNil: [ :methods |
 		aStream nextPutAll: ' top suspect: '.
 		methods ifEmpty: [ aStream nextPutAll: '(none)' ] ifNotEmpty: [ aStream print: methods first ] ].
-	errorMessage ifNotNil: [ aStream nextPutAll: ' error: '; nextPutAll: errorMessage ]
-]
-
-{ #category : 'accessing' }
-UmeBugReport >> stackTrace [
-
-	^ stackTrace
-]
-
-{ #category : 'accessing' }
-UmeBugReport >> stackTrace: aCollection [
-
-	stackTrace := aCollection
+	self errorMessage ifNotNil: [ aStream nextPutAll: ' error: '; nextPutAll: self errorMessage ]
 ]
 
 { #category : 'accessing' }
@@ -146,18 +139,6 @@ UmeBugReport >> suspectedMethods: anOrderedCollection [
 ]
 
 { #category : 'accessing' }
-UmeBugReport >> suspiciousnessScores [
-
-	^ suspiciousnessScores
-]
-
-{ #category : 'accessing' }
-UmeBugReport >> suspiciousnessScores: aDictionary [
-
-	suspiciousnessScores := aDictionary
-]
-
-{ #category : 'accessing' }
 UmeBugReport >> test [
 
 	^ test
@@ -167,28 +148,4 @@ UmeBugReport >> test [
 UmeBugReport >> test: aUmeTest [
 
 	test := aUmeTest
-]
-
-{ #category : 'accessing' }
-UmeBugReport >> type [
-
-	^ type
-]
-
-{ #category : 'accessing' }
-UmeBugReport >> type: aSymbol [
-
-	type := aSymbol
-]
-
-{ #category : 'accessing' }
-UmeBugReport >> uncoveredMethods [
-
-	^ uncoveredMethods
-]
-
-{ #category : 'accessing' }
-UmeBugReport >> uncoveredMethods: aSet [
-
-	uncoveredMethods := aSet
 ]
