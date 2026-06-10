@@ -7,6 +7,40 @@ Class {
 }
 
 { #category : 'enumerating' }
+UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree [ 
+	" return all the reduction candidates"
+	| symbol expansions reductions  grammar|
+	 
+	reductions := OrderedCollection new.
+	expansions := OrderedCollection new.
+	symbol := aTree tag.
+	grammar := aTree grammarRule fragments.
+	
+	grammar do: [ :aRule | expansions addAll: aRule rules ].
+	expansions := expansions sorted: [ :expA :expB | expA fragments size < expB fragments size ]. 
+
+	expansions do: [ :expansion | | match newChildReductions |
+		match := true.
+		newChildReductions := OrderedCollection new.
+		expansion fragments do: [ :altSymbol | | childReductions|
+			childReductions := UmeSimplifyGrammarSubtreeReducer findSubtree: aTree mathchingWith: altSymbol name.
+			childReductions ifEmpty: [ match:= false ].
+			match ifTrue: [ newChildReductions add: childReductions ]].
+			1 halt.
+		match ifTrue: [ (self possibleCombination: newChildReductions) do: [ :combination | |newTree|
+				newTree := aTree class new.
+				newTree tag: symbol.
+				1 halt.
+				newTree children: combination.
+				1 halt.
+				newTree treeSize  < aTree treeSize ifTrue: [ reductions add: newTree ].
+				]
+			]
+		].
+    ^ reductions sorted: [ :treeA :treeB | treeA treeSize  < treeB treeSize ]
+]
+
+{ #category : 'enumerating' }
 UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: aGrammar [
 	" return all the reduction candidates"
 	| symbol expansions reductions  grammar|
@@ -17,23 +51,19 @@ UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: a
 	grammar := aTree grammarRule fragments.
 	
 	grammar do: [ :aRule | expansions addAll: aRule rules ].
-	"expansions:= expansions flattened."
 	expansions := expansions sorted: [ :expA :expB | expA fragments size < expB fragments size ]. 
 
 	expansions do: [ :expansion | | match newChildReductions |
 		match := true.
 		newChildReductions := OrderedCollection new.
 		expansion fragments do: [ :altSymbol | | childReductions|
-			1 halt.
 			childReductions := UmeSimplifyGrammarSubtreeReducer findSubtree: aTree mathchingWith: altSymbol name.
 			childReductions ifEmpty: [ match:= false ].
 			match ifTrue: [ newChildReductions add: childReductions ]].
 			1 halt.
 		match ifTrue: [ (self possibleCombination: newChildReductions) do: [ :combination | |newTree|
-				newTree := aTree class new.
-				newTree tag: symbol.
-				newTree children: combination.
-				1 halt.
+				1 halt. 
+				newTree := UmeGrammarParser parse: combination asInput from: aGrammar .
 				newTree treeSize  < aTree treeSize ifTrue: [ reductions add: newTree ].
 				]
 			]
@@ -54,6 +84,9 @@ UmeSimplifyGrammarAlternateReduction class >> possibleCombination: aListOfLists 
 	
 	allCombinationsList := OrderedCollection new.
 	aListOfLists ifNil: [ ^nil ].
+	aListOfLists ifEmpty: [ ^ allCombinationsList ].
+	
+	
 	allCombinationsList := OrderedCollection with: OrderedCollection new.
 	aListOfLists do: [ :aSubList | |res|
 		res := OrderedCollection new.
@@ -64,6 +97,7 @@ UmeSimplifyGrammarAlternateReduction class >> possibleCombination: aListOfLists 
 		allCombinationsList := res.
 		].
 	^ allCombinationsList 
+
 ]
 
 { #category : 'enumerating' }
