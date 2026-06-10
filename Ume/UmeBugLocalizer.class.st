@@ -67,7 +67,7 @@ UmeBugLocalizer >> coveredNodesDeltaBetween: baseline and: test [
 
 	^ testNodes keys inject: Dictionary new into: [ :dic :key | | currentValue baselineValue |
 		currentValue := testNodes at: key.
-		baselineValue := baselineNodes at: key.
+		baselineValue := baselineNodes at: key ifAbsent: [ 0 ].
 		(currentValue > baselineValue) ifTrue: [
 			dic at: key put: (currentValue - baselineValue)
 		].

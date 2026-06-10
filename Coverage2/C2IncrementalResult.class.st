@@ -40,7 +40,7 @@ C2IncrementalResult >> coverNode: aNodePath inMethod: aMethodName [
 C2IncrementalResult >> initialize [
 
 	super initialize.
-	coveredNodes := IdentityDictionary new.
+	coveredNodes := Dictionary new.
 ]
 
 { #category : 'as yet unclassified' }
