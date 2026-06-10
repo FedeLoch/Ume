@@ -14,6 +14,7 @@ UmeSimplifyGrammarAlternateReductionTest >> testMinimizingATreeWithAAlternativeE
 	grammar := AritExpressionGrammar new.
 
 	expressionTree := UmeGrammarParser parse: '2*3' from: grammar.
-	res1:= (UmeSimplifyGrammarAlternateReduction reduce: expressionTree).
+	res1 := (UmeSimplifyGrammarAlternateReduction alternateReduction: expressionTree using: grammar ).
 	self assert:  res1 asInput equals: '3'. 
+	
 ]

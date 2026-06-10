@@ -9,31 +9,61 @@ Class {
 { #category : 'enumerating' }
 UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: aGrammar [
 	" return all the reduction candidates"
-	| rules candidates reductions  |
-	
-	candidates := OrderedCollection new. 
+	| symbol expansions reductions  grammar|
+	 
 	reductions := OrderedCollection new.
-	rules := aTree grammarRule fragments .
+	expansions := OrderedCollection new.
+	symbol := aTree tag.
+	grammar := aTree grammarRule fragments.
+	
+	grammar do: [ :aRule | expansions addAll: aRule rules ].
+	"expansions:= expansions flattened."
+	expansions := expansions sorted: [ :expA :expB | expA fragments size < expB fragments size ]. 
 
-	rules do: [ :rule | | match newChild validSubtrees |
+	expansions do: [ :expansion | | match newChildReductions |
 		match := true.
-		newChild := OrderedCollection new.
-		validSubtrees := UmeSimplifyGrammarSubtreeReducer findSubtree: aTree mathchingWith: rule name.
-		(validSubtrees isNil) ifTrue: [ match := false ].
-		match ifTrue: [ 
-			 validSubtrees do: [ :subtree | | newTree |
-				"newTree := self updateTree: aTree with: subtree using: aGrammar."
-				newTree := self copyTree: subtree with: aGrammar.
-				( newTree treeSize ) < ( aTree treeSize) ifTrue: [ 
-					reductions add: newTree ] ] ]  
+		newChildReductions := OrderedCollection new.
+		expansion fragments do: [ :altSymbol | | childReductions|
+			1 halt.
+			childReductions := UmeSimplifyGrammarSubtreeReducer findSubtree: aTree mathchingWith: altSymbol name.
+			childReductions ifEmpty: [ match:= false ].
+			match ifTrue: [ newChildReductions add: childReductions ]].
+			1 halt.
+		match ifTrue: [ (self possibleCombination: newChildReductions) do: [ :combination | |newTree|
+				newTree := aTree class new.
+				newTree tag: symbol.
+				newTree children: combination.
+				1 halt.
+				newTree treeSize  < aTree treeSize ifTrue: [ reductions add: newTree ].
+				]
+			]
 		].
-    ^ reductions sorted: [ :treeA :treeB | (treeA treeSize ) < (treeB treeSize ) ] 
+    ^ reductions sorted: [ :treeA :treeB | treeA treeSize  < treeB treeSize ]
 ]
 
 { #category : 'as yet unclassified' }
 UmeSimplifyGrammarAlternateReduction class >> findTarget: aNode [
 
 	^ (aNode parent isNotNil and: [ ( aNode allNodes detect: [ :next |  next ~= aNode and: [ next tag = aNode tag ]] ifNone: [nil]) isNotNil. ])
+]
+
+{ #category : 'as yet unclassified' }
+UmeSimplifyGrammarAlternateReduction class >> possibleCombination: aListOfLists [
+
+	| allCombinationsList |
+	
+	allCombinationsList := OrderedCollection new.
+	aListOfLists ifNil: [ ^nil ].
+	allCombinationsList := OrderedCollection with: OrderedCollection new.
+	aListOfLists do: [ :aSubList | |res|
+		res := OrderedCollection new.
+		allCombinationsList do: [ :combinations | 
+			aSubList do: [ :element |
+				res add: (combinations copy add: element); yourself ]
+			].
+		allCombinationsList := res.
+		].
+	^ allCombinationsList 
 ]
 
 { #category : 'enumerating' }
@@ -69,11 +99,10 @@ UmeSimplifyGrammarAlternateReduction class >> updateTree: aTree with: aSubTree u
 
 	| treeCopy replacementNodeInCopy allNodesCopy targetIndex targetNodeInCopy|
 	
-	1 halt.
 	treeCopy := self copyTree: aTree with: aGrammar.
 	
 	targetIndex := aTree allNodes findFirst: [ :subtree |
-		1 halt.(subtree isLeaf not) and: (subtree == aSubTree ) ].
+		(subtree isLeaf not) and: (subtree == aSubTree ) ].
 	
 	 
 	(targetIndex = 0) ifTrue: [ ^ treeCopy ].
@@ -81,6 +110,5 @@ UmeSimplifyGrammarAlternateReduction class >> updateTree: aTree with: aSubTree u
  	allNodesCopy := treeCopy allNodes.
 	targetNodeInCopy := allNodesCopy at: targetIndex.   
 	replacementNodeInCopy := self copyTree: aSubTree with: aGrammar. 
-	1 halt. 
 	^ targetNodeInCopy parent ifNil: [ replacementNodeInCopy ] ifNotNil: [ :parent | parent replaceChild: targetNodeInCopy with: replacementNodeInCopy. treeCopy ].
 ]
