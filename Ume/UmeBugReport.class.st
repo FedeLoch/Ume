@@ -3,7 +3,6 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'test',
-		'metric',
 		'suspectedMethods',
 		'delta',
 		'executedMethods'
@@ -109,21 +108,6 @@ UmeBugReport >> executedMethods [
 UmeBugReport >> executedMethods: aSet [
 
 	executedMethods := aSet
-]
-
-{ #category : 'printing' }
-UmeBugReport >> printOn: aStream [
-
-	super printOn: aStream.
-	aStream
-		nextPutAll: ' type: ';
-		nextPutAll: self type asString.
-	metric ifNotNil: [ aStream nextPutAll: ' metric: '; nextPutAll: metric asString ].
-	aStream nextPutAll: ' test: '; print: test name.
-	suspectedMethods ifNotNil: [ :methods |
-		aStream nextPutAll: ' top suspect: '.
-		methods ifEmpty: [ aStream nextPutAll: '(none)' ] ifNotEmpty: [ aStream print: methods first ] ].
-	self errorMessage ifNotNil: [ aStream nextPutAll: ' error: '; nextPutAll: self errorMessage ]
 ]
 
 { #category : 'accessing' }
