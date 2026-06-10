@@ -11,11 +11,16 @@ Class {
 { #category : 'as yet unclassified' }
 C2IncrementalResult >> collectResult: collector [
 
-	| nodes |
-	nodes := coveredNodes collect: [ :tuple | self resolveNode: tuple ].
+	| nodes timesExecuted|
+
+	timesExecuted := coveredNodes keys inject: Dictionary new into: [ :dic :tuple |
+		dic at: (self resolveNode: tuple) put: (coveredNodes at: tuple). dic
+	].
+	nodes := timesExecuted keys.
 
 	^ C2CoverageResult new
 		  collector: collector;
+		  timesExecuted: timesExecuted;
 		  nodes: nodes;
 		  methods:
 			  (nodes collect: [ :node | node methodNode compiledMethod ]) asSet
@@ -24,20 +29,24 @@ C2IncrementalResult >> collectResult: collector [
 { #category : 'as yet unclassified' }
 C2IncrementalResult >> coverNode: aNodePath inMethod: aMethodName [
 
-	coveredNodes add: { aMethodName. aNodePath }
+	| tuple |
+	
+	tuple := { aMethodName. aNodePath }.
+
+	coveredNodes at: tuple update: [ :n | n + 1 ] initial: [ 1 ].
 ]
 
 { #category : 'as yet unclassified' }
 C2IncrementalResult >> initialize [
 
 	super initialize.
-	coveredNodes := Set new
+	coveredNodes := IdentityDictionary new.
 ]
 
 { #category : 'as yet unclassified' }
 C2IncrementalResult >> resolveNode: tuple [
 
-	^(Object readFrom: tuple first) ast childAtPath: tuple second 
+	^ (Object readFrom: tuple first) ast childAtPath: tuple second 
 	
 
 ]
@@ -45,7 +54,8 @@ C2IncrementalResult >> resolveNode: tuple [
 { #category : 'as yet unclassified' }
 C2IncrementalResult >> tagExecuted: aNodePath inMethod: aMethodName [
 
-	coveredNodes add: {
-			aMethodName.
-			aNodePath }
+	| tuple |
+
+	tuple := { aMethodName. aNodePath }.
+	coveredNodes at: tuple update: [ :n | n + 1 ] initial: [ 1 ].
 ]

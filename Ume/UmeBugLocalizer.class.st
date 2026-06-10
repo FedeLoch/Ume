@@ -61,11 +61,18 @@ UmeBugLocalizer >> coveredMethodDeltaBetween: baseline and: test [
 UmeBugLocalizer >> coveredNodesDeltaBetween: baseline and: test [
 	
 	| baselineNodes testNodes |
-	
-	baselineNodes := baseline result coverageResult nodes.
-	testNodes := test result coverageResult nodes.
 
-	^ testNodes difference: baselineNodes
+	baselineNodes := baseline result coverageResult timesExecuted.
+	testNodes := test result coverageResult timesExecuted.
+
+	^ testNodes keys inject: Dictionary new into: [ :dic :key | | currentValue baselineValue |
+		currentValue := testNodes at: key.
+		baselineValue := baselineNodes at: key.
+		(currentValue > baselineValue) ifTrue: [
+			dic at: key put: (currentValue - baselineValue)
+		].
+		dic	
+	]
 ]
 
 { #category : 'localization' }
@@ -115,7 +122,7 @@ UmeBugLocalizer >> localizeOutliers: umeResult [
 	^ outliers collect: [ :test | | bug delta deltaMethods deltaNodes |
 		delta := self profilingDeltaBetween: baseline and: test.
 		deltaMethods := self coveredMethodDeltaBetween: baseline and: test.
-		deltaNodes :=  self coveredNodesDeltaBetween: baseline and: test.
+		deltaNodes := self coveredNodesDeltaBetween: baseline and: test.
 		bug := UmeBugReport outlierReport: test delta: delta suspectedMethods: deltaMethods suspectedNodes: deltaNodes.
 		baseline := test.
 		bug
