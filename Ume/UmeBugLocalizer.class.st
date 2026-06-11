@@ -81,7 +81,7 @@ UmeBugLocalizer >> localize: umeResult [
 	^ {
 		'Errors' -> (self localizeErrors: umeResult).
 		'Failures' -> (self localizeFailures: umeResult).
-		'OutlierCauses' -> (self localizeOutliers: umeResult)
+		'Outliers' -> (self localizeOutliers: umeResult)
 	} asDictionary
 ]
 
@@ -113,20 +113,24 @@ UmeBugLocalizer >> localizeFailures: umeResult [
 { #category : 'localization' }
 UmeBugLocalizer >> localizeOutliers: umeResult [
 
-	| outliers baseline |
+	| outliers baseline bugBaseline outlierbugs |
 
 	umeResult topCases ifEmpty: [ ^ OrderedCollection new ].
 	outliers := umeResult topCases allButFirst select: [ :test | test result isSuccess ].
 	baseline := umeResult topCases first.
+	bugBaseline := UmeBugReport outlierBaseline: baseline.
 	
-	^ outliers collect: [ :test | | bug delta deltaMethods deltaNodes |
+	outlierbugs := outliers collect: [ :test | | bug delta deltaMethods deltaNodes |
 		delta := self profilingDeltaBetween: baseline and: test.
 		deltaMethods := self coveredMethodDeltaBetween: baseline and: test.
 		deltaNodes := self coveredNodesDeltaBetween: baseline and: test.
 		bug := UmeBugReport outlierReport: test delta: delta suspectedMethods: deltaMethods suspectedNodes: deltaNodes.
 		baseline := test.
 		bug
-	]
+	].
+	
+	^ { bugBaseline }, outlierbugs
+
 ]
 
 { #category : 'localization' }
