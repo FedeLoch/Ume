@@ -39,23 +39,3 @@ UmeSimplifyGrammarSubtreeReducer class >> findSubtreesIndex: aTree mathchingWith
 
 	^ candidates
 ]
-
-{ #category : 'enumerating' }
-UmeSimplifyGrammarSubtreeReducer class >> reduce: aTree [
-	"subtree reductions"
-	| allNodes theOne theOneIndex |
-	
-	allNodes := aTree allNodes.
-	
-	theOneIndex := allNodes findFirst: [ :node |
-		node parent isNotNil and: [ node isLeaf not and: [ node parent tag = node tag ] ]
-	].
-
-	theOneIndex = 0 ifTrue: [ ^ nil ]. 
-	
-	theOne := allNodes at: theOneIndex.
-
-	theOne grandParent replaceChild: (theOne parent) with: theOne.
-
-	^ aTree
-]

@@ -19,3 +19,17 @@ UmeSimplifyGrammarSubtreeReducerTest >> testMinimizingAnExpressionSubree [
 	
 	self assert: (stringList includesAll: expectedRes).
 ]
+
+{ #category : 'tests' }
+UmeSimplifyGrammarSubtreeReducerTest >> testMinimizingAnExpressionSubree02 [
+
+	| expressionTree grammar res stringList expectedRes|
+	grammar := AritExpressionGrammar new.
+
+	expressionTree := UmeGrammarParser parse: '1+(2*3)' from: grammar.
+	res := (UmeSimplifyGrammarSubtreeReducer findSubtree: expressionTree mathchingWith: 'Op' ).
+	stringList := res collect: #asInput.
+	expectedRes := #('+' '*').
+	
+	self assert: (stringList includesAll: expectedRes).
+]
