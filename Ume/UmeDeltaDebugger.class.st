@@ -30,16 +30,34 @@ UmeDeltaDebugger >> initialize [
 ]
 
 { #category : 'shrinking' }
-UmeDeltaDebugger >> minimizeOne: aInput upperBound: bound [
+UmeDeltaDebugger >> minimizeOne: stringInput upperBound: bound [
+	
 	| inputSlice|
 	
-	(0 < aInput size and: splittingValue <= aInput size) ifTrue: [ 
-		inputSlice := self split: aInput into: splittingValue. 
+	(0 < stringInput size and: splittingValue <= stringInput size) ifTrue: [ 
+		inputSlice := self split: stringInput into: splittingValue. 
 		inputSlice do: [ :aSubInput |
-			(self triggerBug: aSubInput upperBound:bound ) ifTrue: [ 
-				^ aSubInput]].
+			self minimizationDone.
+			(self triggerBug: aSubInput upperBound: bound)
+				ifTrue: [ ^ aSubInput ]
+				ifFalse: [ self failedMinimization ]
+		].
 	].
-	^ aInput .
+
+	^ stringInput
+
+]
+
+{ #category : 'shrinking' }
+UmeDeltaDebugger >> problemPresence: bound [ 
+	
+	^ bound ifFalse: [ 100 ] ifTrue: [ 0 ]
+]
+
+{ #category : 'shrinking' }
+UmeDeltaDebugger >> sizeOf: string [
+
+	^ string size
 
 ]
 

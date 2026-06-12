@@ -81,7 +81,6 @@ UmeShrinker >> minimizeTree: tree upperBound: bound [
 	maxIterations timesRepeat: [ | minimized |
 		minimized := self minimizeOne: currentTree upperBound: bound.
 		(minimized = currentTree) ifTrue: [ ^ currentTree ].
-		self minimizationDone.
 		currentTree := minimized.
 	].
 
@@ -104,16 +103,27 @@ UmeShrinker >> oracle: anOracle [
 UmeShrinker >> percentageInputReduced: tree given: minimizedTree [
 
 	| initialNumOfNodes currentNumOfNodes |
-	initialNumOfNodes := tree allNodes size.
-	currentNumOfNodes := minimizedTree allNodes size.
+	initialNumOfNodes := self sizeOf: tree.
+	currentNumOfNodes := self sizeOf: minimizedTree.
 
-	^ 100 - ((currentNumOfNodes * 100) / initialNumOfNodes)
+	^ (100 - ((currentNumOfNodes * 100) / initialNumOfNodes)) asFloat
 ]
 
 { #category : 'shrinking' }
-UmeShrinker >> percentageProblemPreservation: upperBound given: currentValue [
+UmeShrinker >> percentageProblemPreservation: upperBound given: currentBound [
 
-	1 halt.
+	| baseline current |
+	
+	baseline := self problemPresence: upperBound.
+	current := self problemPresence: currentBound.
+	
+	^ ((current * 100) / baseline) asFloat
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> problemPresence: bound [
+
+	self subclassResponsibility 
 ]
 
 { #category : 'shrinking' }
@@ -121,22 +131,22 @@ UmeShrinker >> profiledShrink: input [
 
 	| tree minimizedTree upperBound initialTime totalTime minimizedInput |
 	
-	initialTime := Time millisecondClockValue.
+	initialTime := Time microsecondClockValue.
 	(self tree: input) ifNil: [ Error signal: 'Trying to reduce a non valid input' ].
 	upperBound := self evalInput: input.
 
 	tree := self tree: input.
 	
 	minimizedTree := self minimizeTree: tree upperBound: upperBound.	
-	totalTime := Time millisecondClockValue - initialTime.
+	totalTime := Time microsecondClockValue - initialTime.
 	minimizedInput := self asInput: minimizedTree.
 	
 	^ {
-		'totalTime' -> totalTime.
+		'totalTime' -> (Duration microSeconds: totalTime).
 		'neededReductions' -> reductionsDone.
 		'failedReductions' -> failedReductionsDone.
-		'%problemPreservation' -> self percentageProblemPreservation: upperBound given: (self evalInput: minimizedInput).
-		'%inputReduction' -> self percentageInputReduced: tree given: minimizedTree.
+		'%problemPreservation' -> (self percentageProblemPreservation: upperBound given: (self evalInput: minimizedInput)).
+		'%inputReduction' -> (self percentageInputReduced: tree given: minimizedTree).
 		'minimizedInput' -> minimizedInput
 	}
 ]
@@ -153,6 +163,12 @@ UmeShrinker >> shrink: input [
 	minimizedTree := self minimizeTree: tree upperBound: upperBound.
 
 	^ self asInput: minimizedTree
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> sizeOf: tree [
+
+	^ tree allNodes size
 ]
 
 { #category : 'shrinking' }
