@@ -2,7 +2,9 @@ Class {
 	#name : 'UmeShrinker',
 	#superclass : 'Object',
 	#instVars : [
-		'maxIterations'
+		'maxIterations',
+		'reductionsDone',
+		'failedReductionsDone'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -26,6 +28,8 @@ UmeShrinker >> initialize [
 	
 	super initialize.
 	maxIterations := 1000.
+	reductionsDone := 0.
+	failedReductionsDone := 0.
 ]
 
 { #category : 'shrinking' }
@@ -48,6 +52,47 @@ UmeShrinker >> minimizeTree: tree upperBound: bound [
 	].
 
 	^ currentTree
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> percentageInputReduced: tree given: minimizedTree [
+
+	| initialNumOfNodes currentNumOfNodes |
+	initialNumOfNodes := tree allNodes size.
+	currentNumOfNodes := minimizedTree allNodes size.
+
+	^ 100 - ((currentNumOfNodes * 100) / initialNumOfNodes)
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> percentageProblemPreservation: upperBound given: currentValue [
+
+	1 halt.
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> profiledShrink: input [
+
+	| tree minimizedTree upperBound initialTime totalTime minimizedInput |
+	
+	initialTime := Time millisecondClockValue.
+	(self tree: input) ifNil: [ Error signal: 'Trying to reduce a non valid input' ].
+	upperBound := self evalInput: input.
+
+	tree := self tree: input.
+	
+	minimizedTree := self minimizeTree: tree upperBound: upperBound.	
+	totalTime := Time millisecondClockValue - initialTime.
+	minimizedInput := self asInput: minimizedTree.
+	
+	^ {
+		'totalTime' -> totalTime.
+		'neededReductions' -> reductionsDone.
+		'failedReductions' -> failedReductionsDone.
+		'%problemPreservation' -> self percentageProblemPreservation: upperBound given: (self evalInput: minimizedInput).
+		'%inputReduction' -> self percentageInputReduced: tree given: minimizedTree.
+		'minimizedInput' -> minimizedInput
+	}
 ]
 
 { #category : 'shrinking' }
