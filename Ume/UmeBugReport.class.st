@@ -21,11 +21,10 @@ UmeBugReport class >> errorReport: test [
 	bug errorMessage: test result message.
 
 	test result stack ifNotNil: [ :frames |
-			bug stackTrace: frames.
-			topFrames := frames first: (frames size min: 3).
-			bug suspectedMethods:
-				(topFrames collect: [ :frame | frame asString ])
-					asOrderedCollection ].
+		bug stackTrace: frames.
+		topFrames := frames first: (frames size min: 3).
+		bug suspectedMethods: (topFrames collect: [ :frame | frame method ])
+	].
 
 	test result coverageResult ifNotNil: [ :cov | bug executedMethods: cov methods ].
 	
