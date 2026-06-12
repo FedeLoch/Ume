@@ -2,7 +2,6 @@ Class {
 	#name : 'UmeDeltaDebugger',
 	#superclass : 'UmeShrinker',
 	#instVars : [
-		'oracle',
 		'shrinker',
 		'splittingValue'
 	],
@@ -42,18 +41,6 @@ UmeDeltaDebugger >> minimizeOne: aInput upperBound: bound [
 	].
 	^ aInput .
 
-]
-
-{ #category : 'shrinking' }
-UmeDeltaDebugger >> oracle [ 
-	
-	^ oracle 
-]
-
-{ #category : 'shrinking' }
-UmeDeltaDebugger >> oracle: anOracle [
-
-	oracle := anOracle
 ]
 
 { #category : 'private' }

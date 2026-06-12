@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'maxIterations',
 		'reductionsDone',
-		'failedReductionsDone'
+		'failedReductionsDone',
+		'oracle',
+		'grammar'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -23,6 +25,24 @@ UmeShrinker >> evalInput: input [
 	self subclassResponsibility 
 ]
 
+{ #category : 'shrinking' }
+UmeShrinker >> failedMinimization [
+
+	failedReductionsDone := failedReductionsDone + 1
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> grammar [
+	
+	^ grammar
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> grammar: aGrammar [
+
+	grammar := aGrammar
+]
+
 { #category : 'testing' }
 UmeShrinker >> initialize [ 
 	
@@ -33,9 +53,19 @@ UmeShrinker >> initialize [
 ]
 
 { #category : 'shrinking' }
+UmeShrinker >> minimizationDone [
+
+	reductionsDone := reductionsDone + 1
+]
+
+{ #category : 'shrinking' }
 UmeShrinker >> minimizeOne: tree upperBound: bound [
 
-	self subclassResponsibility 
+	"Each sublclass must call:
+		self minimizationDone -> each time it proceeds to do a reduction ( failed or not )
+		self failedMinimization -> each time it proceeds to do a failed reduction
+	"
+	self subclassResponsibility
 ]
 
 { #category : 'shrinking' }
@@ -48,10 +78,23 @@ UmeShrinker >> minimizeTree: tree upperBound: bound [
 	maxIterations timesRepeat: [ | minimized |
 		minimized := self minimizeOne: currentTree upperBound: bound.
 		(minimized = currentTree) ifTrue: [ ^ currentTree ].
+		self minimizationDone.
 		currentTree := minimized.
 	].
 
 	^ currentTree
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> oracle [ 
+	
+	^ oracle 
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> oracle: anOracle [
+
+	oracle := anOracle
 ]
 
 { #category : 'shrinking' }

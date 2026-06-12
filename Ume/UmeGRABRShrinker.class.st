@@ -2,8 +2,6 @@ Class {
 	#name : 'UmeGRABRShrinker',
 	#superclass : 'UmeShrinker',
 	#instVars : [
-		'grammar',
-		'oracle',
 		'reductionStrategy'
 	],
 	#category : 'Ume-Shrinking',
@@ -36,12 +34,6 @@ UmeGRABRShrinker >> evalInput: input [
 ]
 
 { #category : 'shrinking' }
-UmeGRABRShrinker >> grammar: aGrammar [
-
-	grammar := aGrammar
-]
-
-{ #category : 'shrinking' }
 UmeGRABRShrinker >> minimizeOne: originalTree upperBound: bound [
 
 	| reducedTree |
@@ -58,18 +50,6 @@ UmeGRABRShrinker >> minimizeOne: originalTree upperBound: bound [
 		1 halt.]."
 	
 	^ reducedTree 
-]
-
-{ #category : 'shrinking' }
-UmeGRABRShrinker >> oracle [
-
-	^ oracle
-]
-
-{ #category : 'shrinking' }
-UmeGRABRShrinker >> oracle: aOracle [
-
-	oracle := aOracle
 ]
 
 { #category : 'shrinking' }

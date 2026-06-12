@@ -2,7 +2,6 @@ Class {
 	#name : 'UmeGrammarBasedShrinker',
 	#superclass : 'UmeShrinker',
 	#instVars : [
-		'grammar',
 		'evaluator',
 		'feedbackEvaluator',
 		'threshold',
@@ -89,12 +88,6 @@ UmeGrammarBasedShrinker >> feedbackEvaluator [
 UmeGrammarBasedShrinker >> feedbackEvaluator: aFeedbackEvaluator [
 
 	feedbackEvaluator := aFeedbackEvaluator 
-]
-
-{ #category : 'accessing' }
-UmeGrammarBasedShrinker >> grammar: aGrammar [
-
-	grammar := aGrammar 
 ]
 
 { #category : 'testing' }
