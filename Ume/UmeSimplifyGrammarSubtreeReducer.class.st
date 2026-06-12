@@ -39,3 +39,10 @@ UmeSimplifyGrammarSubtreeReducer class >> findSubtreesIndex: aTree mathchingWith
 
 	^ candidates
 ]
+
+{ #category : 'enumerating' }
+UmeSimplifyGrammarSubtreeReducer class >> reduce: subtree using: grammar matching: symbol [
+
+	^ self findSubtree: subtree mathchingWith: symbol 
+
+]

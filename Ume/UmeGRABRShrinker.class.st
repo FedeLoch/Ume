@@ -44,20 +44,19 @@ UmeGRABRShrinker >> grammar: aGrammar [
 { #category : 'shrinking' }
 UmeGRABRShrinker >> minimizeOne: originalTree upperBound: bound [
 
-	| reducedTree |
+	originalTree allNodes doWithIndex: [ :subTree :index | 
+		( subTree isLeaf ) ifFalse: [ 
+		| symbol |
+		symbol := subTree tag. 
+		( reductionStrategy reduce: subTree using: grammar matching: symbol ) do: [ :alternateSubtree |
+			( alternateSubtree treeSize < originalTree treeSize) ifTrue: [ | newTree |
+				newTree := self replaceSubtreeIn: originalTree by: alternateSubtree index: index.
+				(self triggerBug: newTree upperBound: bound ) ifTrue: [ ^ newTree ] ]
+				] 
+			] 
+		].
 	
-	reducedTree:= self reductionOn: originalTree with: bound.
-	1 halt. 
-
-	"originalTree children do: [ :child | reducedTrees := reductionStrategy findCandidates: child using: grammar. ].
-	reducedTrees do: [ :subtree |
-		| treeCopy |
-		1 halt.
-		treeCopy:= self copyTree: originalTree.
-		treeCopy replaceChild: subtree parent with: subtree.
-		1 halt.]."
-	
-	^ reducedTree 
+	^ originalTree
 ]
 
 { #category : 'shrinking' }
@@ -78,19 +77,6 @@ UmeGRABRShrinker >> parse: input [
 	^ UmeGrammarParser parse: input from: grammar
 ]
 
-{ #category : 'as yet unclassified' }
-UmeGRABRShrinker >> reductionOn: originalTree with: bound [
-	
-	| reducedTrees |
-
-	reducedTrees := reductionStrategy reduce: originalTree using: grammar.
-	reducedTrees do: [ :candidate |
-		(self triggerBug: candidate upperBound: bound) ifTrue: [ ^ candidate ] 
-	].
-
-	^ originalTree 
-]
-
 { #category : 'accessing' }
 UmeGRABRShrinker >> reductionStrategy [
 
@@ -103,21 +89,15 @@ UmeGRABRShrinker >> reductionStrategy: aStrategy [
 	reductionStrategy := aStrategy
 ]
 
-{ #category : 'shrinking' }
-UmeGRABRShrinker >> test: aTree with: bound [
+{ #category : 'copying' }
+UmeGRABRShrinker >> replaceSubtreeIn: tree by: subtree index: index [
 
-	| allChildrens allSubTree|
+	| treeCopy |
 	
-	allSubTree := OrderedCollection new. 
+	treeCopy := self copyTree: tree. 
+	treeCopy replaceChildAt: index with: (subtree at: 2). 
 	
-	allChildrens := aTree allNodes.
-	allChildrens do: [ :aSubTree |
-		| candidate |
-		(aSubTree isLeaf not) ifTrue: (candidate := reductionStrategy reduce: aSubTree).
-		1 halt. 
-		(self triggerBug: candidate upperBound: bound) ifTrue: [ allSubTree add: candidate ] ].
-
-	^ allSubTree 
+	^ treeCopy. 
 ]
 
 { #category : 'shrinking' }
