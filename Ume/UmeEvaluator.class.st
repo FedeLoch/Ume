@@ -55,7 +55,7 @@ UmeEvaluator >> eval: receiver method: methodToPerform from: schema with: args a
 			stack: (error signalerContext stackOfSize: 10);
 			profilingResult: profilingResult;
 			coverageResult: localCoverageResult;
-			message: self asString"error messageText"
+			message: error asString
 	].
 
 	^ (assertResult ifTrue: [ UmeEvalSuccess ] ifFalse: [ UmeEvalFail ]) new
