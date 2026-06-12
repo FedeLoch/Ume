@@ -60,7 +60,7 @@ UmeAPINeoJsonTest >> testNeoJsonPerformance [
 	result := runner run.
 
 	self assertSuccess: result.
-	
+	self assert: (result totalTime >= 2 seconds).
 
 ]
 
@@ -74,7 +74,7 @@ UmeAPINeoJsonTest >> testNeoJsonPerformanceCount [
 	result := runner run.
 
 	self assertSuccess: result.
-	
+	self assert: (result numberOfGeneratedTests ) equals: 2.
 
 ]
 
@@ -117,6 +117,6 @@ UmeAPINeoJsonTest >> testNeoJsonPerformanceTimer [
 	result := runner run.
 
 	self assertSuccess: result.
-	
+	self assert: (result totalTime >= 2 seconds).
 
 ]

@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeShrinkerTest',
+	#name : 'UmeGrammarBasedShrinkerTest',
 	#superclass : 'TestCase',
 	#instVars : [
 		'feedbackEvaluator'
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'tests' }
-UmeShrinkerTest >> updateFeedbackEvaluatorWith: feedback [
+UmeGrammarBasedShrinkerTest >> updateFeedbackEvaluatorWith: feedback [
 
 	feedbackEvaluator guide setBase: feedback.
 

@@ -1,6 +1,6 @@
 Class {
 	#name : 'UmeJSONShrinkerTest',
-	#superclass : 'UmeShrinkerTest',
+	#superclass : 'UmeGrammarBasedShrinkerTest',
 	#instVars : [
 		'shrinker',
 		'evaluator'
@@ -15,7 +15,7 @@ UmeJSONShrinkerTest >> setUp [
 	
 	super setUp.
 	self timeLimit: 5 hours.
-	shrinker := UmeShrinker new.
+	shrinker := UmeGrammarBasedShrinker new.
 	shrinker grammar: JSONGrammar new.
 	evaluator := UmeEvaluator new profilingByMethodCalls.
 	shrinker evaluator: evaluator.
@@ -29,7 +29,6 @@ UmeJSONShrinkerTest >> setUp [
 UmeJSONShrinkerTest >> testShrinkNestedArraysToNormalForm [
 
 	self assert: (shrinker shrink: '[[[[1,2,3]]],{"a":null}]') equals: '[[[[1,3]]],{}]'.
-
 ]
 
 { #category : 'tests' }
