@@ -12,6 +12,6 @@ UmeShrinkingAExprBenchmark >> initialize [
 	super initialize.
 	grammar := AritExpressionGrammar new.
 	tests := {
-		ShrinkerTest new: 'input' error: 'error?'
+		ShrinkerTest input: 'input' oracle: ''
 	}.
 ]
