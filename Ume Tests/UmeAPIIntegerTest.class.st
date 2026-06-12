@@ -79,5 +79,5 @@ UmeAPIIntegerTest >> testIntegerAdditionOnlyOutliers [
 	result := runner run.
 	
 	(result tests) do: [ :t | self assert: t feedback improvement > 0 ].
-	self assert: (result numberOfGeneratedTests ) equals: 5. 
+	self assert: (result numberOfGeneratedTests ) equals: 5.
 ]
