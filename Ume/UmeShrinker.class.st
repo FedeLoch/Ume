@@ -114,16 +114,10 @@ UmeShrinker >> percentageProblemPreservation: upperBound given: currentBound [
 
 	| baseline current |
 	
-	baseline := self problemPresence: upperBound.
-	current := self problemPresence: currentBound.
+	baseline := oracle problemPresence: upperBound.
+	current := oracle problemPresence: currentBound.
 	
 	^ ((current * 100) / baseline) asFloat
-]
-
-{ #category : 'shrinking' }
-UmeShrinker >> problemPresence: bound [
-
-	self subclassResponsibility 
 ]
 
 { #category : 'shrinking' }

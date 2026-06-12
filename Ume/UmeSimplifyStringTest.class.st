@@ -15,7 +15,7 @@ UmeSimplifyStringTest >> setUp [
 
 	super setUp.
 	shrinker := UmeDeltaDebugger new.	
-	shrinker oracle: [ :string | (string includes: $e) not].
+	shrinker oracle: (UmeBooleanInputOracle from: [ :string | (string includes: $e) not]).
 
 ]
 
@@ -63,6 +63,7 @@ UmeSimplifyStringTest >> testString04 [
 UmeSimplifyStringTest >> testString05 [
 	
 	shrinker splittingValue: 3.
+
 	self assert: (shrinker shrink: 'eqlbfkdjbkj') equals: 'eq'
 ]
 

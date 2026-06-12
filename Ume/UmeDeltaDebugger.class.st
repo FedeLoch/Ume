@@ -19,7 +19,7 @@ UmeDeltaDebugger >> asInput: aString [
 { #category : 'shrinking' }
 UmeDeltaDebugger >> evalInput: input [
 
-	^ ( oracle value: input )
+	^ ( oracle isAccepted: input )
 ]
 
 { #category : 'testing' }
@@ -46,12 +46,6 @@ UmeDeltaDebugger >> minimizeOne: stringInput upperBound: bound [
 
 	^ stringInput
 
-]
-
-{ #category : 'shrinking' }
-UmeDeltaDebugger >> problemPresence: bound [ 
-	
-	^ bound ifFalse: [ 100 ] ifTrue: [ 0 ]
 ]
 
 { #category : 'shrinking' }
