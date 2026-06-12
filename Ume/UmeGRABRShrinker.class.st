@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'grammar',
 		'oracle',
-		'reductionStrategy'
+		'reductionStrategy',
+		'seen'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -15,6 +16,16 @@ Class {
 UmeGRABRShrinker >> asInput: tree [
 
 	^ tree asInput
+]
+
+{ #category : 'shrinking' }
+UmeGRABRShrinker >> candidates: subTree matching: symbol [
+
+	| allCandidates |
+	
+	allCandidates := (reductionStrategy reduce: subTree using: grammar matching: symbol) asSet.
+
+	^ allCandidates difference: seen
 ]
 
 { #category : 'shrinking' }
@@ -42,15 +53,23 @@ UmeGRABRShrinker >> grammar: aGrammar [
 ]
 
 { #category : 'shrinking' }
+UmeGRABRShrinker >> initialize [ 
+
+	super initialize.
+	seen := Set new. 
+	
+]
+
+{ #category : 'shrinking' }
 UmeGRABRShrinker >> minimizeOne: originalTree upperBound: bound [
 
 	originalTree allNodes doWithIndex: [ :subTree :index | 
-		( subTree isLeaf ) ifFalse: [ 
-		| symbol |
+		( subTree isLeaf ) ifFalse: [ | symbol |
 		symbol := subTree tag. 
-		( reductionStrategy reduce: subTree using: grammar matching: symbol ) do: [ :alternateSubtree |
-			( alternateSubtree treeSize < originalTree treeSize) ifTrue: [ | newTree |
-				newTree := self replaceSubtreeIn: originalTree by: alternateSubtree index: index.
+		( self candidates: subTree matching: symbol ) do: [ :candidate |
+			seen add: candidate. 
+			( candidate treeSize < originalTree treeSize) ifTrue: [ | newTree |
+				newTree := self replaceSubtreeIn: originalTree by: candidate index: index.
 				(self triggerBug: newTree upperBound: bound ) ifTrue: [ ^ newTree ] ]
 				] 
 			] 
