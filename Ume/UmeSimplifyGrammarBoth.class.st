@@ -7,29 +7,15 @@ Class {
 }
 
 { #category : 'enumerating' }
-UmeSimplifyGrammarBoth class >> findCandidates: aTree using: aGrammar [
+UmeSimplifyGrammarBoth class >> findCandidates: aTree using: aGrammar matchingWith: aSymbol [
 
 	| candidatesSubtree candidatesAlternate candidates|
 	
 	candidates := OrderedCollection new.
 	 
-	candidatesSubtree := (UmeSimplifyGrammarAlternateReduction findCandidates: aTree using: aGrammar).
-	candidatesAlternate := (UmeSimplifyGrammarSubtreeReducer findCandidates: aTree using: aGrammar).
+	candidatesAlternate := (UmeSimplifyGrammarAlternateReduction alternateReduction: aTree using: aGrammar matchingWith: aSymbol ).
+	candidatesSubtree := (UmeSimplifyGrammarSubtreeReducer findSubtree: aTree mathchingWith: aSymbol ).
 	candidates := candidatesSubtree, candidatesAlternate.  
 	
 	^ candidates 
-]
-
-{ #category : 'enumerating' }
-UmeSimplifyGrammarBoth class >> reduce: aTree using: aGrammar [
-
-	| candidates candidatesSubtree candidatesAlternate| 
-	
-	candidates := OrderedCollection new.
-	 
-	candidatesSubtree := (UmeSimplifyGrammarAlternateReduction findCandidates: aTree using: aGrammar).
-	candidatesAlternate := (UmeSimplifyGrammarSubtreeReducer findCandidates: aTree using: aGrammar).
-	candidates := candidatesSubtree, candidatesAlternate.  
-	
-	^ aTree 
 ]
