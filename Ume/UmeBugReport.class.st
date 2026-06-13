@@ -69,20 +69,6 @@ UmeBugReport class >> outlierBaseline: baseline [
 ]
 
 { #category : 'instance creation' }
-UmeBugReport class >> outlierReport: test delta: delta suspectedMethods: suspectedMethods [
-
-	| bug |
-	
-	bug := UmeOutlierBugReport new test: test.
-	bug delta: delta.
-	bug suspectedMethods: suspectedMethods.
-
-	test result coverageResult ifNotNil: [ :cov | bug executedMethods: cov methods ].
-
-	^ bug
-]
-
-{ #category : 'instance creation' }
 UmeBugReport class >> outlierReport: test delta: delta suspectedMethods: deltaMethods suspectedNodes: deltaNodes [
 
 	| bug |
