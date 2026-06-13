@@ -5,3 +5,9 @@ Class {
 	#package : 'Ume',
 	#tag : 'Localization'
 }
+
+{ #category : 'as yet unclassified' }
+UmeOutlierBaseline >> bugId [
+
+	^ 'Baseline'
+]

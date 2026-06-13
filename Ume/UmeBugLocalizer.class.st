@@ -78,11 +78,10 @@ UmeBugLocalizer >> coveredNodesDeltaBetween: baseline and: test [
 { #category : 'localization' }
 UmeBugLocalizer >> localize: umeResult [
 
-	^ {
-		'Errors' -> (self localizeErrors: umeResult).
-		'Failures' -> (self localizeFailures: umeResult).
-		'Outliers' -> (self localizeOutliers: umeResult)
-	} asDictionary
+	^ UmeBugLocalization new
+		errors: (self localizeErrors: umeResult);
+		failures: (self localizeFailures: umeResult);
+		outliers: (self localizeOutliers: umeResult)
 ]
 
 { #category : 'localization' }
@@ -129,7 +128,7 @@ UmeBugLocalizer >> localizeOutliers: umeResult [
 		bug
 	].
 	
-	^ { bugBaseline }, outlierbugs
+	^ ({ bugBaseline }, outlierbugs) asOrderedCollection
 
 ]
 

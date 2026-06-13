@@ -10,6 +10,12 @@ Class {
 	#tag : 'Localization'
 }
 
+{ #category : 'as yet unclassified' }
+UmeErrorBugReport >> bugId [
+
+	^ errorMessage
+]
+
 { #category : 'accessing' }
 UmeErrorBugReport >> errorMessage [
 

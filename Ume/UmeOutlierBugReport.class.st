@@ -9,6 +9,12 @@ Class {
 	#tag : 'Localization'
 }
 
+{ #category : 'as yet unclassified' }
+UmeOutlierBugReport >> bugId [
+
+	^ suspectedNodes asString
+]
+
 { #category : 'accessing' }
 UmeOutlierBugReport >> suspectedNodes [
 

@@ -83,6 +83,12 @@ UmeBugReport class >> outlierReport: test delta: delta suspectedMethods: deltaMe
 	^ bug
 ]
 
+{ #category : 'as yet unclassified' }
+UmeBugReport >> bugId [
+
+	self subclassResponsibility 
+]
+
 { #category : 'accessing' }
 UmeBugReport >> delta [
 
