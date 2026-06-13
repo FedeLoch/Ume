@@ -5,3 +5,9 @@ Class {
 	#package : 'Ume',
 	#tag : 'Evaluation'
 }
+
+{ #category : 'testing' }
+UmeEvalFail >> isFail [
+
+	^ true
+]
