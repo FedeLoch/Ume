@@ -5,3 +5,9 @@ Class {
 	#package : 'Ume',
 	#tag : 'Shrinking'
 }
+
+{ #category : 'as yet unclassified' }
+UmeReductionShrinkerTest >> oracleByBlock: block [
+
+	^ UmeBooleanInputOracle from: block
+]

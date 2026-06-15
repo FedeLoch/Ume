@@ -3,7 +3,7 @@ Class {
 	#superclass : 'UmeShrinker',
 	#instVars : [
 		'reductionStrategy',
-    'seen'
+		'seen'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -40,7 +40,7 @@ UmeGRABRShrinker >> copyTree: tree [
 { #category : 'shrinking' }
 UmeGRABRShrinker >> evalInput: input [
 
-	^ ( oracle value: input )
+	^ ( oracle isAccepted: input )
 ]
 
 { #category : 'shrinking' }
@@ -56,15 +56,19 @@ UmeGRABRShrinker >> minimizeOne: originalTree upperBound: bound [
 
 	originalTree allNodes doWithIndex: [ :subTree :index | 
 		( subTree isLeaf ) ifFalse: [ | symbol |
-		symbol := subTree tag. 
-		( self candidates: subTree matching: symbol ) do: [ :candidate |
-			seen add: candidate. 
-			( candidate treeSize < originalTree treeSize) ifTrue: [ | newTree |
-				newTree := self replaceSubtreeIn: originalTree by: candidate index: index.
-				(self triggerBug: newTree upperBound: bound ) ifTrue: [ ^ newTree ] ]
-				] 
+			symbol := subTree tag. 
+			( self candidates: subTree matching: symbol ) do: [ :candidate |
+				seen add: candidate. 
+				( candidate treeSize < originalTree treeSize) ifTrue: [ | newTree |
+					newTree := self replaceSubtreeIn: originalTree by: candidate index: index.
+					self minimizationDone.
+					(self triggerBug: newTree upperBound: bound ) ifTrue: [
+						^ newTree
+					] ifFalse: [ self failedMinimization. ]
+				]
 			] 
-		].
+		] 
+	].
 	
 	^ originalTree
 ]

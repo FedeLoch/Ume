@@ -2,9 +2,7 @@ Class {
 	#name : 'UmeDeltaDebugger',
 	#superclass : 'UmeShrinker',
 	#instVars : [
-		'shrinker',
-		'splittingValue',
-		'oracle'
+		'splittingValue'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -42,29 +40,33 @@ UmeDeltaDebugger >> initialize [
 { #category : 'shrinking' }
 UmeDeltaDebugger >> minimizeOne: aInput upperBound: bound [
 
-	| currentInput n start subsetLength someComplementFailing |
+	| currentInput granularity start subsetLength someComplementFailing |
 
 	currentInput := aInput .
-	n := 2.
+	granularity := 2.
+
 	[currentInput size >= 2 ] whileTrue: [
 		start:= 0.
-		subsetLength := currentInput size // n.
+		subsetLength := currentInput size // granularity.
 		someComplementFailing := false.
-		[ start < currentInput size ] whileTrue: [ 
-			| complement |
+		[ start < currentInput size ] whileTrue: [ | complement |
+			self minimizationDone.
 			complement := self getComplement: currentInput start: start length: subsetLength .
 			(self triggerBug: complement upperBound: bound ) ifTrue: [ 
 				currentInput := complement.
-				n := (n -1) max: 2.
+				granularity := (granularity -1) max: 2.
 				someComplementFailing := true.
 				start := currentInput size.
-			] ifFalse: [ 
-			start := start+ subsetLength. ]].
+			] ifFalse: [
+				self failedMinimization.
+				start := start + subsetLength
+			]
+		].
 		
 		someComplementFailing ifFalse: [ 
-			(n = currentInput size) ifTrue:[
+			(granularity = currentInput size) ifTrue:[
 				^ currentInput ].
-			n := (n*2) min: currentInput size.
+			granularity := (granularity*2) min: currentInput size.
 		 ]
 	].
 
