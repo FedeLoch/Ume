@@ -16,7 +16,6 @@ UmeSimplifyGrammarAlternateReductionTest >> testMinimizingATreeWithAAlternativeE
 	res := (UmeSimplifyGrammarAlternateReduction alternateReduction: expressionTree  using: grammar matchingWith: 'Expr' ).
 	stringList := res collect: #asInput.
 	expectedRes := #('1' '2' ).
-	1 halt.
 	self assert: (stringList includesAll: expectedRes).
 ]
 
