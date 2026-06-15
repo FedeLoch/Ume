@@ -90,3 +90,12 @@ UmeStrategyShrinkerTest >> testGrammarReducer07 [
 	
 	self assert:  (shrinker shrink: '1+(3)' ) equals: '1+(3)'
 ]
+
+{ #category : 'tests' }
+UmeStrategyShrinkerTest >> testGrammarReducer08 [
+
+	shrinker oracle: [ :string | (string includesSubstring: '2' ) not].
+	shrinker reductionStrategy: UmeSimplifyGrammarAlternateReduction . 
+	
+	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '2'
+]
