@@ -24,6 +24,16 @@ UmeDeltaDebugger >> evalInput: input [
 ]
 
 { #category : 'testing' }
+UmeDeltaDebugger >> getComplement: input start: start length: subsetLength [
+
+	| complement |
+	complement := (input copyFrom: 1 to: start) , 
+                 (input copyFrom: (start + subsetLength + 1 min: input size + 1) to: input size).
+
+	^ complement. 
+]
+
+{ #category : 'testing' }
 UmeDeltaDebugger >> initialize [ 
 	
 	super initialize.
@@ -32,15 +42,37 @@ UmeDeltaDebugger >> initialize [
 
 { #category : 'shrinking' }
 UmeDeltaDebugger >> minimizeOne: aInput upperBound: bound [
-	| inputSlice|
-	
-	(0 < aInput size and: splittingValue <= aInput size) ifTrue: [ 
-		inputSlice := self split: aInput into: splittingValue. 
-		inputSlice do: [ :aSubInput |
-			(self triggerBug: aSubInput upperBound:bound ) ifTrue: [ 
-				^ aSubInput]].
+
+	| currentInput n start subsetLength someComplementFailing |
+
+	currentInput := aInput .
+	n := 2.
+	[currentInput size >= 2 ] whileTrue: [
+		start:= 0.
+		subsetLength := currentInput size // n.
+		someComplementFailing := false.
+		[ start < currentInput size ] whileTrue: [ 
+			| complement |
+			complement := self getComplement: currentInput start: start length: subsetLength .
+			(self triggerBug: complement upperBound: bound ) ifTrue: [ 
+				currentInput := complement.
+				n := (n -1) max: 2.
+				someComplementFailing := true.
+				start := currentInput size.
+			] ifFalse: [ 
+			start := start+ subsetLength. ]].
+		
+		someComplementFailing ifFalse: [ 
+			(n = currentInput size) ifTrue:[
+				^ currentInput ].
+			n := (n*2) min: currentInput size.
+		 ]
 	].
-	^ aInput .
+
+	^ currentInput 
+	
+	
+	
 
 ]
 
@@ -54,38 +86,6 @@ UmeDeltaDebugger >> oracle [
 UmeDeltaDebugger >> oracle: anOracle [
 
 	oracle := anOracle
-]
-
-{ #category : 'private' }
-UmeDeltaDebugger >> split: subInput into: aValue [
-
-	| result sliceSize start end |
-	
-	result := OrderedCollection new. 
-
-	subInput size == splittingValue ifTrue: [ result add: (subInput copyFrom: 1 to: 1 ); add: (subInput copyFrom: 2 to: 2). ^result ].
-	
-	sliceSize := (subInput size / aValue ) ceiling.
-	1 to: aValue do:[ :i |
-		start := ((i -1) * sliceSize ) + 1.
-		end := (start + sliceSize - 1) min: subInput size.
-		start <= subInput size ifTrue:
-			[ result add: (subInput copyFrom: start to: end )]
-		].
-	
-	^ result 
-]
-
-{ #category : 'accessing' }
-UmeDeltaDebugger >> splittingValue [
-
-	^splittingValue
-]
-
-{ #category : 'accessing' }
-UmeDeltaDebugger >> splittingValue: aValue [
-
-	splittingValue := aValue 
 ]
 
 { #category : 'shrinking' }
