@@ -117,6 +117,8 @@ UmeShrinker >> percentageProblemPreservation: upperBound given: currentBound [
 	baseline := oracle problemPresence: upperBound.
 	current := oracle problemPresence: currentBound.
 	
+	(baseline = 0) ifTrue: [ ^ 0 ].
+	
 	^ ((current * 100) / baseline) asFloat
 ]
 
@@ -137,12 +139,12 @@ UmeShrinker >> profiledShrink: input [
 	
 	^ {
 		'totalTime' -> (Duration microSeconds: totalTime).
-		'neededReductions' -> reductionsDone.
-		'failedReductions' -> failedReductionsDone.
+		'neededReductions' -> reductionsDone asFloat.
+		'failedReductions' -> failedReductionsDone asFloat.
 		'%problemPreservation' -> (self percentageProblemPreservation: upperBound given: (self evalInput: minimizedInput)).
 		'%inputReduction' -> (self percentageInputReduced: tree given: minimizedTree).
 		'minimizedInput' -> minimizedInput
-	}
+	} asDictionary
 ]
 
 { #category : 'shrinking' }

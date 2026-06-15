@@ -47,7 +47,8 @@ UmeGRABRShrinker >> evalInput: input [
 UmeGRABRShrinker >> initialize [ 
 
 	super initialize.
-	seen := Set new. 
+	seen := Set new.
+	reductionStrategy := UmeSimplifyGrammarBoth.
 	
 ]
 
