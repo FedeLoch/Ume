@@ -3,8 +3,7 @@ Class {
 	#superclass : 'UmeShrinker',
 	#instVars : [
 		'oracle',
-		'shrinker',
-		'splittingValue'
+		'shrinker'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -37,7 +36,6 @@ UmeDeltaDebugger >> getComplement: input start: start length: subsetLength [
 UmeDeltaDebugger >> initialize [ 
 	
 	super initialize.
-	splittingValue := 2.
 ]
 
 { #category : 'shrinking' }
