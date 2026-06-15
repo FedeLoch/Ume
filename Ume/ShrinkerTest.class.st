@@ -13,7 +13,7 @@ Class {
 { #category : 'as yet unclassified' }
 ShrinkerTest class >> input: input oracle: oracle [
 
-	^ self new input: input oracle: oracle
+	^ self new input: input; oracle: oracle
 ]
 
 { #category : 'accessing' }
