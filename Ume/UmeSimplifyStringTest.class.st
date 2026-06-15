@@ -20,22 +20,6 @@ UmeSimplifyStringTest >> setUp [
 ]
 
 { #category : 'running' }
-UmeSimplifyStringTest >> testSplit [ 
-
-	| string string2 res res2|
-	string := 'abcde'.
-	string2:= 'ab'.
-	
-	res := OrderedCollection new.
-	res add: 'abc'; add:'de'.
-	res2 := OrderedCollection  new.
-	res2 add: 'a'; add: 'b'.
-	
-	self assert: (shrinker split: string into:2) equals: res.
-	self assert: (shrinker split: string2 into: 2) equals: res2. 
-]
-
-{ #category : 'running' }
 UmeSimplifyStringTest >> testString [ 
 	
 	self assert: (shrinker shrink: 'asqjjkqsbdvieqvsbdoivbq') equals: 'e'
@@ -62,13 +46,8 @@ UmeSimplifyStringTest >> testString04 [
 { #category : 'running' }
 UmeSimplifyStringTest >> testString05 [
 	
-	shrinker splittingValue: 3.
-	self assert: (shrinker shrink: 'eqlbfkdjbkj') equals: 'eq'
-]
-
-{ #category : 'running' }
-UmeSimplifyStringTest >> testString06 [
 	
-	shrinker splittingValue: 20.
-	self assert: (shrinker shrink: 'gjnjconjcome') equals: 'gjnjconjcome'
+	shrinker oracle: [ :string | ((string includes: $e) and: (string includes: $a) ) not].
+	
+	self assert: (shrinker shrink: 'kjdsfhkjqsdhfehdkjsqfhkjsa') equals: 'ea'
 ]

@@ -20,10 +20,11 @@ UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: a
 		match := true.
 		newChildReductions := OrderedCollection new.
 		expansion fragments do: [ :altSymbol | | childReductions treeCopy |
+			(altSymbol isTerminal not) ifTrue: [ 
 			treeCopy := self copyTree: aTree with: aGrammar. 
 			childReductions := UmeSimplifyGrammarSubtreeReducer findSubtree: treeCopy mathchingWith: altSymbol name.
 			childReductions ifEmpty: [ match:= false ].
-			match ifTrue: [ newChildReductions add: childReductions ]
+			match ifTrue: [ newChildReductions add: childReductions ]  ]
 		].
 		match ifTrue: [ (self possibleCombination: newChildReductions) do: [ :combination | | newTree|
 				newTree := self buildNewTree: combination tag: symbol.
@@ -64,4 +65,10 @@ UmeSimplifyGrammarAlternateReduction class >> possibleCombination: aListOfLists 
 		allCombinationsList := res.
 		].
 	^ allCombinationsList 
+]
+
+{ #category : 'as yet unclassified' }
+UmeSimplifyGrammarAlternateReduction class >> reduce: subtree using: grammar matching: symbol [
+
+	^ self alternateReduction: subtree using: grammar matchingWith: symbol 
 ]
