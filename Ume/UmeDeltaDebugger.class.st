@@ -15,12 +15,6 @@ UmeDeltaDebugger >> asInput: aString [
 	^ aString
 ]
 
-{ #category : 'shrinking' }
-UmeDeltaDebugger >> evalInput: input [
-
-	^ ( oracle isAccepted: input )
-]
-
 { #category : 'testing' }
 UmeDeltaDebugger >> getComplement: input start: start length: subsetLength [
 
@@ -88,9 +82,8 @@ UmeDeltaDebugger >> tree: aString [
 ]
 
 { #category : 'testing' }
-UmeDeltaDebugger >> triggerBug: string upperBound: _ [
+UmeDeltaDebugger >> triggerBug: input upperBound: _ [
 	
-	^ (self evalInput: string) not
-	
+	^ self evalInput: input
 
 ]

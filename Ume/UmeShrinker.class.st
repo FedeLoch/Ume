@@ -22,7 +22,8 @@ UmeShrinker >> asInput: tree [
 { #category : 'shrinking' }
 UmeShrinker >> evalInput: input [
 
-	self subclassResponsibility 
+	"Returns true if the input triggers the bug, otherwise, it returns false"
+	^ oracle isAccepted: input
 ]
 
 { #category : 'shrinking' }

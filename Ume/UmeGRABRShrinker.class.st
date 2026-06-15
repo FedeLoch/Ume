@@ -38,12 +38,6 @@ UmeGRABRShrinker >> copyTree: tree [
 ]
 
 { #category : 'shrinking' }
-UmeGRABRShrinker >> evalInput: input [
-
-	^ ( oracle isAccepted: input )
-]
-
-{ #category : 'shrinking' }
 UmeGRABRShrinker >> initialize [ 
 
 	super initialize.
@@ -118,7 +112,7 @@ UmeGRABRShrinker >> triggerBug: aTree upperBound: _ [
 	|input|
 	
 	input := (self asInput: aTree).
-	(self checkGrammar: input ) ifFalse: [ ^false ].
+	(self checkGrammar: input ) ifFalse: [ ^ false ].
 
-	^ (self evalInput: input ) not
+	^ self evalInput: input
 ]

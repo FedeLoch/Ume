@@ -15,7 +15,7 @@ UmeSimplifyStringTest >> setUp [
 
 	super setUp.
 	shrinker := UmeDeltaDebugger new.	
-	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $e) not]).
+	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $e) ]).
 
 ]
 
@@ -47,7 +47,7 @@ UmeSimplifyStringTest >> testString04 [
 UmeSimplifyStringTest >> testString05 [
 
 	shrinker oracle: (self oracleByBlock: [ :string |
-			 ((string includes: $e) and: (string includes: $a)) not ]).
+			 (string includes: $e) and: (string includes: $a) ]).
 
 	self
 		assert: (shrinker shrink: 'kjdsfhkjqsdhfehdkjsqfhkjsa')

@@ -22,7 +22,7 @@ UmeStrategyShrinkerTest >> setUp [
 { #category : 'tests' }
 UmeStrategyShrinkerTest >> testGrammarReducer00 [ 
 
-	shrinker oracle: (self oracleByBlock: [ :string | (string includesSubstring: '(3)' ) not]).
+	shrinker oracle: (self oracleByBlock: [ :string | string includesSubstring: '(3)' ]).
 	shrinker reductionStrategy: UmeSimplifyGrammarAlternateReduction . 
 	
 	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '(3)'
@@ -31,7 +31,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer00 [
 { #category : 'tests' }
 UmeStrategyShrinkerTest >> testGrammarReducer01 [
 
-	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $1) not]).
+	shrinker oracle: (self oracleByBlock: [ :string | string includes: $1 ]).
 	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
 	
 	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '1'
@@ -40,7 +40,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer01 [
 { #category : 'tests' }
 UmeStrategyShrinkerTest >> testGrammarReducer02 [
 	
-	shrinker oracle: (self oracleByBlock: [ :string | (string includesSubstring: '(3)' ) not]).
+	shrinker oracle: (self oracleByBlock: [ :string | string includesSubstring: '(3)' ]).
 	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
 	
 	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '(3)'
@@ -49,7 +49,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer02 [
 { #category : 'tests' }
 UmeStrategyShrinkerTest >> testGrammarReducer03 [
 
-	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $3) not]).
+	shrinker oracle: (self oracleByBlock: [ :string | string includes: $3 ]).
 	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
 	
 	self assert:  (shrinker shrink: '2*3' ) equals: '3'
@@ -58,7 +58,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer03 [
 { #category : 'tests' }
 UmeStrategyShrinkerTest >> testGrammarReducer04 [
 
-	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $3) not]).
+	shrinker oracle: (self oracleByBlock: [ :string | string includes: $3 ]).
 	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
 
 	self assert:  (shrinker shrink: '3*2' ) equals: '3'
@@ -67,7 +67,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer04 [
 { #category : 'tests' }
 UmeStrategyShrinkerTest >> testGrammarReducer05 [
 
-	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $3) not]).
+	shrinker oracle: (self oracleByBlock: [ :string | string includes: $3 ]).
 	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
 	
 	self assert:  (shrinker shrink: '3' ) equals: '3'
@@ -76,7 +76,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer05 [
 { #category : 'tests' }
 UmeStrategyShrinkerTest >> testGrammarReducer06 [
 
-	shrinker oracle: (self oracleByBlock: [ :string | (string includesSubstring: '(' ) not]).
+	shrinker oracle: (self oracleByBlock: [ :string | string includesSubstring: '(' ]).
 	shrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer . 
 	
 	self assert:  (shrinker shrink: '1+(3)' ) equals: '(3)'
@@ -85,7 +85,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer06 [
 { #category : 'tests' }
 UmeStrategyShrinkerTest >> testGrammarReducer07 [
 
-	shrinker oracle: (self oracleByBlock: [ :string | (string includesSubstring: '4' ) not]).
+	shrinker oracle: (self oracleByBlock: [ :string | string includesSubstring: '4' ]).
 	shrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer . 
 	
 	self assert:  (shrinker shrink: '1+(3)' ) equals: '1+(3)'
@@ -94,7 +94,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer07 [
 { #category : 'tests' }
 UmeStrategyShrinkerTest >> testGrammarReducer08 [
 
-	shrinker oracle: (self oracleByBlock: [ :string | (string includesSubstring: '2' ) not]).
+	shrinker oracle: (self oracleByBlock: [ :string | string includesSubstring: '2' ]).
 	shrinker reductionStrategy: UmeSimplifyGrammarAlternateReduction . 
 
 	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '2'
