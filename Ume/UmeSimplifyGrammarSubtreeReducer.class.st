@@ -21,7 +21,9 @@ UmeSimplifyGrammarSubtreeReducer class >> findSubtree: aTree mathchingWith: aSym
 		node isLeaf ifFalse: [ candidates addAll: (self findSubtree: node mathchingWith: aSymbol ) ]
 	].
 
-	^ candidates
+	
+
+	^ candidates sorted: [ :treeA :treeB | treeA treeSize  < treeB treeSize ]
 ]
 
 { #category : 'enumerating' }
@@ -37,5 +39,13 @@ UmeSimplifyGrammarSubtreeReducer class >> findSubtreesIndex: aTree mathchingWith
 		 ]
 	].
 
+
 	^ candidates
+]
+
+{ #category : 'enumerating' }
+UmeSimplifyGrammarSubtreeReducer class >> reduce: subtree using: grammar matching: symbol [
+
+	^ self findSubtree: subtree mathchingWith: symbol 
+
 ]

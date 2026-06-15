@@ -99,7 +99,6 @@ UmeAPINeoJsonTest >> testNeoJsonPerformanceOutliersOnly [
 	runner := UmeRunner test: schema.
 
 	result := runner run.
-
 	self assertSuccess: result.
 
 	(result tests select: [ :test | test isError not ]) do: [ :test |

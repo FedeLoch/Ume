@@ -52,6 +52,18 @@ UmeEvalResult >> isError [
 	^ false
 ]
 
+{ #category : 'testing' }
+UmeEvalResult >> isFail [
+
+	^ false
+]
+
+{ #category : 'testing' }
+UmeEvalResult >> isSuccess [
+
+	^ false
+]
+
 { #category : 'accessing' }
 UmeEvalResult >> profilingResult [
 

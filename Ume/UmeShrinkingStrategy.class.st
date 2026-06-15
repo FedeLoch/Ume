@@ -11,3 +11,9 @@ UmeShrinkingStrategy class >> copyTree: aTree with: aGrammar [
 
 	^ UmeGrammarParser parse: (aTree asInput ) from: aGrammar
 ]
+
+{ #category : 'enumerating' }
+UmeShrinkingStrategy class >> reduce: subtree using: grammar matching: symbol [
+
+	self subclassResponsibility 
+]

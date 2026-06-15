@@ -11,7 +11,8 @@ Class {
 		'ranking',
 		'topCases',
 		'feedbackEvaluator',
-		'runner'
+		'runner',
+		'localizedBugs'
 	],
 	#category : 'Ume-Result',
 	#package : 'Ume',
@@ -34,12 +35,12 @@ UmeResult class >> resultFrom: tests since: time withCoverage: totalCoverageResu
 		runner: runner;
 		feedbackEvaluator: runner feedbackEvaluator;
 		ranking: (tests collect: [ :test | test score ifNil: [ 0 ] ifNotNil: [ test score ] ]) asSortedCollection reverse;
+		localizeBugs;
 		performanceResult: perfResult
 ]
 
 { #category : 'as yet unclassified' }
 UmeResult class >> resultFrom: tests since: time withCoverage: totalCoverageResult runner: runner with: aNumberOfTest [
-
 	
 	^ (self resultFrom: tests since: time  withCoverage: totalCoverageResult  runner: runner) numberOfGeneratedTests: aNumberOfTest 
 ]
@@ -138,6 +139,14 @@ UmeResult >> lineplotBy: xBlock and: ybloc xlabel: xLabel ylabel: yLabel title: 
 		  ylabel: yLabel;
 		  title: title;
 		  open
+]
+
+{ #category : 'localization' }
+UmeResult >> localizeBugs [
+
+	localizedBugs ifNil: [ localizedBugs := UmeBugLocalizer localize: self ].
+
+	^ localizedBugs
 ]
 
 { #category : 'as yet unclassified' }

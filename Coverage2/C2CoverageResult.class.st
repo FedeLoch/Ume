@@ -13,7 +13,8 @@ Class {
 		'collector',
 		'methods',
 		'nodes',
-		'fixedPercentage'
+		'fixedPercentage',
+		'timesExecuted'
 	],
 	#category : 'Coverage2',
 	#package : 'Coverage2'
@@ -124,6 +125,18 @@ C2CoverageResult >> printOn: aStream [
 		print: ((100.0 * nodes size / collector nodes size) rounded) ;
 		nextPutAll: '%)'
 
+]
+
+{ #category : 'accessing' }
+C2CoverageResult >> timesExecuted [
+
+	^ timesExecuted
+]
+
+{ #category : 'accessing' }
+C2CoverageResult >> timesExecuted: times [
+
+	timesExecuted := times
 ]
 
 { #category : 'computation' }

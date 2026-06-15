@@ -2,7 +2,8 @@ Class {
 	#name : 'UmeGRABRShrinker',
 	#superclass : 'UmeShrinker',
 	#instVars : [
-		'reductionStrategy'
+		'reductionStrategy',
+    'seen'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -13,6 +14,15 @@ Class {
 UmeGRABRShrinker >> asInput: tree [
 
 	^ tree asInput
+]
+
+{ #category : 'shrinking' }
+UmeGRABRShrinker >> candidates: subTree matching: symbol [
+
+	| allCandidates |
+	
+	allCandidates := (reductionStrategy reduce: subTree using: grammar matching: symbol) asSet.
+	^ allCandidates difference: seen
 ]
 
 { #category : 'shrinking' }
@@ -34,41 +44,35 @@ UmeGRABRShrinker >> evalInput: input [
 ]
 
 { #category : 'shrinking' }
+UmeGRABRShrinker >> initialize [ 
+
+	super initialize.
+	seen := Set new. 
+	
+]
+
+{ #category : 'shrinking' }
 UmeGRABRShrinker >> minimizeOne: originalTree upperBound: bound [
 
-	| reducedTree |
+	originalTree allNodes doWithIndex: [ :subTree :index | 
+		( subTree isLeaf ) ifFalse: [ | symbol |
+		symbol := subTree tag. 
+		( self candidates: subTree matching: symbol ) do: [ :candidate |
+			seen add: candidate. 
+			( candidate treeSize < originalTree treeSize) ifTrue: [ | newTree |
+				newTree := self replaceSubtreeIn: originalTree by: candidate index: index.
+				(self triggerBug: newTree upperBound: bound ) ifTrue: [ ^ newTree ] ]
+				] 
+			] 
+		].
 	
-	reducedTree:= self reductionOn: originalTree with: bound.
-	1 halt. 
-
-	"originalTree children do: [ :child | reducedTrees := reductionStrategy findCandidates: child using: grammar. ].
-	reducedTrees do: [ :subtree |
-		| treeCopy |
-		1 halt.
-		treeCopy:= self copyTree: originalTree.
-		treeCopy replaceChild: subtree parent with: subtree.
-		1 halt.]."
-	
-	^ reducedTree 
+	^ originalTree
 ]
 
 { #category : 'shrinking' }
 UmeGRABRShrinker >> parse: input [
 
 	^ UmeGrammarParser parse: input from: grammar
-]
-
-{ #category : 'as yet unclassified' }
-UmeGRABRShrinker >> reductionOn: originalTree with: bound [
-	
-	| reducedTrees |
-
-	reducedTrees := reductionStrategy reduce: originalTree using: grammar.
-	reducedTrees do: [ :candidate |
-		(self triggerBug: candidate upperBound: bound) ifTrue: [ ^ candidate ] 
-	].
-
-	^ originalTree 
 ]
 
 { #category : 'accessing' }
@@ -83,21 +87,18 @@ UmeGRABRShrinker >> reductionStrategy: aStrategy [
 	reductionStrategy := aStrategy
 ]
 
-{ #category : 'shrinking' }
-UmeGRABRShrinker >> test: aTree with: bound [
+{ #category : 'copying' }
+UmeGRABRShrinker >> replaceSubtreeIn: tree by: subtree index: index [
 
-	| allChildrens allSubTree|
+	| treeCopy replacementTree test|
 	
-	allSubTree := OrderedCollection new. 
+	treeCopy := self copyTree: tree.  
+	replacementTree := treeCopy at: index.
+	test := OrderedCollection new. 
+	test add: (subtree at: 2).
+	replacementTree children: test.
 	
-	allChildrens := aTree allNodes.
-	allChildrens do: [ :aSubTree |
-		| candidate |
-		(aSubTree isLeaf not) ifTrue: (candidate := reductionStrategy reduce: aSubTree).
-		1 halt. 
-		(self triggerBug: candidate upperBound: bound) ifTrue: [ allSubTree add: candidate ] ].
-
-	^ allSubTree 
+	^ treeCopy 
 ]
 
 { #category : 'shrinking' }
