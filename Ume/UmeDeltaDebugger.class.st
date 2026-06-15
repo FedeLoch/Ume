@@ -62,8 +62,6 @@ UmeDeltaDebugger >> split: subInput into: aValue [
 	| result sliceSize start end |
 	
 	result := OrderedCollection new. 
-	"
-	subInput size == splitingValue ifTrue: [ ^ subInput collect: #toString ]. ""?"""
 
 	subInput size == splittingValue ifTrue: [ result add: (subInput copyFrom: 1 to: 1 ); add: (subInput copyFrom: 2 to: 2). ^result ].
 	

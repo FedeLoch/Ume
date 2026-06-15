@@ -24,7 +24,6 @@ UmeGRABRShrinker >> candidates: subTree matching: symbol [
 	| allCandidates |
 	
 	allCandidates := (reductionStrategy reduce: subTree using: grammar matching: symbol) asSet.
-
 	^ allCandidates difference: seen
 ]
 
@@ -117,9 +116,9 @@ UmeGRABRShrinker >> replaceSubtreeIn: tree by: subtree index: index [
 	replacementTree := treeCopy at: index.
 	test := OrderedCollection new. 
 	test add: (subtree at: 2).
-	
 	replacementTree children: test.
-	^ treeCopy.  
+	
+	^ treeCopy 
 ]
 
 { #category : 'shrinking' }
