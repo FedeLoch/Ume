@@ -137,7 +137,7 @@ UmeShrinker >> profiledShrink: input [
 	minimizedTree := self minimizeTree: tree upperBound: upperBound.	
 	totalTime := Time microsecondClockValue - initialTime.
 	minimizedInput := self asInput: minimizedTree.
-	
+1 halt.
 	^ {
 		'totalTime' -> (Duration microSeconds: totalTime).
 		'neededReductions' -> reductionsDone asFloat.

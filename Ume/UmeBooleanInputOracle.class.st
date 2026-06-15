@@ -33,6 +33,6 @@ UmeBooleanInputOracle >> isAccepted: input [
 { #category : 'as yet unclassified' }
 UmeBooleanInputOracle >> problemPresence: bound [
 
-	^ bound ifFalse: [ 100 ] ifTrue: [ 0 ]
+	^ bound ifTrue: [ 100 ] ifFalse: [ 0 ]
 
 ]
