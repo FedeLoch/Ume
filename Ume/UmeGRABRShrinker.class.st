@@ -1,6 +1,6 @@
 Class {
 	#name : 'UmeGRABRShrinker',
-	#superclass : 'UmeShrinker',
+	#superclass : 'UmeGrammarShrinker',
 	#instVars : [
 		'reductionStrategy',
 		'seen'
@@ -21,6 +21,7 @@ UmeGRABRShrinker >> candidates: subTree matching: symbol [
 
 	| allCandidates |
 	
+	"TODO: Improve performance here"
 	allCandidates := (reductionStrategy reduce: subTree using: grammar matching: symbol) asSet.
 
 	^ allCandidates difference: seen
@@ -69,12 +70,6 @@ UmeGRABRShrinker >> minimizeOne: originalTree upperBound: bound [
 	^ originalTree
 ]
 
-{ #category : 'shrinking' }
-UmeGRABRShrinker >> parse: input [
-
-	^ UmeGrammarParser parse: input from: grammar
-]
-
 { #category : 'accessing' }
 UmeGRABRShrinker >> reductionStrategy [
 
@@ -99,12 +94,6 @@ UmeGRABRShrinker >> replaceSubtreeIn: tree by: subtree index: index [
 	replacementTree children: test.
 	
 	^ treeCopy 
-]
-
-{ #category : 'shrinking' }
-UmeGRABRShrinker >> tree: input [
-
-	^ self parse: input
 ]
 
 { #category : 'testing' }

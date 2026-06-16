@@ -1,13 +1,6 @@
 Class {
 	#name : 'UmeGrammarBasedShrinker',
-	#superclass : 'UmeShrinker',
-	#instVars : [
-		'evaluator',
-		'feedbackEvaluator',
-		'programBlock',
-		'classesToProfile',
-		'memo'
-	],
+	#superclass : 'UmeGrammarShrinker',
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
 	#tag : 'Shrinking'
@@ -36,71 +29,6 @@ UmeGrammarBasedShrinker >> candidates: root [
 ]
 
 { #category : 'testing' }
-UmeGrammarBasedShrinker >> classesToProfile [
-
-	^ classesToProfile 
-]
-
-{ #category : 'testing' }
-UmeGrammarBasedShrinker >> classesToProfile: someClassesToProfile [
-
-	classesToProfile := someClassesToProfile 
-]
-
-{ #category : 'shrinking' }
-UmeGrammarBasedShrinker >> evalInput: input [
-
-	| profilingResult umeCase program |
-	
-	memo at: input ifAbsentPut: [
-		program := PBAProgram from: [ programBlock value: input ] forClasses: classesToProfile.
-
-		[ 	profilingResult := evaluator analyzer analyze: program.
-			umeCase := UmeTest new result: (UmeEvalSuccess new profilingResult: profilingResult)
-		] on: Error do: [ ^ nil ].
-
-		(feedbackEvaluator eval: umeCase) absoluteImprovement
-	].
-	
-	^ memo at: input
-]
-
-{ #category : 'accessing' }
-UmeGrammarBasedShrinker >> evaluator [
-	
-	^ evaluator
-]
-
-{ #category : 'accessing' }
-UmeGrammarBasedShrinker >> evaluator: anEvaluator [
-
-	evaluator := anEvaluator
-]
-
-{ #category : 'shrinking' }
-UmeGrammarBasedShrinker >> feedbackEvaluator [
-
-	^ feedbackEvaluator 
-]
-
-{ #category : 'shrinking' }
-UmeGrammarBasedShrinker >> feedbackEvaluator: aFeedbackEvaluator [
-
-	feedbackEvaluator := aFeedbackEvaluator 
-]
-
-{ #category : 'testing' }
-UmeGrammarBasedShrinker >> initialize [ 
-	
-	super initialize.
-"	threshold := 0.95."
-	programBlock := nil.
-	classesToProfile := nil.
-	feedbackEvaluator := nil.
-	memo := Dictionary new.
-]
-
-{ #category : 'testing' }
 UmeGrammarBasedShrinker >> isValidTree: node [
 
 	| input derivation |
@@ -126,12 +54,14 @@ UmeGrammarBasedShrinker >> minimizeOne: tree upperBound: upperBound [
 			seen add: candidate.
 			parent := candidate parent.
 			(parent notNil and: [ allNodes includes: candidate ]) ifTrue: [ | index |
-				"TODO: add a memoization to know if the candidate is removable or not"
 				index := parent children indexOf: candidate.
 				parent replaceChildAt: index with: candidate emptyTree.
-				
+				self minimizationDone.
 				trigger := self triggerBug: (self evalInput: tree asInput) upperBound: upperBound.
-				((self isValidTree: tree) and: [ trigger ]) ifFalse: [ parent replaceChildAt: index with: candidate ]
+				((self isValidTree: tree) and: [ trigger ]) ifFalse: [
+					self failedMinimization.
+					parent replaceChildAt: index with: candidate
+				]
 		 	]
 		]
 	].
@@ -140,41 +70,11 @@ UmeGrammarBasedShrinker >> minimizeOne: tree upperBound: upperBound [
 ]
 
 { #category : 'testing' }
-UmeGrammarBasedShrinker >> parse: input [
-
-	^ UmeGrammarParser parse: input from: grammar
-]
-
-{ #category : 'testing' }
-UmeGrammarBasedShrinker >> programBlock [
-
-	^ programBlock 
-]
-
-{ #category : 'testing' }
-UmeGrammarBasedShrinker >> programBlock: aProgramBlock [
-
-	programBlock := aProgramBlock 
-]
-
-{ #category : 'shrinking' }
-UmeGrammarBasedShrinker >> resetMemoization [
-
-	memo := Dictionary new.
-]
-
-{ #category : 'shrinking' }
-UmeGrammarBasedShrinker >> tree: input [
-
-	^ self parse: input
-]
-
-{ #category : 'testing' }
-UmeGrammarBasedShrinker >> triggerBug: score upperBound: originalScore [
+UmeGrammarBasedShrinker >> triggerBug: evalResult upperBound: originalScore [
 
 "	score ifNil: [ ^ false ].
 
 	^ score >= (originalScore * threshold)"
 
-	^ oracle accepts: score from: originalScore
+	^ oracle accepts: evalResult from: originalScore
 ]
