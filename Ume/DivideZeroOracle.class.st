@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-DivideZeroOracle >> isAccepted: input [
+DivideZeroOracle >> accepts: input from: _ [ 
 
 	[
 		OpalCompiler new

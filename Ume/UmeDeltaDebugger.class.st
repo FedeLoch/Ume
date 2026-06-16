@@ -84,6 +84,6 @@ UmeDeltaDebugger >> tree: aString [
 { #category : 'testing' }
 UmeDeltaDebugger >> triggerBug: input upperBound: _ [
 	
-	^ self evalInput: input
+	^ oracle accepts: input from: _ 
 
 ]

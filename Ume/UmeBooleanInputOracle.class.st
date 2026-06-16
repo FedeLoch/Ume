@@ -18,16 +18,16 @@ UmeBooleanInputOracle class >> from: booleanBlock [
 	
 ]
 
+{ #category : 'as yet unclassified' }
+UmeBooleanInputOracle >> accepts: input from: _ [
+	
+	^ block value: input
+]
+
 { #category : 'accessing' }
 UmeBooleanInputOracle >> block: booleanBlock [
 
 	block := booleanBlock
-]
-
-{ #category : 'as yet unclassified' }
-UmeBooleanInputOracle >> isAccepted: input [
-	
-	^ block value: input
 ]
 
 { #category : 'as yet unclassified' }

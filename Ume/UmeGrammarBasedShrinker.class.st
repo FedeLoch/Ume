@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'evaluator',
 		'feedbackEvaluator',
-		'threshold',
 		'programBlock',
 		'classesToProfile',
 		'memo'
@@ -94,11 +93,10 @@ UmeGrammarBasedShrinker >> feedbackEvaluator: aFeedbackEvaluator [
 UmeGrammarBasedShrinker >> initialize [ 
 	
 	super initialize.
-	threshold := 0.95.
+"	threshold := 0.95."
 	programBlock := nil.
 	classesToProfile := nil.
 	feedbackEvaluator := nil.
-	grammar := nil.
 	memo := Dictionary new.
 ]
 
@@ -165,18 +163,6 @@ UmeGrammarBasedShrinker >> resetMemoization [
 	memo := Dictionary new.
 ]
 
-{ #category : 'testing' }
-UmeGrammarBasedShrinker >> threshold [
-
-	^ threshold 
-]
-
-{ #category : 'testing' }
-UmeGrammarBasedShrinker >> threshold: aThreshold [
-
-	threshold := aThreshold.
-]
-
 { #category : 'shrinking' }
 UmeGrammarBasedShrinker >> tree: input [
 
@@ -186,7 +172,9 @@ UmeGrammarBasedShrinker >> tree: input [
 { #category : 'testing' }
 UmeGrammarBasedShrinker >> triggerBug: score upperBound: originalScore [
 
-	score ifNil: [ ^ false ].
+"	score ifNil: [ ^ false ].
 
-	^ score >= (originalScore * threshold)
+	^ score >= (originalScore * threshold)"
+
+	^ oracle accepts: score from: originalScore
 ]

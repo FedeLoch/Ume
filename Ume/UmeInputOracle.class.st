@@ -7,7 +7,8 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-UmeInputOracle >> isAccepted: input [
+UmeInputOracle >> accepts: bound from: base [
+
 	"It returns true if the input triggers the bug"
 	self subclassResponsibility 
 ]

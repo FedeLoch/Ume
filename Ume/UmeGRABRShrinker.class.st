@@ -22,6 +22,7 @@ UmeGRABRShrinker >> candidates: subTree matching: symbol [
 	| allCandidates |
 	
 	allCandidates := (reductionStrategy reduce: subTree using: grammar matching: symbol) asSet.
+
 	^ allCandidates difference: seen
 ]
 
@@ -114,5 +115,5 @@ UmeGRABRShrinker >> triggerBug: aTree upperBound: _ [
 	input := (self asInput: aTree).
 	(self checkGrammar: input ) ifFalse: [ ^ false ].
 
-	^ self evalInput: input
+	^ oracle accepts: input from: _ 
 ]
