@@ -58,8 +58,8 @@ UmeGrammarBasedShrinker >> minimizeOne: tree upperBound: upperBound [
 				"trying to minimize a candidate"
 				parent replaceChildAt: index with: (self minimized: candidate).
 				self minimizationDone.
-				trigger := self triggerBug: (self evalInput: tree asInput) upperBound: upperBound.
 				
+				trigger := self triggerBug: (self evalInput: tree asInput) upperBound: upperBound.
 				((self isValidTree: tree) and: [ trigger ]) ifFalse: [
 					self failedMinimization.
 					parent replaceChildAt: index with: candidate.
@@ -67,7 +67,15 @@ UmeGrammarBasedShrinker >> minimizeOne: tree upperBound: upperBound [
 					(parent tag = candidate tag) ifTrue: [ | parentChildren candidateChildren |
 						parentChildren := parent children.
 						candidateChildren := candidate children.
-						1 halt.
+						parent children: candidateChildren.
+						self minimizationDone.
+						
+						trigger := self triggerBug: (self evalInput: tree asInput) upperBound: upperBound.
+						((self isValidTree: tree) and: [ trigger ]) ifFalse: [
+							self failedMinimization.
+							parent children: parentChildren.
+							candidate children: candidateChildren.
+						]
 					]
 				].
 		 	]
