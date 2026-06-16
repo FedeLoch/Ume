@@ -26,11 +26,11 @@ AritExpressionGrammar >> defineGrammar [
     
     ntFactor --> ntInt | '(', ntExpr, ')'.
     
-    ntInt --> ntDigit.
+    ntInt --> ntDigit | ntDigit, ntInt.
     
     ntDigit --> ($0 - $9).
     
-    ntOp --> '+' | '*'.
+    ntOp --> '+' | '*' | '/' | '-'.
     
     ^ ntStart 
 ]
