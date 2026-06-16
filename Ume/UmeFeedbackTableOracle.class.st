@@ -14,6 +14,14 @@ Class {
 	#tag : 'Shrinking'
 }
 
+{ #category : 'as yet unclassified' }
+UmeFeedbackTableOracle >> accepts: score from: upperBound [
+
+	score ifNil: [ ^ false ].
+
+	^ score >= (upperBound * threshold)
+]
+
 { #category : 'testing' }
 UmeFeedbackTableOracle >> classesToProfile [
 
