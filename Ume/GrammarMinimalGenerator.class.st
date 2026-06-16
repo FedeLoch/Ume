@@ -47,8 +47,8 @@ GrammarMinimalGenerator >> visitNonTerminal: nonTerminal [
 
 { #category : 'visiting' }
 GrammarMinimalGenerator >> visitRule: rule [
-
-	^ GncInnerNode with: (rule fragments collect: [ :fragment | fragment visit: self ])
+	
+	^ GncInnerNode with: (rule fragments collect: [ :fragment | (fragment visit: self) grammarRule: rule; yourself ])
 ]
 
 { #category : 'visiting' }

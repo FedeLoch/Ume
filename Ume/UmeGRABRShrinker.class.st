@@ -27,12 +27,6 @@ UmeGRABRShrinker >> candidates: subTree matching: symbol [
 	^ allCandidates difference: seen
 ]
 
-{ #category : 'shrinking' }
-UmeGRABRShrinker >> checkGrammar: aInput [
-
-	^ UmeGrammarParser accept: aInput from: grammar
-]
-
 { #category : 'copying' }
 UmeGRABRShrinker >> copyTree: tree [
  
@@ -94,15 +88,4 @@ UmeGRABRShrinker >> replaceSubtreeIn: tree by: subtree index: index [
 	replacementTree children: test.
 	
 	^ treeCopy 
-]
-
-{ #category : 'testing' }
-UmeGRABRShrinker >> triggerBug: aTree upperBound: _ [
-
-	|input|
-	
-	input := (self asInput: aTree).
-	(self checkGrammar: input ) ifFalse: [ ^ false ].
-
-	^ oracle accepts: input from: _ 
 ]

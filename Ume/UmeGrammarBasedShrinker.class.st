@@ -40,29 +40,29 @@ UmeGrammarBasedShrinker >> initialize [
 ]
 
 { #category : 'shrinking' }
-UmeGrammarBasedShrinker >> minimizeOne: tree upperBound: upperBound [
+UmeGrammarBasedShrinker >> minimizeOne: givenTree upperBound: upperBound [
 
-	| seen allNodes |
-	
+	| seen candidates tree |
+
 	seen := Set new.
-	allNodes := tree allNodes asSet.
-	
-	"TODO: We need to recompute the candidates each time we accept a new version of out tree input"
-	(self candidates: tree) do: [ :candidate | | parent trigger |
-		(seen includes: candidate) ifFalse: [
-			seen add: candidate.
+	tree := self tree: givenTree asInput.
+	candidates := self candidates: tree.
+	[ candidates isNotEmpty ] whileTrue: [ | candidate parent |
+		candidate := candidates first.
+		candidates := candidates allButFirst.
+		(seen includes: candidate asInput) ifFalse: [
+			seen add: candidate asInput.
 			parent := candidate parent.
-			"TODO: this could be donde by saving in a memo all the nodes that are not available anymore"
-			(parent notNil and: [ allNodes includes: candidate ]) ifTrue: [ | index |
+			parent notNil ifTrue: [ | index |
 				index := parent children indexOf: candidate.
 				"trying to minimize a candidate"
 				parent replaceChildAt: index with: (self minimized: candidate).
 				self minimizationDone.
 				
-				trigger := self triggerBug: (self evalInput: tree asInput) upperBound: upperBound.
-				((self isValidTree: tree) and: [ trigger ]) ifFalse: [
+				(self triggerBug: tree upperBound: upperBound) ifFalse: [
 					self failedMinimization.
 					parent replaceChildAt: index with: candidate.
+					
 					"trying to replace the parent by candidate in case they have the same symbol"
 					(parent tag = candidate tag) ifTrue: [ | parentChildren candidateChildren |
 						parentChildren := parent children.
@@ -70,15 +70,16 @@ UmeGrammarBasedShrinker >> minimizeOne: tree upperBound: upperBound [
 						parent children: candidateChildren.
 						self minimizationDone.
 						
-						trigger := self triggerBug: (self evalInput: tree asInput) upperBound: upperBound.
-						((self isValidTree: tree) and: [ trigger ]) ifFalse: [
+						(self triggerBug: tree upperBound: upperBound) ifFalse: [	
 							self failedMinimization.
 							parent children: parentChildren.
 							candidate children: candidateChildren.
-						]
+						] ifTrue: [ candidates := self candidates: tree ]
 					]
-				].
-		 	]
+				] ifTrue: [
+					"candidates := self candidates: tree"
+				]
+			]
 		]
 	].
 
@@ -88,11 +89,11 @@ UmeGrammarBasedShrinker >> minimizeOne: tree upperBound: upperBound [
 { #category : 'shrinking' }
 UmeGrammarBasedShrinker >> minimized: node [
 
-	^ node grammarRule visit: minimalGenerator
-]
+	| newNode |
+	
+	newNode := node grammarRule visit: minimalGenerator.
+	newNode tag: node	tag.
+	newNode grammarRule: node grammarRule.
 
-{ #category : 'testing' }
-UmeGrammarBasedShrinker >> triggerBug: evalResult upperBound: originalScore [
-
-	^ oracle accepts: evalResult from: originalScore
+	^ newNode "self tree: (node grammarRule visit: minimalGenerator) asInput"
 ]
