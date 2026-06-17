@@ -47,12 +47,14 @@ UmeGrammarBasedShrinker >> minimizeOne: givenTree upperBound: upperBound [
 	seen := Set new.
 	tree := self tree: givenTree asInput.
 	candidates := self candidates: tree.
+
 	[ candidates isNotEmpty ] whileTrue: [ | candidate parent |
 		candidate := candidates first.
 		candidates := candidates allButFirst.
 		(seen includes: candidate asInput) ifFalse: [
 			seen add: candidate asInput.
 			parent := candidate parent.
+
 			parent notNil ifTrue: [ | index |
 				index := parent children indexOf: candidate.
 				"trying to minimize a candidate"
@@ -67,6 +69,7 @@ UmeGrammarBasedShrinker >> minimizeOne: givenTree upperBound: upperBound [
 					(parent tag = candidate tag) ifTrue: [ | parentChildren candidateChildren |
 						parentChildren := parent children.
 						candidateChildren := candidate children.
+
 						parent children: candidateChildren.
 						self minimizationDone.
 						
@@ -74,11 +77,9 @@ UmeGrammarBasedShrinker >> minimizeOne: givenTree upperBound: upperBound [
 							self failedMinimization.
 							parent children: parentChildren.
 							candidate children: candidateChildren.
-						] ifTrue: [ candidates := self candidates: tree ]
+						] ifTrue: []
 					]
-				] ifTrue: [
-					"candidates := self candidates: tree"
-				]
+				] ifTrue: []
 			]
 		]
 	].
@@ -95,5 +96,5 @@ UmeGrammarBasedShrinker >> minimized: node [
 	newNode tag: node	tag.
 	newNode grammarRule: node grammarRule.
 
-	^ newNode "self tree: (node grammarRule visit: minimalGenerator) asInput"
+	^ newNode
 ]
