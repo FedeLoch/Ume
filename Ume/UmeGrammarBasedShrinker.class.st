@@ -98,3 +98,9 @@ UmeGrammarBasedShrinker >> minimized: node [
 
 	^ newNode
 ]
+
+{ #category : 'shrinking' }
+UmeGrammarBasedShrinker >> shouldStop: minimized size: size from: current size: currentSize [
+
+	^ minimized asInput = current asInput
+]

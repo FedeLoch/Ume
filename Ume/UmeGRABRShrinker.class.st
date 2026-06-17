@@ -89,3 +89,10 @@ UmeGRABRShrinker >> replaceSubtreeIn: tree by: subtree index: index [
 	
 	^ treeCopy 
 ]
+
+{ #category : 'shrinking' }
+UmeGRABRShrinker >> shouldStop: minimized size: size from: current size: currentSize [
+
+	^ minimized = current
+	
+]

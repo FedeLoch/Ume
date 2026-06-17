@@ -69,6 +69,12 @@ UmeDeltaDebugger >> minimizeOne: aInput upperBound: bound [
 ]
 
 { #category : 'shrinking' }
+UmeDeltaDebugger >> shouldStop: minimized size: size from: current size: currentSize [
+
+	^ minimized = current
+]
+
+{ #category : 'shrinking' }
 UmeDeltaDebugger >> sizeOf: string [
 
 	^ string size
