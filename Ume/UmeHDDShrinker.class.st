@@ -1,6 +1,9 @@
 Class {
 	#name : 'UmeHDDShrinker',
 	#superclass : 'UmeGrammarShrinker',
+	#instVars : [
+		'ddMin'
+	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
 	#tag : 'Shrinking'
@@ -18,14 +21,20 @@ UmeHDDShrinker >> checkGrammar: aInput [
 	^ UmeGrammarParser accept: aInput from: grammar
 ]
 
-{ #category : 'shrinking' }
-UmeHDDShrinker >> deltadebugOn: nodes level: level from: currentTree [
+{ #category : 'testing' }
+UmeHDDShrinker >> copyTree: tree [
+ 
+	^ self tree: tree asInput
+]
 
+{ #category : 'testing' }
+UmeHDDShrinker >> ddMin: inputTree upperBound: bound level: level [
 
 	| currentInput granularity start subsetLength someComplementFailing |
 
-	currentInput := nodes .
+	currentInput := inputTree .
 	granularity := 2.
+
 	[currentInput size >= 2 ] whileTrue: [
 		start:= 0.
 		subsetLength := currentInput size // granularity.
@@ -33,7 +42,7 @@ UmeHDDShrinker >> deltadebugOn: nodes level: level from: currentTree [
 		[ start < currentInput size ] whileTrue: [ | complement |
 			self minimizationDone.
 			complement := self getComplement: currentInput start: start length: subsetLength .
-			(self triggerBugWith: complement atLevel: level inside: currentTree) ifTrue: [ 
+			(self triggerBug: complement upperBound: bound ) ifTrue: [ 
 				currentInput := complement.
 				granularity := (granularity -1) max: 2.
 				someComplementFailing := true.
@@ -52,36 +61,46 @@ UmeHDDShrinker >> deltadebugOn: nodes level: level from: currentTree [
 	].
 
 	^ currentInput
+
+]
+
+{ #category : 'shrinking' }
+UmeHDDShrinker >> getComplement: input start: start length: subsetLength [
+
+	| complement |
+	complement := (input copyFrom: 1 to: start) , 
+                 (input copyFrom: (start + subsetLength + 1 min: input size + 1) to: input size).
+
+	^ complement. 
 ]
 
 { #category : 'shrinking' }
 UmeHDDShrinker >> minimizeOne: originalTree upperBound: bound [
 
-	| level currentTree levelMax |
+	| level currentTree nodesAtLevel minconfig |
+	
 	currentTree := originalTree. 
 	level := 1.
-	levelMax := currentTree height. 
-	( level <= levelMax ) whileTrue: [ 
-		| nodesAtLevel minconfig |
-		nodesAtLevel := currentTree "les noeud du level. ".
+	
+	[ currentTree children notNil ] whileTrue: [ 
+		nodesAtLevel := currentTree allNodesAtLevel: level.
 		(nodesAtLevel size >= 2) ifTrue: [ 
-			minconfig := self deltadebugOn: nodesAtLevel level: level from: currentTree .
-			currentTree := self rebuild: currentTree with: minconfig atLevel: level.
+			minconfig :=  self ddMin: nodesAtLevel  upperBound: bound level: level.
+			currentTree := self removeIrrevelantNodes: currentTree level: level with: minconfig.
 		].
-		self reduce: originalTree at: level with: minconfig.
 		level := level + 1.
-		levelMax := currentTree height. 
 	].
 	
-	^ currentTree 
+	^ currentTree
 ]
 
 { #category : 'testing' }
-UmeHDDShrinker >> rebuild: tree with: minTree atLevel: level [
-]
+UmeHDDShrinker >> removeIrrevelantNodes: tree level: level with: nodes [
 
-{ #category : 'testing' }
-UmeHDDShrinker >> reduce: tree at: level with: minTree [
+	| treeCopy |
+	treeCopy := self copyTree: tree.
+	
+	^ treeCopy 
 ]
 
 { #category : 'testing' }
@@ -93,8 +112,4 @@ UmeHDDShrinker >> triggerBug: aTree upperBound: _ [
 	(self checkGrammar: input ) ifFalse: [ ^ false ].
 
 	^ oracle accepts: input from: _ 
-]
-
-{ #category : 'testing' }
-UmeHDDShrinker >> triggerBugWith: complement atLevel: level inside: tree [
 ]

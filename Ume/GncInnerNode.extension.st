@@ -1,6 +1,26 @@
 Extension { #name : 'GncInnerNode' }
 
 { #category : '*Ume' }
+GncInnerNode >> allChildAtLevel: level currentLevel: currentLevel [
+
+	| result |
+	
+	result := OrderedCollection new. 
+	( level = currentLevel ) ifTrue: [ ^ OrderedCollection with: self ].
+	( self children ) ifEmpty: [ ^ OrderedCollection new ].
+	( self children ) do: [ :child |
+		( child isLeaf) ifFalse: [ result addAll: (child allChildAtLevel: level currentLevel: currentLevel +1) ] ].
+	^ result 
+
+]
+
+{ #category : '*Ume' }
+GncInnerNode >> allNodesAtLevel: level [
+
+	^ self allChildAtLevel: level currentLevel: 0
+]
+
+{ #category : '*Ume' }
 GncInnerNode >> asClassInstanceObject [
 
 	| objectClass |
@@ -44,6 +64,12 @@ GncInnerNode >> indexOf: aNode [
 GncInnerNode >> isClassObject [
 
 	^ children first isTypeVariable
+]
+
+{ #category : '*Ume' }
+GncInnerNode >> levelOf: subTree [
+
+	^ ( self treeHeight - subTree treeHeight )
 ]
 
 { #category : '*Ume' }
