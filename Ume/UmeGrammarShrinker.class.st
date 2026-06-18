@@ -1,6 +1,9 @@
 Class {
 	#name : 'UmeGrammarShrinker',
 	#superclass : 'UmeShrinker',
+	#instVars : [
+		'minimalGenerator'
+	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
 	#tag : 'Shrinking'
@@ -19,6 +22,20 @@ UmeGrammarShrinker >> checkGrammar: aInput [
 ]
 
 { #category : 'testing' }
+UmeGrammarShrinker >> grammar: aGrammar [
+
+	super grammar: aGrammar.
+	minimalGenerator grammar: aGrammar
+]
+
+{ #category : 'testing' }
+UmeGrammarShrinker >> initialize [ 
+	
+	super initialize.
+	minimalGenerator := GrammarMinimalGenerator new.
+]
+
+{ #category : 'testing' }
 UmeGrammarShrinker >> isValidTree: tree [
 
 	| input derivation |
@@ -28,6 +45,18 @@ UmeGrammarShrinker >> isValidTree: tree [
 	derivation ifNil: [ ^ false ].
 
 	^ derivation asInput = input
+]
+
+{ #category : 'shrinking' }
+UmeGrammarShrinker >> minimized: node [
+
+	| newNode |
+	
+	newNode := node grammarRule visit: minimalGenerator.
+	newNode tag: node	tag.
+	newNode grammarRule: node grammarRule.
+
+	^ newNode
 ]
 
 { #category : 'testing' }

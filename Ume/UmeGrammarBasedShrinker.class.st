@@ -1,9 +1,6 @@
 Class {
 	#name : 'UmeGrammarBasedShrinker',
 	#superclass : 'UmeGrammarShrinker',
-	#instVars : [
-		'minimalGenerator'
-	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
 	#tag : 'Shrinking'
@@ -23,20 +20,6 @@ UmeGrammarBasedShrinker >> candidates: root [
 	].
 
 	^ worst
-]
-
-{ #category : 'testing' }
-UmeGrammarBasedShrinker >> grammar: aGrammar [
-
-	super grammar: aGrammar.
-	minimalGenerator grammar: aGrammar
-]
-
-{ #category : 'testing' }
-UmeGrammarBasedShrinker >> initialize [ 
-	
-	super initialize.
-	minimalGenerator := GrammarMinimalGenerator new.
 ]
 
 { #category : 'shrinking' }
@@ -85,18 +68,6 @@ UmeGrammarBasedShrinker >> minimizeOne: givenTree upperBound: upperBound [
 	].
 
 	^ tree 
-]
-
-{ #category : 'shrinking' }
-UmeGrammarBasedShrinker >> minimized: node [
-
-	| newNode |
-	
-	newNode := node grammarRule visit: minimalGenerator.
-	newNode tag: node	tag.
-	newNode grammarRule: node grammarRule.
-
-	^ newNode
 ]
 
 { #category : 'shrinking' }
