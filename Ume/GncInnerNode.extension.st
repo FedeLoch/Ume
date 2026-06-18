@@ -89,8 +89,8 @@ GncInnerNode >> replaceChild: child by: newChild [
 
 	| index |
 
-	index := parent children indexOf: child.
-	parent replaceChildAt: index+1 with: newChild
+	index := children indexOf: child.
+	self replaceChildAt: index with: newChild
 ]
 
 { #category : '*Ume' }

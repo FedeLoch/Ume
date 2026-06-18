@@ -30,6 +30,16 @@ UmeArithExpressionShrinkerTest >> testMinimizeSimpleExpression [
 ]
 
 { #category : 'running' }
+UmeArithExpressionShrinkerTest >> testMinimizeSimpleExpression1 [
+
+	| node |
+	
+	node := self tree: '1+(2*3)'.
+
+	self assert: (shrinker minimized: node) asInput size equals: 1
+]
+
+{ #category : 'running' }
 UmeArithExpressionShrinkerTest >> tree: input [
 
 	^ UmeGrammarParser parse: input from: shrinker grammar
