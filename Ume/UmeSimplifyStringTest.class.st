@@ -53,3 +53,11 @@ UmeSimplifyStringTest >> testString05 [
 		assert: (shrinker shrink: 'kjdsfhkjqsdhfehdkjsqfhkjsa')
 		equals: 'ea'
 ]
+
+{ #category : 'running' }
+UmeSimplifyStringTest >> testString06 [
+	
+	shrinker oracle: (self oracleByBlock: [ :string | string includes: $3 ]).
+	
+	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '3'
+]

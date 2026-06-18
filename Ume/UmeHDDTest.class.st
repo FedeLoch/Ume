@@ -20,17 +20,17 @@ UmeHDDTest >> setUp [
 ]
 
 { #category : 'tests' }
-UmeHDDTest >> testGrammarReducer01 [
-
-	shrinker oracle: (self oracleByBlock: [ :string | string includes: $3 ]).
-	
-	self assert:  (shrinker shrink: '1+5*(2*3)' ) equals: '3'
-]
-
-{ #category : 'tests' }
-UmeHDDTest >> testGrammarReducer02 [
+UmeHDDTest >> testHDDReducer01 [
 
 	shrinker oracle: (self oracleByBlock: [ :string | string includes: $3 ]).
 	
 	self assert:  (shrinker shrink: '1+3' ) equals: '3'
+]
+
+{ #category : 'tests' }
+UmeHDDTest >> testHDDReducer02 [
+
+	shrinker oracle: (self oracleByBlock: [ :string | string includes: $2 ]).
+	
+	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '2'
 ]

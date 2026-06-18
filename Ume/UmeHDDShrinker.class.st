@@ -42,7 +42,7 @@ UmeHDDShrinker >> ddMin: subTrees upperBound: bound level: level currentTree: tr
 		[ start < currentInput size ] whileTrue: [ | complement testTree |
 			self minimizationDone.
 			complement := self getComplement: currentInput start: start length: subsetLength .
-			testTree := self removeIrrevelantNodes: currentInput level: level  with: complement.
+			testTree := self removeIrrevelantNodes: tree level: level  with: complement.
 			(self triggerBug: testTree upperBound: bound ) ifTrue: [ 
 				currentInput := complement.
 				granularity := (granularity -1) max: 2.
@@ -64,6 +64,22 @@ UmeHDDShrinker >> ddMin: subTrees upperBound: bound level: level currentTree: tr
 	^ currentInput
 ]
 
+{ #category : 'testing' }
+UmeHDDShrinker >> filter: tree level: currentLevel to: level with: nodes [
+
+	| nodeCopy |
+	nodeCopy := tree copy .
+	tree children ifNil: [ ^ nodeCopy ].
+	currentLevel = level ifTrue: [ | children |
+		children:= tree children select: [ :child | nodes includes: child ].
+		nodeCopy children: children.
+		^ nodeCopy. 
+	].
+	nodeCopy children: ( tree children collect: [ :child |
+		self filter: child level: currentLevel+1 to: level  with: nodes ]).
+	^ nodeCopy
+]
+
 { #category : 'shrinking' }
 UmeHDDShrinker >> getComplement: input start: start length: subsetLength [
 
@@ -78,7 +94,6 @@ UmeHDDShrinker >> getComplement: input start: start length: subsetLength [
 UmeHDDShrinker >> minimizeOne: originalTree upperBound: bound [
 
 	| level levelMax currentTree nodesAtLevel minconfig |
-	
 	currentTree := originalTree. 
 	level := 1.
 	levelMax := currentTree treeHeight.
@@ -92,7 +107,6 @@ UmeHDDShrinker >> minimizeOne: originalTree upperBound: bound [
 		level := level + 1.
 		levelMax := currentTree treeHeight.
 	].
-	
 	^ currentTree
 ]
 
@@ -103,11 +117,7 @@ UmeHDDShrinker >> removeIrrevelantNodes: tree level: level with: nodes [
 	
 	treeCopy := self copyTree: tree.
 	( level = 0 ) ifTrue: [ ^ treeCopy ].
-	nodes do: [ :node | | index |
-		index := tree indexOf: node.
-		treeCopy removeChildAt: index. ]. 
-	
-	^ treeCopy
+	^ self filter: tree level: 1 to: level with: nodes
 ]
 
 { #category : 'testing' }
