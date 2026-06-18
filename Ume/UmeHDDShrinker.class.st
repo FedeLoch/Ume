@@ -70,13 +70,15 @@ UmeHDDShrinker >> filter: tree level: currentLevel to: level with: nodes [
 	| nodeCopy |
 	nodeCopy := tree copy .
 	tree children ifNil: [ ^ nodeCopy ].
+	
 	currentLevel = level ifTrue: [ | children |
 		children:= tree children select: [ :child | nodes includes: child ].
 		nodeCopy children: children.
 		^ nodeCopy. 
 	].
 	nodeCopy children: ( tree children collect: [ :child |
-		self filter: child level: currentLevel+1 to: level  with: nodes ]).
+		(child isLeaf) ifFalse: [
+			self filter: child level: currentLevel+1 to: level  with: nodes] ]).
 	^ nodeCopy
 ]
 
@@ -97,7 +99,6 @@ UmeHDDShrinker >> minimizeOne: originalTree upperBound: bound [
 	currentTree := originalTree. 
 	level := 1.
 	levelMax := currentTree treeHeight.
-	 
 	[ level <= levelMax ] whileTrue: [ 
 		nodesAtLevel := currentTree allNodesAtLevel: level.
 		(nodesAtLevel size >= 2) ifTrue: [ 
