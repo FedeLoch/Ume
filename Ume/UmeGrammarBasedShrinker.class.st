@@ -1,16 +1,13 @@
 Class {
 	#name : 'UmeGrammarBasedShrinker',
 	#superclass : 'UmeGrammarShrinker',
+	#instVars : [
+		'minimalGenerator'
+	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
 	#tag : 'Shrinking'
 }
-
-{ #category : 'shrinking' }
-UmeGrammarBasedShrinker >> asInput: tree [
-
-	^ tree asInput
-]
 
 { #category : 'shrinking' }
 UmeGrammarBasedShrinker >> candidates: root [
@@ -29,52 +26,81 @@ UmeGrammarBasedShrinker >> candidates: root [
 ]
 
 { #category : 'testing' }
-UmeGrammarBasedShrinker >> isValidTree: node [
+UmeGrammarBasedShrinker >> grammar: aGrammar [
 
-	| input derivation |
-	input := node asInput.
+	super grammar: aGrammar.
+	minimalGenerator grammar: aGrammar
+]
 
-	[ derivation := self parse: input ] on: Error do: [ ^ false ].
-	derivation ifNil: [ ^ false ].
-
-	^ derivation asInput = input
+{ #category : 'testing' }
+UmeGrammarBasedShrinker >> initialize [ 
+	
+	super initialize.
+	minimalGenerator := GrammarMinimalGenerator new.
 ]
 
 { #category : 'shrinking' }
-UmeGrammarBasedShrinker >> minimizeOne: tree upperBound: upperBound [
+UmeGrammarBasedShrinker >> minimizeOne: givenTree upperBound: upperBound [
 
-	| seen allNodes |
-	
+	| seen candidates tree |
+
 	seen := Set new.
-	allNodes := tree allNodes asSet.
-	
-	"TODO: We need to recompute the candidates each time we accept a new version of out tree input"
-	(self candidates: tree) do: [ :candidate | | parent trigger |
-		(seen includes: candidate) ifFalse: [
-			seen add: candidate.
+	tree := self tree: givenTree asInput.
+	candidates := self candidates: tree.
+
+	[ candidates isNotEmpty ] whileTrue: [ | candidate parent |
+		candidate := candidates first.
+		candidates := candidates allButFirst.
+		(seen includes: candidate asInput) ifFalse: [
+			seen add: candidate asInput.
 			parent := candidate parent.
-			(parent notNil and: [ allNodes includes: candidate ]) ifTrue: [ | index |
+
+			parent notNil ifTrue: [ | index |
 				index := parent children indexOf: candidate.
-				parent replaceChildAt: index with: candidate emptyTree.
+				"trying to minimize a candidate"
+				parent replaceChildAt: index with: (self minimized: candidate).
 				self minimizationDone.
-				trigger := self triggerBug: (self evalInput: tree asInput) upperBound: upperBound.
-				((self isValidTree: tree) and: [ trigger ]) ifFalse: [
+				
+				(self triggerBug: tree upperBound: upperBound) ifFalse: [
 					self failedMinimization.
-					parent replaceChildAt: index with: candidate
-				]
-		 	]
+					parent replaceChildAt: index with: candidate.
+					
+					"trying to replace the parent by candidate in case they have the same symbol"
+					(parent tag = candidate tag) ifTrue: [ | parentChildren candidateChildren |
+						parentChildren := parent children.
+						candidateChildren := candidate children.
+
+						parent children: candidateChildren.
+						self minimizationDone.
+						
+						(self triggerBug: tree upperBound: upperBound) ifFalse: [	
+							self failedMinimization.
+							parent children: parentChildren.
+							candidate children: candidateChildren.
+						] ifTrue: []
+					]
+				] ifTrue: []
+			]
 		]
 	].
 
 	^ tree 
 ]
 
-{ #category : 'testing' }
-UmeGrammarBasedShrinker >> triggerBug: evalResult upperBound: originalScore [
+{ #category : 'shrinking' }
+UmeGrammarBasedShrinker >> minimized: node [
 
-"	score ifNil: [ ^ false ].
+	| newNode |
+	
+	newNode := node grammarRule visit: minimalGenerator.
+	newNode tag: node	tag.
+	newNode grammarRule: node grammarRule.
 
-	^ score >= (originalScore * threshold)"
+	^ newNode
+]
 
-	^ oracle accepts: evalResult from: originalScore
+{ #category : 'shrinking' }
+UmeGrammarBasedShrinker >> shouldStop: minimized size: size from: current size: currentSize [
+
+	^ minimized asInput = current asInput
 ]

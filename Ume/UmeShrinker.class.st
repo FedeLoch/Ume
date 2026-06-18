@@ -72,17 +72,22 @@ UmeShrinker >> minimizeOne: tree upperBound: bound [
 { #category : 'shrinking' }
 UmeShrinker >> minimizeTree: tree upperBound: bound [
 
-	| currentTree |
+	| currentTree currentSize |
 	
 	reductionsDone := 0.
 	failedReductionsDone := 0.
 
 	"This minimize as much as possible the input".
 	currentTree := tree copy.
-	maxIterations timesRepeat: [ | minimized |
+	currentSize := self sizeOf: currentTree.
+	maxIterations timesRepeat: [ | minimized size |
 		minimized := self minimizeOne: currentTree upperBound: bound.
-		(minimized = currentTree) ifTrue: [ ^ currentTree ].
+		size := self sizeOf: minimized.
+		
+		(self shouldStop: minimized size: size from: currentTree size: currentSize) ifTrue: [ ^ currentTree ].
+		
 		currentTree := minimized.
+		currentSize := size
 	].
 
 	^ currentTree
@@ -146,6 +151,12 @@ UmeShrinker >> profiledShrink: input [
 		'%inputReduction' -> (self percentageInputReduced: tree given: minimizedTree).
 		'minimizedInput' -> minimizedInput
 	} asDictionary
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> shouldStop: minimized size: size from: currentTree size: currentSize [
+
+	self subclassResponsibility 
 ]
 
 { #category : 'shrinking' }
