@@ -85,6 +85,15 @@ GncInnerNode >> removeChildAt: index [
 ]
 
 { #category : '*Ume' }
+GncInnerNode >> replaceChild: child by: newChild [
+
+	| index |
+
+	index := parent children indexOf: child.
+	parent replaceChildAt: index+1 with: newChild
+]
+
+{ #category : '*Ume' }
 GncInnerNode >> replaceChildAt: index with: newNode [
 
 	children at: index put: newNode.

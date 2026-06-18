@@ -39,17 +39,27 @@ UmeHDDShrinker >> ddMin: subTrees upperBound: bound level: level currentTree: tr
 		start:= 0.
 		subsetLength := currentInput size // granularity.
 		someComplementFailing := false.
-		[ start < currentInput size ] whileTrue: [ | complement testTree |
+		[ start < currentInput size ] whileTrue: [ | minimizeNode complement testTree |
 			self minimizationDone.
 			complement := self getComplement: currentInput start: start length: subsetLength .
-			testTree := self removeIrrevelantNodes: tree level: level  with: complement.
-			(self triggerBug: testTree upperBound: bound ) ifTrue: [ 
+			minimizeNode := currentInput select: [ :node | complement includes: node ].
+			
+			minimizeNode do: [ :node | | parent |
+				parent := node parent. 
+				1 halt.
+				parent replaceChild: node by: (self minimized: node) ].
+			
+			"testTree := self removeIrrevelantNodes: tree level: level  with: complement."
+			(self triggerBug: currentInput upperBound: bound ) ifTrue: [ 
 				currentInput := complement.
 				granularity := (granularity -1) max: 2.
 				someComplementFailing := true.
 				start := currentInput size.
 			] ifFalse: [
 				self failedMinimization.
+				minimizeNode do: [ :node | | parent |
+					parent := node parent. 
+					parent replaceChildAt: node index with: node]. 
 				start := start + subsetLength
 			]
 		].
@@ -65,15 +75,36 @@ UmeHDDShrinker >> ddMin: subTrees upperBound: bound level: level currentTree: tr
 ]
 
 { #category : 'testing' }
+UmeHDDShrinker >> filter2: tree level: currentLevel to: level with: nodes [
+
+	| nodeCopy |
+	nodeCopy := tree copy .
+	tree children ifNil: [ ^ nodeCopy ].
+	
+	currentLevel = level ifTrue: [ | filterChild |
+		filterChild := tree children select: [ :child | nodes includes: child ].
+		nodeCopy children: filterChild.
+		^ nodeCopy. 
+	].
+	nodeCopy children: ( tree children collect: [ :child |
+		(child isLeaf) ifFalse: [
+			self filter: child level: currentLevel+1 to: level  with: nodes] ]).
+	^ nodeCopy
+]
+
+{ #category : 'testing' }
 UmeHDDShrinker >> filter: tree level: currentLevel to: level with: nodes [
 
 	| nodeCopy |
 	nodeCopy := tree copy .
 	tree children ifNil: [ ^ nodeCopy ].
 	
-	currentLevel = level ifTrue: [ | children |
-		children:= tree children select: [ :child | nodes includes: child ].
-		nodeCopy children: children.
+	currentLevel = level ifTrue: [ | filterChild |
+		filterChild := nodeCopy children select: [ :child | (nodes includes: child) not ].
+		filterChild do: [ :child | | minimized |
+			minimized := self minimized: child.
+			child parent replaceChild: child by: minimized.
+		].
 		^ nodeCopy. 
 	].
 	nodeCopy children: ( tree children collect: [ :child |
@@ -102,7 +133,7 @@ UmeHDDShrinker >> minimizeOne: originalTree upperBound: bound [
 	[ level <= levelMax ] whileTrue: [ 
 		nodesAtLevel := currentTree allNodesAtLevel: level.
 		(nodesAtLevel size >= 2) ifTrue: [ 
-			minconfig :=  self ddMin: nodesAtLevel  upperBound: bound level: level currentTree: currentTree.
+			minconfig :=  self ddMin: nodesAtLevel upperBound: bound level: level currentTree: currentTree.
 			currentTree := self removeIrrevelantNodes: currentTree level: level with: minconfig.
 		].
 		level := level + 1.
@@ -118,7 +149,14 @@ UmeHDDShrinker >> removeIrrevelantNodes: tree level: level with: nodes [
 	
 	treeCopy := self copyTree: tree.
 	( level = 0 ) ifTrue: [ ^ treeCopy ].
-	^ self filter: tree level: 1 to: level with: nodes
+	
+	^ self filter2: treeCopy level: 1 to: level with: nodes
+]
+
+{ #category : 'shrinking' }
+UmeHDDShrinker >> shouldStop: minimized size: size from: current size: currentSize [
+
+	^ minimized asInput = current asInput
 ]
 
 { #category : 'testing' }
