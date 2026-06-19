@@ -7,6 +7,17 @@ Class {
 }
 
 { #category : 'tests' }
+UmeGrammarParserTest >> testParseArithExpr01 [
+
+	| node input |
+
+	input := '1(2*3)'.
+	node := UmeGrammarParser parse: input from: AritExpressionGrammar new.
+	
+	self assert: node equals: nil
+]
+
+{ #category : 'tests' }
 UmeGrammarParserTest >> testParseCsv01 [
 
 	| node input |

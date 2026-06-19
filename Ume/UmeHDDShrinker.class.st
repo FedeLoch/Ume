@@ -41,30 +41,30 @@ UmeHDDShrinker >> ddMin2: nodesAtLevel upperBound: bound level: level currentTre
 		subsetLength := candidates size // granularity.
 		someComplementFailing := false.
 
-		[ start < candidates size ] whileTrue: [ | nodesToMinimize complement parents rootChildren |
-			self minimizationDone.
+		[ start < candidates size ] whileTrue: [ | nodesToMinimize complement saveNodes rootChildren |
+			self minimizationDone. 
 			
 			"these two lines can be extracted on a method"
 			complement := self getComplement: candidates start: start length: subsetLength.
 			nodesToMinimize := candidates reject: [ :node | complement includes: node ].
 			
-			parents := Dictionary new.
+			saveNodes := Dictionary new.
 			nodesToMinimize do: [ :node |
 				node parent ifNotNil: [ :p |
-					parents at: p ifAbsentPut: [ p children copy ]
+					saveNodes at: p ifAbsentPut: [ p children copy ]
 				] 
 			].
 
 			nodesToMinimize do: [ :node | | parent currentIndex |
 				parent := node parent.
 				parent ifNotNil: [ 
-					currentIndex := parent indexOf: node.
+					currentIndex := parent children indexOf: node.
 					currentIndex > 0 ifTrue: [ parent removeChildAt: currentIndex ] 
-				].
+				] ifNil: [
 				rootChildren := node children copy.
-				node children: OrderedCollection new. 
+				node children: OrderedCollection new.
+				] 
 			].
-			
 			(self triggerBug: tree upperBound: bound ) ifTrue: [
 				candidates := complement.
 				granularity := (granularity -1) max: 2.
@@ -73,7 +73,7 @@ UmeHDDShrinker >> ddMin2: nodesAtLevel upperBound: bound level: level currentTre
 			] ifFalse: [
 				self failedMinimization.
 				
-				parents associationsDo: [ :parentAndchildren | | parent children |
+				saveNodes associationsDo: [ :parentAndchildren | | parent children |
 					parent := parentAndchildren key.
 					children := parentAndchildren value. 
 					parent children: children. 
@@ -82,7 +82,7 @@ UmeHDDShrinker >> ddMin2: nodesAtLevel upperBound: bound level: level currentTre
 					tree children: rootChildren.
 					rootChildren := nil.
 				].
-				start := start + subsetLength
+				start := start + subsetLength.
 			]
 		].
 		
@@ -183,7 +183,6 @@ UmeHDDShrinker >> minimizeOne: originalTree upperBound: bound [
 		level := level + 1.
 		maxLevel := tree treeHeight.
 	].
-
 	^ tree
 ]
 

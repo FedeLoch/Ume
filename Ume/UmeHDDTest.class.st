@@ -32,7 +32,7 @@ UmeHDDTest >> testHDDReducer02 [
 
 	shrinker oracle: (self oracleByBlock: [ :string | string includes: $2 ]).
 	
-	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '2'
+	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '(2)'
 ]
 
 { #category : 'tests' }
@@ -56,5 +56,29 @@ UmeHDDTest >> testHDDReducer05 [
 
 	shrinker oracle: (self oracleByBlock: [ :string | string includes: $3 ]).
 	
-	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '3'
+	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '(3)'
+]
+
+{ #category : 'tests' }
+UmeHDDTest >> testHDDReducer06 [
+
+	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $2) and: [(string includes: $3)] ]).
+	
+	self assert:  ( shrinker shrink: '1+(2*3)' ) equals: '2*3'
+]
+
+{ #category : 'tests' }
+UmeHDDTest >> testHDDReducer07 [
+
+	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $2) and: [(string includes: $1)] ]).
+	
+	self assert:  ( shrinker shrink: '1+(2*3)' ) equals: '1+2'
+]
+
+{ #category : 'tests' }
+UmeHDDTest >> testHDDReducer08 [
+
+	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $3) and: [(string includes: $1)] ]).
+	
+	self assert:  ( shrinker shrink: '1+(2*3)' ) equals: '1+3'
 ]
