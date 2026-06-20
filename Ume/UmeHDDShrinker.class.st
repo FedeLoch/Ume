@@ -56,7 +56,8 @@ UmeHDDShrinker >> hddmin: tree withSubset: toMinimize bound: bound [
 			children := parentAndchildren value. 
 			parent children: children.
 		].
-
+	]ifTrue: [
+		tree children: (self copyTree: tree) children
 	].
 	
 	^ reduced
