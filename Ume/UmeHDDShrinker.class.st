@@ -36,10 +36,15 @@ UmeHDDShrinker >> hddmin: tree upperBound: bound level: level [
 		candidates := tree allNodesAtLevel: level.
 		(candidates size <= 1) ifTrue: [ ^ nil ].
 		
-		1 to: (candidates size -1) do: [ :k |
+		1 to: (candidates size) do: [ :k |
 			candidates combinations: k atATimeDo: [ :toMinimize |
-				self minimizationDone.
-				(self hddmin: tree withSubset: toMinimize bound: bound) ifTrue: [ ^ nil ]
+				(seen includes: toMinimize) ifFalse: [ 
+					seen add: toMinimize.
+					self minimizationDone.
+					(self hddmin: tree withSubset: toMinimize bound: bound) ifTrue: [ ^ nil ] ifFalse: [
+						self failedMinimization.
+					]
+				]
 			]
 		]
 ]
@@ -47,42 +52,29 @@ UmeHDDShrinker >> hddmin: tree upperBound: bound level: level [
 { #category : 'shrinking' }
 UmeHDDShrinker >> hddmin: tree withSubset: toMinimize bound: bound [
 
-	| reduced parents rootChildren |
+	| reduced parents |
 	
 	reduced := false.
 	parents := Dictionary new.
-	toMinimize do: [ :node |
-		node parent ifNotNil: [ :parent |
-			parents at: parent ifAbsentPut: [ parent children copy ]
-		]
-	].
 
-	toMinimize do: [ :node | | parent currentIndex |
+	toMinimize do: [ :node | | parent |
 		parent := node parent.
-		parent ifNotNil: [ 
-			currentIndex := parent children indexOf: node.
-			currentIndex > 0 ifTrue: [ parent removeChildAt: currentIndex ] 
-		] ifNil: [
-			rootChildren := node children.
-			node children: OrderedCollection new.
-		] 
+		parent ifNotNil: [
+			"saving parents with original children to revert later"
+			parents at: parent ifAbsentPut: [ parent children copy ].
+			parent removeChild: node
+		]
 	].
 
 	reduced := self triggerBug: tree upperBound: bound.
 	
 	reduced ifFalse: [
-		self failedMinimization.
-				
 		parents associationsDo: [ :parentAndchildren | | parent children |
 			parent := parentAndchildren key.
 			children := parentAndchildren value. 
-			parent children: children. 
+			parent children: children.
 		].
-				
-		rootChildren ifNotNil: [ 
-			tree children: rootChildren.
-			rootChildren := nil.
-		]
+
 	].
 	
 	^ reduced
@@ -135,7 +127,8 @@ UmeHDDShrinker >> triggerBug: aTree upperBound: _ [
 	|input|
 	
 	input := (self asInput: aTree).
-	(self checkGrammar: input ) ifFalse: [ ^ false ].
+
+	(self checkGrammar: input) ifFalse: [ ^ false ].
 
 	^ oracle accepts: input from: _ 
 ]
