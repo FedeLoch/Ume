@@ -119,15 +119,14 @@ UmeHDDShrinker >> initialize [
 { #category : 'shrinking' }
 UmeHDDShrinker >> minimizeOne: originalTree upperBound: bound [
 
-	| level maxLevel tree |
+	| currentLevel tree |
 
 	tree := self tree: originalTree asInput.
 
-	maxLevel := tree treeHeight.
-	level := maxLevel.
-   [ level >= 1 ] whileTrue: [ 
-		self hddmin: tree upperBound: bound level: level.		
-		level := level - 1.
+	currentLevel := tree treeHeight.
+   [ currentLevel >= 1 ] whileTrue: [ 
+		self hddmin: tree upperBound: bound level: currentLevel.		
+		currentLevel := currentLevel - 1.
 	].
 
 	^ tree
