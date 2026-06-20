@@ -77,7 +77,7 @@ UmeHDDShrinker >> minimizeOne: originalTree upperBound: bound [
 
 	tree := self tree: originalTree asInput.
 
-	currentLevel := tree treeHeight.
+	currentLevel := tree treeHeight - 1.
    [ currentLevel >= 1 ] whileTrue: [ 
 		self hddmin: tree upperBound: bound level: currentLevel.		
 		currentLevel := currentLevel - 1.
