@@ -11,24 +11,6 @@ Class {
 }
 
 { #category : 'shrinking' }
-UmeHDDShrinker >> asInput: tree [
-
-	^ tree asInput
-]
-
-{ #category : 'testing' }
-UmeHDDShrinker >> checkGrammar: aInput [
-
-	^ UmeGrammarParser accept: aInput from: grammar
-]
-
-{ #category : 'testing' }
-UmeHDDShrinker >> copyTree: tree [
- 
-	^ self tree: tree asInput
-]
-
-{ #category : 'shrinking' }
 UmeHDDShrinker >> hddmin: tree upperBound: bound level: level [
 	
 		| candidates |
@@ -119,16 +101,4 @@ UmeHDDShrinker >> seen: aInput [
 UmeHDDShrinker >> shouldStop: minimized size: size from: current size: currentSize [
 
 	^ minimized asInput = current asInput
-]
-
-{ #category : 'testing' }
-UmeHDDShrinker >> triggerBug: aTree upperBound: _ [
-
-	|input|
-	
-	input := (self asInput: aTree).
-
-	(self checkGrammar: input) ifFalse: [ ^ false ].
-
-	^ oracle accepts: input from: _ 
 ]
