@@ -38,7 +38,7 @@ UmeHDDShrinker >> ddMin2: nodesAtLevel upperBound: bound level: level currentTre
 
 	[ candidates size > 1 ] whileTrue: [
 		start:= 0.
-		subsetLength := candidates size // granularity.
+		subsetLength := (candidates size // granularity) max: 1.
 		someComplementFailing := false.
 
 		[ start < candidates size ] whileTrue: [ | nodesToMinimize complement saveNodes rootChildren |
@@ -172,17 +172,17 @@ UmeHDDShrinker >> minimizeOne: originalTree upperBound: bound [
 	| level maxLevel tree nodesAtLevel |
 
 	tree := self tree: originalTree asInput.
-	level := 1.
 	maxLevel := tree treeHeight.
-	[ level <= maxLevel ] whileTrue: [ 
+	level := maxLevel.
+   [ level >= 1 ] whileTrue: [ 
 		nodesAtLevel := tree allNodesAtLevel: level.
 		(nodesAtLevel size > 1) ifTrue: [
 			self ddMin2: nodesAtLevel upperBound: bound level: level currentTree: tree.
 		].
 		
-		level := level + 1.
-		maxLevel := tree treeHeight.
+		level := level - 1.
 	].
+
 	^ tree
 ]
 
