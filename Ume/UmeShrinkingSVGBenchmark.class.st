@@ -9,9 +9,13 @@ Class {
 { #category : 'initialization' }
 UmeShrinkingSVGBenchmark >> initialize [
 
+	| oracle |
+	
 	super initialize.
-	grammar := GncRegexGrammar new.
+	grammar := GncRegexGrammar new. "1) Implement a svg grammar".
+	oracle := PerformanceOracle new evalBlock: [ :path | SVGRunner run: path ].
+	
 	tests := { } collect: [ :svg |
-		ShrinkerTest input: svg oracle: PerformanceOracle new
+		ShrinkerTest input: svg oracle: oracle
 	]
 ]
