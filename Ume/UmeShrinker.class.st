@@ -20,6 +20,12 @@ UmeShrinker >> asInput: tree [
 ]
 
 { #category : 'shrinking' }
+UmeShrinker >> checkGrammar: aInput [
+
+	^ UmeGrammarParser accept: aInput from: grammar
+]
+
+{ #category : 'shrinking' }
 UmeShrinker >> evalInput: input [
 
 	"Returns true if the input triggers the bug, otherwise, it returns false"
@@ -185,7 +191,12 @@ UmeShrinker >> tree: input [
 ]
 
 { #category : 'testing' }
-UmeShrinker >> triggerBug: score upperBound: originalScore [
+UmeShrinker >> triggerBug: tree upperBound: originalScore [
 
-	self subclassResponsibility 
+	|input|
+	
+	input := (self asInput: tree).
+	(self checkGrammar: input) ifFalse: [ ^ false ].
+
+	^ oracle accepts: input from: originalScore
 ]

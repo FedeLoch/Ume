@@ -2,7 +2,8 @@ Class {
 	#name : 'PerformanceOracle',
 	#superclass : 'UmeInputOracle',
 	#instVars : [
-		'threshold'
+		'threshold',
+		'evalBlock'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -10,17 +11,29 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-PerformanceOracle >> accepts: regex from: baseline [
+PerformanceOracle >> accepts: input from: baseline [
 
-	[ regex asRegex ] on: Error do: [ :e | ^ false ].
-	
-	^ (self evalInput: regex) >= (baseline * threshold)
+	^ [ (self evalInput: input) >= (baseline * threshold) ] on: Error do: [ :e | ^ false ]
+]
+
+{ #category : 'as yet unclassified' }
+PerformanceOracle >> evalBlock [
+
+	^ evalBlock 
+]
+
+{ #category : 'as yet unclassified' }
+PerformanceOracle >> evalBlock: aBlock [
+
+	evalBlock := aBlock 
 ]
 
 { #category : 'as yet unclassified' }
 PerformanceOracle >> evalInput: regex [
 
-	^ [ (regex asRegex matches: regex minimalStringMatching) ] microsecondsToRun
+	^ (20 timesCollect: [
+		[ evalBlock value: regex ] microsecondsToRun
+	]) average
 ]
 
 { #category : 'initialization' }
