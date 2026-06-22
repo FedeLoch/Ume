@@ -1,6 +1,12 @@
 Extension { #name : 'GncAST' }
 
 { #category : '*Ume' }
+GncAST >> allChildAtLevel: level currentLevel: currentLevel [
+
+	self subclassResponsibility 
+]
+
+{ #category : '*Ume' }
 GncAST >> allChildren [
 
 	self subclassResponsibility

@@ -3,14 +3,11 @@ Extension { #name : 'GncInnerNode' }
 { #category : '*Ume' }
 GncInnerNode >> allChildAtLevel: level currentLevel: currentLevel [
 
-	| result |
+	^ ( level = currentLevel ) ifTrue: [ OrderedCollection with: self ] ifFalse: [
+		children flatCollect: [ :child | child allChildAtLevel: level currentLevel: currentLevel + 1 ]
+	].
 	
-	result := OrderedCollection new. 
-	( level = currentLevel ) ifTrue: [ ^ OrderedCollection with: self ].
-	( self children ) ifEmpty: [ ^ OrderedCollection new ].
-	( self children ) do: [ :child |
-		( child isLeaf) ifFalse: [ result addAll: (child allChildAtLevel: level currentLevel: currentLevel +1) ] ].
-	^ result 
+	
 
 ]
 
@@ -76,6 +73,13 @@ GncInnerNode >> levelOf: subTree [
 GncInnerNode >> objectClass [
 
 	^ tag asClassInEnvironment: self class environment
+]
+
+{ #category : '*Ume' }
+GncInnerNode >> removeChild: child [
+
+	children remove: child ifAbsent: [  Error signal: 'Trying to remove a wrong child' ] 
+
 ]
 
 { #category : '*Ume' }

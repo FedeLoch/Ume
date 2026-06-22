@@ -22,6 +22,12 @@ UmeGrammarShrinker >> checkGrammar: aInput [
 ]
 
 { #category : 'testing' }
+UmeGrammarShrinker >> copyTree: tree [
+ 
+	^ self tree: tree asInput
+]
+
+{ #category : 'testing' }
 UmeGrammarShrinker >> grammar: aGrammar [
 
 	super grammar: aGrammar.
