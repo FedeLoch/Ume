@@ -77,7 +77,6 @@ UmeShrinker >> minimizeTree: tree upperBound: bound [
 	reductionsDone := 0.
 	failedReductionsDone := 0.
 
-	"This minimize as much as possible the input".
 	currentTree := tree copy.
 	currentSize := self sizeOf: currentTree.
 	maxIterations timesRepeat: [ | minimized size |

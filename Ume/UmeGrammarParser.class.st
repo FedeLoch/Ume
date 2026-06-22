@@ -22,7 +22,11 @@ UmeGrammarParser class >> parse: string from: grammar [
 	| parsingResult |
 	parsingResult := self new parseNonTerminal: grammar start on: string from: 0.
 	
-	^ parsingResult ifNil: [ nil ] ifNotNil: [ parsingResult first ] 
+	parsingResult ifNil: [ ^ nil ].
+	
+	(parsingResult second ~= string size) ifTrue: [ ^ nil ].
+	
+	^ parsingResult first
 ]
 
 { #category : 'initialization' }

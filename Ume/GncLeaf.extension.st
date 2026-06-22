@@ -1,6 +1,12 @@
 Extension { #name : 'GncLeaf' }
 
 { #category : '*Ume' }
+GncLeaf >> allChildAtLevel: level currentLevel: currentLevel [
+
+	^ ( level = currentLevel ) ifTrue: [ OrderedCollection with: self ] ifFalse: [ {} ]
+]
+
+{ #category : '*Ume' }
 GncLeaf >> allChildren [
 
 	^ #(  )

@@ -1,6 +1,23 @@
 Extension { #name : 'GncInnerNode' }
 
 { #category : '*Ume' }
+GncInnerNode >> allChildAtLevel: level currentLevel: currentLevel [
+
+	^ ( level = currentLevel ) ifTrue: [ OrderedCollection with: self ] ifFalse: [
+		children flatCollect: [ :child | child allChildAtLevel: level currentLevel: currentLevel + 1 ]
+	].
+	
+	
+
+]
+
+{ #category : '*Ume' }
+GncInnerNode >> allNodesAtLevel: level [
+
+	^ self allChildAtLevel: level currentLevel: 0
+]
+
+{ #category : '*Ume' }
 GncInnerNode >> asClassInstanceObject [
 
 	| objectClass |
@@ -47,15 +64,37 @@ GncInnerNode >> isClassObject [
 ]
 
 { #category : '*Ume' }
+GncInnerNode >> levelOf: subTree [
+
+	^ ( self treeHeight - subTree treeHeight )
+]
+
+{ #category : '*Ume' }
 GncInnerNode >> objectClass [
 
 	^ tag asClassInEnvironment: self class environment
 ]
 
 { #category : '*Ume' }
+GncInnerNode >> removeChild: child [
+
+	children remove: child ifAbsent: [  Error signal: 'Trying to remove a wrong child' ] 
+
+]
+
+{ #category : '*Ume' }
 GncInnerNode >> removeChildAt: index [ 
 
 	children removeAt: index.
+]
+
+{ #category : '*Ume' }
+GncInnerNode >> replaceChild: child by: newChild [
+
+	| index |
+
+	index := children indexOf: child.
+	self replaceChildAt: index with: newChild
 ]
 
 { #category : '*Ume' }

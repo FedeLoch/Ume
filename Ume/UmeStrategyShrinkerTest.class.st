@@ -60,7 +60,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer04 [
 
 	shrinker oracle: (self oracleByBlock: [ :string | string includes: $3 ]).
 	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
-
+	
 	self assert:  (shrinker shrink: '3*2' ) equals: '3'
 ]
 
@@ -98,4 +98,13 @@ UmeStrategyShrinkerTest >> testGrammarReducer08 [
 	shrinker reductionStrategy: UmeSimplifyGrammarAlternateReduction . 
 
 	self assert:  (shrinker shrink: '1+(2*3)' ) equals: '2'
+]
+
+{ #category : 'tests' }
+UmeStrategyShrinkerTest >> testGrammarReducer09 [
+
+	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $3) and: (string includes: $1) ]).
+	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
+	
+	self assert:  (shrinker shrink: '3*2+(4*1)' ) equals: '3*1'
 ]
