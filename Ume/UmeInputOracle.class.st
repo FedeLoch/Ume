@@ -13,8 +13,14 @@ UmeInputOracle >> accepts: bound from: base [
 	self subclassResponsibility 
 ]
 
+{ #category : 'shrinking' }
+UmeInputOracle >> evalInput: input [
+
+	self subclassResponsibility 
+]
+
 { #category : 'as yet unclassified' }
-UmeInputOracle >> problemPresence: bound [
+UmeInputOracle >> valueBound: bound [
 
 	self subclassResponsibility 
 ]

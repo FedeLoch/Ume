@@ -2,8 +2,7 @@ Class {
 	#name : 'PerformanceOracle',
 	#superclass : 'UmeInputOracle',
 	#instVars : [
-		'preservation',
-		'timerList'
+		'threshold'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -11,20 +10,27 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-PerformanceOracle >> accepts: input from: regex [
+PerformanceOracle >> accepts: regex from: baseline [
+
+	[ regex asRegex ] on: Error do: [ :e | ^ false ].
 	
-	^ (regex asRegex) matches: input
+	^ (self evalInput: regex) >= (baseline * threshold)
+]
+
+{ #category : 'as yet unclassified' }
+PerformanceOracle >> evalInput: regex [
+
+	^ [ (regex asRegex matches: regex minimalStringMatching) ] microsecondsToRun
 ]
 
 { #category : 'initialization' }
 PerformanceOracle >> initialize [ 
 
-	preservation := 0.9. 
-	timerList := OrderedCollection new. 
+	threshold := 0.9
 ]
 
 { #category : 'initialization' }
-PerformanceOracle >> problemPresence: input [
+PerformanceOracle >> valueBound: bound [
 
-	^ [  ]
+	^ bound
 ]

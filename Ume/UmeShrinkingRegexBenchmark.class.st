@@ -7,13 +7,18 @@ Class {
 }
 
 { #category : 'initialization' }
-UmeShrinkingRegexBenchmark >> initialize [ 
+UmeShrinkingRegexBenchmark >> initialize [
 
 	super initialize.
 	grammar := GncRegexGrammar new.
-	tests := {
-		ShrinkerTest input: 'ac?ab?ab?b?aa.?aaab?c?a(c)?ac?aaab?a?a' oracle: PerformanceOracle new.
-		ShrinkerTest input: 'ac?ab?ab|.b?aa.?aaab?c?a(ca)?ac?aaab?a?a' oracle: PerformanceOracle new.
-		
-	}
+	tests := { 'ac?ab?ab?b?aa.?aaab?c?a(c)?ac?aaab?a?a'.
+	         'ac?ab?ab|.b?aa.?aaab?c?a(ca)?ac?aaab?a?a'.
+	         'a.?aa?aaa.b?aa.?aaa*a|a?a(c)?aa?|a*a|a?a'.
+	         'ac.aaa+a?.c?aa.?a+a*a?a+a(c)?aa.aa+aaa?a'.
+	         'ac?aaa+a?.c?aa.?aaa*a?a+a(c)?aa?aa+aaa?a'.
+	         'ac?c*a+a?.c?aa.?aaa*a?a+a(c)?aa?aa+aaaba'.
+	         'ac?aaaaa?.c?aa.?aaa*a?a+a(c)?aa?aa+aaa?a'.
+	         'ac?aaa+a?.c?aaa?aaa*a?a?a(c)?aa?aa?aaa?a' } collect: [ :regex |
+					ShrinkerTest input: regex oracle: PerformanceOracle new
+				]
 ]

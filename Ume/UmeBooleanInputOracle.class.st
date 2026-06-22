@@ -31,7 +31,7 @@ UmeBooleanInputOracle >> block: booleanBlock [
 ]
 
 { #category : 'as yet unclassified' }
-UmeBooleanInputOracle >> problemPresence: bound [
+UmeBooleanInputOracle >> valueBound: bound [
 
 	^ bound ifTrue: [ 100 ] ifFalse: [ 0 ]
 

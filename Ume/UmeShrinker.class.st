@@ -23,7 +23,7 @@ UmeShrinker >> asInput: tree [
 UmeShrinker >> evalInput: input [
 
 	"Returns true if the input triggers the bug, otherwise, it returns false"
-	^ oracle accepts: input from: nil
+	^ oracle evalInput: input
 ]
 
 { #category : 'shrinking' }
@@ -119,8 +119,8 @@ UmeShrinker >> percentageProblemPreservation: upperBound given: currentBound [
 
 	| baseline current |
 	
-	baseline := oracle problemPresence: upperBound.
-	current := oracle problemPresence: currentBound.
+	baseline := oracle valueBound: upperBound.
+	current := oracle valueBound: currentBound.
 	
 	(baseline = 0) ifTrue: [ ^ 0 ].
 	

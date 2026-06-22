@@ -20,7 +20,8 @@ UmeRegexPerfuzzWithGrammarMutatorTest >> regexConstraint [
 					    maxSize: 100);
 			   mutationsPerIteration: 3;
 			   mutators: {
-					(UmeGrammarLiteralsMutator from: GncRegexGrammar new) maxInputSize: 40
+					(UmeGrammarLiteralsMutator from: GncRegexGrammar new) maxInputSize: 40.
+					(UmeGrammarDerivationMutator from: GncRegexGrammar new) maxInputSize: 41.
 				};
 			   heuristic: UmePickBestElementDifferenceHeuristic new)
 ]
@@ -30,7 +31,7 @@ UmeRegexPerfuzzWithGrammarMutatorTest >> setUp [
 	
 	super setUp.
 	schema score: nil.
-	runner := UmeRunner test: RxMatcher >> #matches: from: schema for: 5 minutes.
+	runner := UmeRunner test: RxMatcher >> #matches: from: schema for: 10 minutes.
 ]
 
 { #category : 'tests' }
