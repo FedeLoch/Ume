@@ -31,7 +31,7 @@ PerformanceOracle >> evalBlock: aBlock [
 { #category : 'as yet unclassified' }
 PerformanceOracle >> evalInput: regex [
 
-	^ (20 timesCollect: [
+	^ (30 timesCollect: [
 		[ evalBlock value: regex ] microsecondsToRun
 	]) average
 ]
@@ -39,7 +39,19 @@ PerformanceOracle >> evalInput: regex [
 { #category : 'initialization' }
 PerformanceOracle >> initialize [ 
 
-	threshold := 0.9
+	threshold := 0.95
+]
+
+{ #category : 'initialization' }
+PerformanceOracle >> threshold [
+
+	^ threshold 
+]
+
+{ #category : 'initialization' }
+PerformanceOracle >> threshold: aThreshold [
+
+	threshold := aThreshold 
 ]
 
 { #category : 'initialization' }

@@ -13,7 +13,7 @@ UmeShrinkingRegexBenchmark >> initialize [
 
 	super initialize.
 	grammar := GncRegexGrammar new.
-	oracle := PerformanceOracle new evalBlock: [ :regex |
+	oracle := PerformanceOracle new threshold: 0.95; evalBlock: [ :regex |
 		(regex asRegex matches: regex minimalStringMatching)
 	].
 	tests := { 'ac?ab?ab?b?aa.?aaab?c?a(c)?ac?aaab?a?a'.
