@@ -31,7 +31,7 @@ PerformanceOracle >> evalBlock: aBlock [
 { #category : 'as yet unclassified' }
 PerformanceOracle >> evalInput: regex [
 
-	^ (30 timesCollect: [
+	^ (1 timesCollect: [
 		[ evalBlock value: regex ] microsecondsToRun
 	]) average
 ]

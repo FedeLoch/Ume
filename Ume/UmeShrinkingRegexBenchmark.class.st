@@ -16,14 +16,7 @@ UmeShrinkingRegexBenchmark >> initialize [
 	oracle := PerformanceOracle new threshold: 0.95; evalBlock: [ :regex |
 		(regex asRegex matches: regex minimalStringMatching)
 	].
-	tests := { 'ac?ab?ab?b?aa.?aaab?c?a(c)?ac?aaab?a?a'.
-	         'ac?ab?ab|.b?aa.?aaab?c?a(ca)?ac?aaab?a?a'.
-	         'a.?aa?aaa.b?aa.?aaa*a|a?a(c)?aa?|a*a|a?a'.
-	         'ac.aaa+a?.c?aa.?a+a*a?a+a(c)?aa.aa+aaa?a'.
-	         'ac?aaa+a?.c?aa.?aaa*a?a+a(c)?aa?aa+aaa?a'.
-	         'ac?c*a+a?.c?aa.?aaa*a?a+a(c)?aa?aa+aaaba'.
-	         'ac?aaaaa?.c?aa.?aaa*a?a+a(c)?aa?aa+aaa?a'.
-	         'ac?aaa+a?.c?aaa?aaa*a?a?a(c)?aa?aa?aaa?a' } collect: [ :regex |
+	tests := #('b*c?c+' 'b*c?b+' 'b*bbc?b+' 'b*bbc|bc?b+' '(a)*.*.' 'b*(b|bc|bc?)b+' 'b*b(b|bc||bac?)b+' 'b*b(b|ba*||bac?)b+' 'b*b(b|b.*||bac?)b+' 'b*b(b|b.*|ba?.*c+bba+|)b+' 'b*b(b|b.*|b*|)b+' 'b*b(b|(bc.*|b*|))b+' 'b*(c|a*|||)(b|.+|b*b*)b+' 'b*(a((c?b.*))*.?|a*|||)(b|b?|b*b*)c+' 'b*(ac+a*.()c|.*|||)(b+|b?|b*b*)c+' 'b*(ac+a*.a?b*|.*|||)(|b*.|c+a+.*)b+' 'b*(acca+a*..()c|.*|||)(b+|b?|b*b*)c+' 'b.*(acca+a*..(.)c|.*|||)(b+|b?|cb*b*)c+' 'b.*(acca+a*..(.)c|.*||)(b+|cb?|ccb*b*)c+' 'b.*(acca+a*..(.)c|.*|||)(c.||c.*)()' 'b.*(acca+a*..(..+)c|.*|||)(c..||c.*)()' 'b.*(acca+a*..(.c)c|.*|||)(c..||c.*)(||())' 'b.*(acca+a*..(.c)c|.*|||)(c..||a.*)(||())' 'b.*(acca+a*..(.c)c|.*|||)(b+||a.*)(||c?)' 'b.*(acca+a*..(.c)c|.*|||)(c..||a.*)(||a*)' 'a.*(ac.a+a*..(.c)c|.*|||)(c..||a.*)(||a*)' 'a.*(ac.a+a*..cc|.*|||)(c..||a.*)(()||||a+)' 'a.*(ac.a+a*..cc|.*|||)(c..||a.*)(()||||.+)' 'a.*(ac.a+a+c|.*|||)(c..||a.*)(|.*ba+()|a+|c*a+.?b+||)' 'a.*(ac.a+a*..cc|.*|||)(|(.*).*a*)(()||||b)' 'a.*(ac.a+a*..cc|.*|||)(|(.*).*a*)(()|||||)' 'a.*(ac.a+a*..cc|.*|||)(|(.*).*a*)(()|.*||(a*))' 'a.*(ac.a+a*..cc|.*|||)(|(.*).*a*)(c?.*|c?b?|||)' 'a.*(ac.a+a*..cc|.*|.|)(|(.*).*.*)(c?.*|c?b?|||)' 'a.*(cc.a+a*..cc|.*|c|)(|(.*).*.*)(cc|c?b?|||)' 'a.*(cc.a+a*..cc|.*|c|)(|(.*).*.*)(cc|c?b?|.*)' 'a.*(cc.a+a*..cc|.*|c|)(|()(.+|.)*.*)c' 'a.*(cc.a+a*..cbc|.*|c|)(b|.()(.+|.)*.*)c' 'a.*(cc.a.a*..cbc|.*|.|)(b|.()(.+|.)*.*)c' 'a.*(cc.a.a*..cbc|.|.|)(b|.*)(.+|.)*.*cc' 'a.*(cc.a.a*c.cbc|.|.|)(c|.*)(.+|.)*a.*cc' 'a.*(cc.a.a*c..cbc...|)(c|.*)(.+|.)*a.*cc' ) collect: [ :regex |
 					ShrinkerTest input: regex oracle: oracle
 				]
 ]
