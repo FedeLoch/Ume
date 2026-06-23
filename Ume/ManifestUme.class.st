@@ -13,12 +13,12 @@ Class {
 ManifestUme class >> ruleCollectionProtocolRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#UmeGrammarBasedShrinker #candidates: #false)) #'2026-06-17T10:25:57.033098+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#UmeNautilusShrinker #candidates: #false)) #'2026-06-17T10:25:57.033098+02:00') )
 ]
 
 { #category : 'code-critics' }
 ManifestUme class >> ruleReIsNotNilAndConditionalRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#UmeGrammarBasedShrinker #minimizeOne:upperBound: #false)) #'2026-06-17T10:24:47.051485+02:00') #(#(#RGClassDefinition #(#UmeGrammarBasedShrinker)) #'2026-06-17T10:25:15.980842+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#UmeNautilusShrinker #minimizeOne:upperBound: #false)) #'2026-06-17T10:24:47.051485+02:00') #(#(#RGClassDefinition #(#UmeNautilusShrinker)) #'2026-06-17T10:25:15.980842+02:00') )
 ]

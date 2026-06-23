@@ -136,7 +136,7 @@ UmeShrinker >> percentageProblemPreservation: upperBound given: currentBound [
 { #category : 'shrinking' }
 UmeShrinker >> profiledShrink: input [
 
-	| tree minimizedTree upperBound initialTime totalTime minimizedInput |
+	| tree minimizedTree upperBound initialTime totalTime minimizedInput minimizedBound |
 	
 	initialTime := Time microsecondClockValue.
 	(self tree: input) ifNil: [ Error signal: 'Trying to reduce a non valid input' ].
@@ -147,14 +147,18 @@ UmeShrinker >> profiledShrink: input [
 	minimizedTree := self minimizeTree: tree upperBound: upperBound.	
 	totalTime := Time microsecondClockValue - initialTime.
 	minimizedInput := self asInput: minimizedTree.
+	minimizedBound := self evalInput: minimizedInput.
 
 	^ {
+		'originalInput' -> input.
+		'minimizedInput' -> minimizedInput.
 		'totalTime' -> (Duration microSeconds: totalTime).
 		'neededReductions' -> reductionsDone asFloat.
 		'failedReductions' -> failedReductionsDone asFloat.
-		'%problemPreservation' -> (self percentageProblemPreservation: upperBound given: (self evalInput: minimizedInput)).
+		'%problemPreservation' -> (self percentageProblemPreservation: upperBound given: minimizedBound).
 		'%inputReduction' -> (self percentageInputReduced: tree given: minimizedTree).
-		'minimizedInput' -> minimizedInput
+		'originalBound' -> upperBound.
+		'minimizedBound' -> minimizedBound
 	} asDictionary
 ]
 
