@@ -23,7 +23,9 @@ Class {
 		'ntDecimal',
 		'ntSep',
 		'ntFloat',
-		'ntStart'
+		'ntStart',
+		'ntTrace',
+		'ntNbSep'
 	],
 	#category : 'Ume-Grammars',
 	#package : 'Ume',
@@ -35,9 +37,11 @@ SvgPathGrammar >> defineGrammar [
 
 	ntPath --> ntStart.
 	
-	ntStart --> ntCommand, ntSep , ntStart | ntCommand.
+	ntStart --> ntMove, ntSep, ntTrace | ntMove.
 	
-	ntCommand --> ntMove | ntLine | ntHorizontalLine | ntVerticalLine | ntStraight | ntCubicCurve | ntSmoothCubicCurve | ntQuadraticCurve | ntSmoothQuadraticCurve | ntArc. 
+	ntTrace --> ntCommand, ntSep, ntTrace | ntCommand | ntCommand, ntSep, ntStraight, ntSep, ntTrace | ntCommand, ntSep, ntStraight.
+	
+	ntCommand --> ntMove | ntLine | ntHorizontalLine | ntVerticalLine | ntCubicCurve | ntSmoothCubicCurve | ntQuadraticCurve | ntSmoothQuadraticCurve | ntArc. 
 	
 	ntMove --> 'M', ntPoint | 'm',ntPoint .
 	
@@ -49,23 +53,25 @@ SvgPathGrammar >> defineGrammar [
 	
 	ntStraight --> 'Z' | 'z'. 
 	
-	ntCubicCurve --> 'C', ntPoint , ntSep , ntPoint , ntSep , ntPoint | 'c', ntPoint , ntSep , ntPoint , ntSep , ntPoint . 
+	ntCubicCurve --> 'C', ntPoint , ntNbSep , ntPoint , ntNbSep , ntPoint | 'c', ntPoint , ntNbSep , ntPoint , ntNbSep , ntPoint . 
 	
-	ntSmoothCubicCurve --> 'S', ntPoint , ntSep, ntPoint | 's', ntPoint , ntSep, ntPoint .
+	ntSmoothCubicCurve --> 'S', ntPoint , ntNbSep, ntPoint | 's', ntPoint , ntNbSep, ntPoint .
 		
-	ntQuadraticCurve --> 'Q', ntPoint , ntSep , ntPoint | 'q', ntPoint , ntSep, ntPoint .
+	ntQuadraticCurve --> 'Q', ntPoint , ntNbSep , ntPoint | 'q', ntPoint , ntNbSep, ntPoint .
 	
-	ntSmoothQuadraticCurve --> 'T', ntPoint , ntSep, ntPoint | 't', ntPoint , ntSep, ntPoint .
+	ntSmoothQuadraticCurve --> 'T', ntPoint , ntNbSep, ntPoint | 't', ntPoint , ntNbSep, ntPoint .
 	
 	ntArc --> 'A', ntRadius, ntRadius , ntRotation , ntFlag , ntFlag , ntPoint | 'a', ntRadius, ntRadius , ntRotation , ntFlag , ntFlag , ntPoint.
 	
 	ntInt --> ($0 - $9).
 	 
-	ntPoint --> ntDecimal, ntSep, ntDecimal.
+	ntPoint --> ntDecimal, ntNbSep , ntDecimal.
 	
 	ntDecimal --> '-', ntFloat | '-', ntDigit | ntFloat | ntDigit. 
 	
-	ntSep --> ' ' | ',' | ''.
+	ntSep --> ' ' | ''.
+	
+	ntNbSep --> ' ' | ','.
 	
 	ntFloat --> ntDigit, '.', ntDigit. 
 	
