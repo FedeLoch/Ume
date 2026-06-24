@@ -13,7 +13,7 @@ shrinkerClasses := {
     Smalltalk at: #UmeHDDShrinker
 }.
 
-benchmark2 := (Smalltalk at: #UmeShrinkingRegexBenchmark) for: shrinkerClasses.
-report := benchmark2 bench.
+benchmark := (Smalltalk at: #UmeShrinkingRegexBenchmark) for: shrinkerClasses.
+report := benchmark bench.
 
 report saveAsFile: 'UmeShrinkingRegexBenchmark.json'
