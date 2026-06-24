@@ -22,7 +22,8 @@ Class {
 		'ntCommand',
 		'ntDecimal',
 		'ntSep',
-		'ntFloat'
+		'ntFloat',
+		'ntStart'
 	],
 	#category : 'Ume-Grammars',
 	#package : 'Ume',
@@ -32,7 +33,9 @@ Class {
 { #category : 'initialization' }
 SvgPathGrammar >> defineGrammar [ 
 
-	ntPath --> ntCommand, ntSep, ntPath | ntCommand.
+	ntPath --> ntStart.
+	
+	ntStart --> ntCommand, ntSep , ntStart | ntCommand.
 	
 	ntCommand --> ntMove | ntLine | ntHorizontalLine | ntVerticalLine | ntStraight | ntCubicCurve | ntSmoothCubicCurve | ntQuadraticCurve | ntSmoothQuadraticCurve | ntArc. 
 	

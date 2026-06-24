@@ -12,10 +12,10 @@ UmeShrinkingSVGBenchmark >> initialize [
 	| oracle |
 	
 	super initialize.
-	grammar := GncRegexGrammar new. "1) Implement a svg grammar".
+	grammar := SvgPathGrammar new.
 	oracle := PerformanceOracle new evalBlock: [ :path | SVGRunner run: path ].
 	
-	tests := { } collect: [ :svg |
+	tests := #() collect: [ :svg |
 		ShrinkerTest input: svg oracle: oracle
 	]
 ]
