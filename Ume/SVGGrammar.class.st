@@ -12,7 +12,17 @@ Class {
 		'ntSmoothCubicCurve',
 		'ntQuadraticCurve',
 		'ntSmoothQuadraticCurve',
-		'ntArc'
+		'ntArc',
+		'ntInt',
+		'ntPoint',
+		'ntRadius',
+		'ntRotation',
+		'ntFlag',
+		'ntPath',
+		'ntCommand',
+		'ntDecimal',
+		'ntSep',
+		'ntFloat'
 	],
 	#category : 'Ume-Grammars',
 	#package : 'Ume',
@@ -22,27 +32,47 @@ Class {
 { #category : 'initialization' }
 SVGGrammar >> defineGrammar [ 
 
-	ntMove --> 'M', ntDigit, ntDigit | 'm', ntDigit, ntDigit.
+	ntPath --> ntCommand, ntSep, ntPath | ntCommand.
 	
-	ntLine --> 'L', ntDigit, ntDigit | 'l', ntDigit, ntDigit.
+	ntCommand --> ntMove | ntLine | ntHorizontalLine | ntVerticalLine | ntStraight | ntCubicCurve | ntSmoothCubicCurve | ntQuadraticCurve | ntSmoothQuadraticCurve | ntArc. 
 	
-	ntHorizontalLine --> 'H', ntDigit | 'h', ntDigit.
+	ntMove --> 'M', ntPoint | 'm',ntPoint .
 	
-	ntVerticalLine --> 'V', ntDigit | 'v', ntDigit. 
+	ntLine --> 'L', ntPoint | 'l', ntPoint .
+	
+	ntHorizontalLine --> 'H', ntDecimal | 'h', ntDecimal.
+	
+	ntVerticalLine --> 'V', ntDecimal | 'v', ntDecimal. 
 	
 	ntStraight --> 'Z' | 'z'. 
 	
-	ntCubicCurve --> 'C', ntDigit, ntDigit, ',', ntDigit, ntDigit, ',', ntDigit, ntDigit | 'c', ntDigit, ntDigit, ',', ntDigit, ntDigit, ',', ntDigit, ntDigit. 
+	ntCubicCurve --> 'C', ntPoint , ntSep , ntPoint , ntSep , ntPoint | 'c', ntPoint , ntSep , ntPoint , ntSep , ntPoint . 
 	
-	ntSmoothCubicCurve --> 'S', ntDigit, ntDigit, ',', ntDigit, ntDigit | 's', ntDigit, ntDigit, ',', ntDigit, ntDigit.
+	ntSmoothCubicCurve --> 'S', ntPoint , ntSep, ntPoint | 's', ntPoint , ntSep, ntPoint .
 		
-	ntQuadraticCurve --> 'Q', ntDigit, ntDigit, ',', ntDigit, ntDigit | 'q', ntDigit, ntDigit, ',', ntDigit, ntDigit.
+	ntQuadraticCurve --> 'Q', ntPoint , ntSep , ntPoint | 'q', ntPoint , ntSep, ntPoint .
 	
-	ntSmoothQuadraticCurve --> 'T', ntDigit, ntDigit, ',', ntDigit, ntDigit | 't', ntDigit, ntDigit, ',', ntDigit, ntDigit.
+	ntSmoothQuadraticCurve --> 'T', ntPoint , ntSep, ntPoint | 't', ntPoint , ntSep, ntPoint .
 	
-	ntArc --> 'A', ntDigit, ntDigit, ntDigit, ntDigit, ntDigit, ntDigit, ntDigit | 'a', ntDigit, ntDigit, ntDigit, ntDigit, ntDigit, ntDigit, ntDigit.
+	ntArc --> 'A', ntRadius, ntRadius , ntRotation , ntFlag , ntFlag , ntPoint | 'a', ntRadius, ntRadius , ntRotation , ntFlag , ntFlag , ntPoint.
+	
+	ntInt --> ($0 - $9).
 	 
-	ntDigit --> ($0 - $9) | '-', ($0 - $9).
+	ntPoint --> ntDecimal, ntSep, ntDecimal.
 	
-
+	ntDecimal --> '-', ntFloat | '-', ntDigit | ntFloat | ntDigit. 
+	
+	ntSep --> ' ' | ',' | ''.
+	
+	ntFloat --> ntDigit, '.', ntDigit. 
+	
+	ntRadius --> ntDecimal. 
+	
+	ntRotation --> ntDecimal. 
+	
+	ntFlag --> '0' | '1'.
+	
+	ntDigit --> ntInt | ntInt, ntDigit. 
+	
+	^ ntPath. 
 ]
