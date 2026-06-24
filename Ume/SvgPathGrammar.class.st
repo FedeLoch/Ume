@@ -2,43 +2,45 @@ Class {
 	#name : 'SvgPathGrammar',
 	#superclass : 'GncGrammar',
 	#instVars : [
+		'ntStart',
+		'ntPath',
 		'ntMove',
-		'ntDigit',
+		'ntSep',
+		'ntTrace',
+		'ntCommand',
+		'ntStraight',
 		'ntLine',
 		'ntHorizontalLine',
 		'ntVerticalLine',
-		'ntStraight',
 		'ntCubicCurve',
 		'ntSmoothCubicCurve',
 		'ntQuadraticCurve',
 		'ntSmoothQuadraticCurve',
 		'ntArc',
-		'ntInt',
-		'ntPoint',
-		'ntRadius',
-		'ntRotation',
-		'ntFlag',
-		'ntPath',
-		'ntCommand',
-		'ntDecimal',
-		'ntSep',
-		'ntFloat',
-		'ntStart',
-		'ntTrace',
-		'ntNbSep',
-		'ntTwoPoints',
-		'ntThreePoints',
 		'ntM',
+		'ntPoint',
 		'ntL',
 		'ntH',
+		'ntDecimal',
 		'ntV',
 		'ntZ',
 		'ntC',
+		'ntThreePoints',
 		'ntS',
+		'ntTwoPoints',
 		'ntQ',
 		'ntT',
 		'ntA',
-		'ntNumDecimal'
+		'ntRadius',
+		'ntRotation',
+		'ntFlag',
+		'ntNbSep',
+		'ntNegPoint',
+		'ntInt',
+		'ntNegDecimal',
+		'ntNumDecimal',
+		'ntFloat',
+		'ntDigit'
 	],
 	#category : 'Ume-Grammars',
 	#package : 'Ume',
@@ -79,9 +81,9 @@ SvgPathGrammar >> defineGrammar [
 
 	ntArc --> ntA, ntRadius , ntRadius , ntRotation , ntFlag , ntFlag, ntPoint.
 	
-	ntThreePoints --> ntTwoPoints, ntNbSep, ntPoint.
+	ntThreePoints --> ntTwoPoints, ntNbSep, ntPoint | ntTwoPoints, ntNegPoint.
 	
-	ntTwoPoints --> ntPoint , ntNbSep , ntPoint.
+	ntTwoPoints --> ntPoint , ntNbSep , ntPoint | ntPoint , ntNegPoint.
 
 	ntInt --> ($0 - $9).
 	
@@ -96,7 +98,11 @@ SvgPathGrammar >> defineGrammar [
 	ntT --> 'T' | 't'.
 	ntQ --> 'Q' | 'q'.
 
-	ntPoint --> ntDecimal , ntNbSep , ntDecimal.
+	ntPoint --> ntDecimal , ntNbSep , ntDecimal | ntDecimal , ntNegDecimal.
+
+	ntNegDecimal --> '-' , ntNumDecimal.
+
+	ntNegPoint --> ntNegDecimal , ntNbSep , ntDecimal | ntNegDecimal , ntNegDecimal.
 
 	ntDecimal --> '-' , ntNumDecimal | ntNumDecimal.
 	
