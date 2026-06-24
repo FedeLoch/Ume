@@ -25,7 +25,20 @@ Class {
 		'ntFloat',
 		'ntStart',
 		'ntTrace',
-		'ntNbSep'
+		'ntNbSep',
+		'ntTwoPoints',
+		'ntThreePoints',
+		'ntM',
+		'ntL',
+		'ntH',
+		'ntV',
+		'ntZ',
+		'ntC',
+		'ntS',
+		'ntQ',
+		'ntT',
+		'ntA',
+		'ntNumDecimal'
 	],
 	#category : 'Ume-Grammars',
 	#package : 'Ume',
@@ -33,55 +46,75 @@ Class {
 }
 
 { #category : 'initialization' }
-SvgPathGrammar >> defineGrammar [ 
+SvgPathGrammar >> defineGrammar [
 
 	ntPath --> ntStart.
+
+	ntStart --> ntMove , ntSep , ntTrace | ntMove.
+
+	ntTrace --> ntCommand , ntSep , ntTrace | ntCommand |
+		ntCommand, ntSep , ntStraight , ntSep , ntTrace | ntCommand , ntSep , ntStraight.
+
+	ntCommand --> ntMove | ntLine | ntHorizontalLine | ntVerticalLine
+				| ntCubicCurve | ntSmoothCubicCurve | ntQuadraticCurve
+				| ntSmoothQuadraticCurve | ntArc.
+
+	ntMove --> ntM, ntPoint.
+
+	ntLine --> ntL, ntPoint.
+
+	ntHorizontalLine --> ntH, ntDecimal.
+
+	ntVerticalLine --> ntV, ntDecimal.
+
+	ntStraight --> ntZ.
+
+	ntCubicCurve --> ntC, ntThreePoints.
 	
-	ntStart --> ntMove, ntSep, ntTrace | ntMove.
+	ntSmoothCubicCurve --> ntS, ntTwoPoints.
+
+	ntQuadraticCurve --> ntQ, ntTwoPoints.
+
+	ntSmoothQuadraticCurve --> ntT, ntTwoPoints.
+
+	ntArc --> ntA, ntRadius , ntRadius , ntRotation , ntFlag , ntFlag, ntPoint.
 	
-	ntTrace --> ntCommand, ntSep, ntTrace | ntCommand | ntCommand, ntSep, ntStraight, ntSep, ntTrace | ntCommand, ntSep, ntStraight.
+	ntThreePoints --> ntTwoPoints, ntNbSep, ntPoint.
 	
-	ntCommand --> ntMove | ntLine | ntHorizontalLine | ntVerticalLine | ntCubicCurve | ntSmoothCubicCurve | ntQuadraticCurve | ntSmoothQuadraticCurve | ntArc. 
-	
-	ntMove --> 'M', ntPoint | 'm',ntPoint .
-	
-	ntLine --> 'L', ntPoint | 'l', ntPoint .
-	
-	ntHorizontalLine --> 'H', ntDecimal | 'h', ntDecimal.
-	
-	ntVerticalLine --> 'V', ntDecimal | 'v', ntDecimal. 
-	
-	ntStraight --> 'Z' | 'z'. 
-	
-	ntCubicCurve --> 'C', ntPoint , ntNbSep , ntPoint , ntNbSep , ntPoint | 'c', ntPoint , ntNbSep , ntPoint , ntNbSep , ntPoint . 
-	
-	ntSmoothCubicCurve --> 'S', ntPoint , ntNbSep, ntPoint | 's', ntPoint , ntNbSep, ntPoint .
-		
-	ntQuadraticCurve --> 'Q', ntPoint , ntNbSep , ntPoint | 'q', ntPoint , ntNbSep, ntPoint .
-	
-	ntSmoothQuadraticCurve --> 'T', ntPoint , ntNbSep, ntPoint | 't', ntPoint , ntNbSep, ntPoint .
-	
-	ntArc --> 'A', ntRadius, ntRadius , ntRotation , ntFlag , ntFlag , ntPoint | 'a', ntRadius, ntRadius , ntRotation , ntFlag , ntFlag , ntPoint.
-	
+	ntTwoPoints --> ntPoint , ntNbSep , ntPoint.
+
 	ntInt --> ($0 - $9).
-	 
-	ntPoint --> ntDecimal, ntNbSep , ntDecimal.
 	
-	ntDecimal --> '-', ntFloat | '-', ntDigit | ntFloat | ntDigit. 
+	ntA --> 'A' | 'a'.
+	ntM --> 'M' | 'm'.
+	ntL --> 'L' | 'l'.
+	ntH --> 'H' | 'h'.
+	ntV --> 'V' | 'v'.
+	ntZ --> 'Z' | 'z'.
+	ntC --> 'C' | 'c'.
+	ntS --> 'S' | 's'.
+	ntT --> 'T' | 't'.
+	ntQ --> 'Q' | 'q'.
+
+	ntPoint --> ntDecimal , ntNbSep , ntDecimal.
+
+	ntDecimal --> '-' , ntNumDecimal | ntNumDecimal.
 	
+	ntNumDecimal -->  ntFloat | ntDigit.
+
 	ntSep --> ' ' | ''.
-	
+
 	ntNbSep --> ' ' | ','.
-	
-	ntFloat --> ntDigit, '.', ntDigit. 
-	
-	ntRadius --> ntDecimal. 
-	
-	ntRotation --> ntDecimal. 
-	
+
+	ntFloat --> ntDigit , '.' , ntDigit.
+
+	ntRadius --> ntDecimal.
+
+	ntRotation --> ntDecimal.
+
 	ntFlag --> '0' | '1'.
-	
-	ntDigit --> ntInt | ntInt, ntDigit. 
-	
-	^ ntPath. 
+
+	ntDigit --> ntInt | ntInt , ntDigit.
+
+	^ ntPath
 ]

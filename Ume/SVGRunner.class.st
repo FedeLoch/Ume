@@ -16,5 +16,5 @@ SVGRunner class >> run: svgPath [
 		       svgPath: svgPath.
 	c add: svg.
 	c @ RSCanvasController.
-	c
+	^ c
 ]
