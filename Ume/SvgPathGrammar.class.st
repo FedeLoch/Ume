@@ -1,5 +1,5 @@
 Class {
-	#name : 'SVGGrammar',
+	#name : 'SvgPathGrammar',
 	#superclass : 'GncGrammar',
 	#instVars : [
 		'ntMove',
@@ -30,7 +30,7 @@ Class {
 }
 
 { #category : 'initialization' }
-SVGGrammar >> defineGrammar [ 
+SvgPathGrammar >> defineGrammar [ 
 
 	ntPath --> ntCommand, ntSep, ntPath | ntCommand.
 	
