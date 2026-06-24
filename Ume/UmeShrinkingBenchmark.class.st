@@ -27,17 +27,10 @@ UmeShrinkingBenchmark >> bench [
 
 { #category : 'initialization' }
 UmeShrinkingBenchmark >> benchShrinker: shrinkerClass [
-
-	| results |
 	
-	results := tests collect: [ :test | | shrinker |
+	^ tests collect: [ :test | | shrinker |
 		shrinker := shrinkerClass new grammar: grammar; oracle: test oracle.
 		shrinker profiledShrink: test input.
-	].
-
-	^ UmeShrinkingBenchmarkReport keys inject: Dictionary new into: [ :result :key |
-		result at: key put: (results collect: [ :report | report at: key ]) average.
-		result
 	]
 ]
 

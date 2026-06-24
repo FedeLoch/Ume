@@ -31,7 +31,7 @@ UmeRegexPerfuzzWithGrammarMutatorTest >> setUp [
 	
 	super setUp.
 	schema score: nil.
-	runner := UmeRunner test: RxMatcher >> #matches: from: schema for: 10 minutes.
+	runner := UmeRunner test: RxMatcher >> #matches: from: schema for: 30 minutes.
 ]
 
 { #category : 'tests' }

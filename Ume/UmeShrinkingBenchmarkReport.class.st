@@ -9,18 +9,6 @@ Class {
 	#tag : 'Shrinking'
 }
 
-{ #category : 'accessing' }
-UmeShrinkingBenchmarkReport class >> keys [
-
-	^ {
-		'totalTime'.
-		'%inputReduction'.
-		'neededReductions'.
-	 	'failedReductions'.
-		'%problemPreservation'
-	}
-]
-
 { #category : 'adding' }
 UmeShrinkingBenchmarkReport >> add: result for: shrinkerClass [
 
