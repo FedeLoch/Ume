@@ -77,15 +77,13 @@ UmeGRABRShrinker >> reductionStrategy: aStrategy [
 ]
 
 { #category : 'copying' }
-UmeGRABRShrinker >> replaceSubtreeIn: tree by: subtree index: index [
+UmeGRABRShrinker >> replaceSubtreeIn: tree by: subtrees index: index [
 
-	| treeCopy replacementTree test|
-	
-	treeCopy := self copyTree: tree.  
-	replacementTree := treeCopy at: index.
-	test := OrderedCollection new. 
-	test add: (subtree at: 2).
-	replacementTree children: test.
+	| treeCopy treeToMutate |
+
+	treeCopy := self copyTree: tree.
+	treeToMutate := treeCopy at: index.
+	treeToMutate children: { subtrees at: 2 }.
 	
 	^ treeCopy 
 ]

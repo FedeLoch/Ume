@@ -15,36 +15,33 @@ Class {
 { #category : 'running' }
 UmeSVGTest >> setUp [
 
-	| methods |
 	super setUp.
 	self timeLimit: 5 hours.
 	
 	schema := UmeSchema new
 		          receiverConstraint: (UmeConstantGenerator new value: SVGRunner);
-		          argumentConstraints: (self svgGenerator);
+		          argumentConstraints: { (self svgGenerator) };
 		          score: [ :re :inputs :res | 1 ];
 		          property: [ :regex :input :result | true ];
 					 method: SVGRunner class >> #run:.
 
 
-	runner := UmeRunner test: schema for: 20 seconds.
-	methods := RSSVGPath package methods.
-	
-	runner methodsToInstrument: methods.
+	runner := UmeRunner test: schema for: 5 minutes.
 ]
 
 { #category : 'as yet unclassified' }
 UmeSVGTest >> svgGenerator [
 
-	| seeds |
-	seeds := { 'M797,632.3c0,44.2-15.7,82.2-47.5,113.5' }.
+	| seeds randomGenerator |
+	randomGenerator := UmeGrammarGenerator new grammar: SvgPathGrammar new; maxHeight: SmallInteger maxVal; maxSize: 500.
+	seeds := 100 timesCollect: [ :i | randomGenerator gen: nil ].
 
 	^ UmeCorpusGenerator new
 		  seeds: seeds;
-		  mutationsPerIteration: 100;
+		  mutationsPerIteration: 3;
 		  mutators: {
-"			(UmeGrammarLiteralsMutator from: SvgPathGrammar new) maxInputSize: 2000."
-			(UmeGrammarDerivationMutator from: SvgPathGrammar new) maxInputSize: 2000
+			(UmeGrammarLiteralsMutator from: SvgPathGrammar new) maxInputSize: 500.
+			(UmeGrammarDerivationMutator from: SvgPathGrammar new) maxInputSize: 500
 		  };
 		  heuristic: UmePickBestElementDifferenceHeuristic new
 ]
@@ -52,9 +49,13 @@ UmeSVGTest >> svgGenerator [
 { #category : 'tests' }
 UmeSVGTest >> testGuidingByMethodsCalls [ 
 
-	| result |
+	| result methods |
 	
-	runner guidedByExecutionTime.
+	runner guidedByCoverage.
+	methods := RSSVGPath package methods.
+"	runner collectAllCases."
+	
+	runner methodsToInstrument: methods.
 	result := runner run.
 
 	1 halt.

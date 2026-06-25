@@ -26,7 +26,12 @@ UmeEvaluator >> analyzer [
 { #category : 'as yet unclassified' }
 UmeEvaluator >> classesFor: target [
 
-	classesToInstrument ifNil: [ classesToInstrument := target package definedClasses ].
+	classesToInstrument ifNil: [
+		classesToInstrument := (
+			runner methodsToInstrument ifEmpty: [ target package definedClasses ] ifNotEmpty: [ :methods |
+				(methods collect: #realClass) asSet
+			])
+	].
 
 	^ classesToInstrument
 ]
@@ -41,6 +46,7 @@ UmeEvaluator >> eval: receiver method: methodToPerform from: schema with: args a
 		collector resetResult.
 
 		"Executing PB Analyzer"
+
 		case := PBAProgram from:
 			[ result := receiver perform: methodToPerform selector withArguments: args ] forClasses: (self classesFor: methodToPerform).
 		
