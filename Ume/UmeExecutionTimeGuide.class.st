@@ -6,6 +6,12 @@ Class {
 	#tag : 'Feedback'
 }
 
+{ #category : 'accessing' }
+UmeExecutionTimeGuide >> category: value [
+
+	^ value
+]
+
 { #category : 'as yet unclassified' }
 UmeExecutionTimeGuide >> tableOfValue [
 

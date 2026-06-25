@@ -26,22 +26,22 @@ UmeSVGTest >> setUp [
 					 method: SVGRunner class >> #run:.
 
 
-	runner := UmeRunner test: schema for: 5 minutes.
+	runner := UmeRunner test: schema for: 20 minutes.
 ]
 
 { #category : 'as yet unclassified' }
 UmeSVGTest >> svgGenerator [
 
 	| seeds randomGenerator |
-	randomGenerator := UmeGrammarGenerator new grammar: SvgPathGrammar new; maxHeight: SmallInteger maxVal; maxSize: 500.
+	randomGenerator := UmeGrammarGenerator new grammar: SvgPathGrammar new; maxHeight: SmallInteger maxVal; maxSize: 1000.
 	seeds := 100 timesCollect: [ :i | randomGenerator gen: nil ].
 
 	^ UmeCorpusGenerator new
 		  seeds: seeds;
 		  mutationsPerIteration: 3;
 		  mutators: {
-			(UmeGrammarLiteralsMutator from: SvgPathGrammar new) maxInputSize: 500.
-			(UmeGrammarDerivationMutator from: SvgPathGrammar new) maxInputSize: 500
+			(UmeGrammarLiteralsMutator from: SvgPathGrammar new) maxInputSize: 1000.
+			(UmeGrammarDerivationMutator from: SvgPathGrammar new) maxInputSize: 1000
 		  };
 		  heuristic: UmePickBestElementDifferenceHeuristic new
 ]
@@ -51,9 +51,9 @@ UmeSVGTest >> testGuidingByMethodsCalls [
 
 	| result methods |
 	
-	runner guidedByCoverage.
+	runner guidedByExecutionTime.
 	methods := RSSVGPath package methods.
-"	runner collectAllCases."
+	"runner collectAllCases."
 	
 	runner methodsToInstrument: methods.
 	result := runner run.
