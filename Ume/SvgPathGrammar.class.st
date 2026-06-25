@@ -40,7 +40,12 @@ Class {
 		'ntNegDecimal',
 		'ntNumDecimal',
 		'ntFloat',
-		'ntDigit'
+		'ntDigit',
+		'ntPointsPlus',
+		'ntThreePointsPlus',
+		'ntTwoPointsPlus',
+		'ntAparamsPlus',
+		'ntAParams'
 	],
 	#category : 'Ume-Grammars',
 	#package : 'Ume',
@@ -59,30 +64,36 @@ SvgPathGrammar >> defineGrammar [
 
 	ntCommand --> ntMove | ntLine | ntHorizontalLine | ntVerticalLine
 				| ntCubicCurve | ntSmoothCubicCurve | ntQuadraticCurve
-				| ntSmoothQuadraticCurve | ntArc.
+				| "ntSmoothQuadraticCurve |" ntArc.
+					"T Not implemented yet"
 
-	ntMove --> ntM, ntPoint.
-
-	ntLine --> ntL, ntPoint.
+	ntMove --> ntM, ntPointsPlus.
+	ntLine --> ntL, ntPointsPlus.
+	
+	ntPointsPlus --> ntPoint | ntPoint, ntNbSep, ntPointsPlus.
 
 	ntHorizontalLine --> ntH, ntDecimal.
-
 	ntVerticalLine --> ntV, ntDecimal.
 
 	ntStraight --> ntZ.
 
-	ntCubicCurve --> ntC, ntThreePoints.
+	ntCubicCurve --> ntC, ntThreePointsPlus.
 	
-	ntSmoothCubicCurve --> ntS, ntTwoPoints.
+	ntSmoothCubicCurve --> ntS, ntTwoPointsPlus.
+	ntQuadraticCurve --> ntQ, ntTwoPointsPlus.
 
-	ntQuadraticCurve --> ntQ, ntTwoPoints.
+	ntSmoothQuadraticCurve --> ntT, ntPointsPlus.
 
-	ntSmoothQuadraticCurve --> ntT, ntTwoPoints.
-
-	ntArc --> ntA, ntRadius , ntRadius , ntRotation , ntFlag , ntFlag, ntPoint.
+	ntArc --> ntA | "This case is not supported by the vector definition, but it is accepted by the runner"
+				 ntA, ntAparamsPlus.
+		
+	ntAparamsPlus --> ntAParams | ntAParams, ntNbSep, ntAparamsPlus.
+	ntAParams --> ntRadius , ntRadius , ntRotation , ntFlag , ntFlag, ntPoint.
 	
+	ntThreePointsPlus --> ntThreePoints | ntThreePoints, ntNbSep, ntThreePointsPlus.
 	ntThreePoints --> ntTwoPoints, ntNbSep, ntPoint | ntTwoPoints, ntNegPoint.
 	
+	ntTwoPointsPlus --> ntTwoPoints | ntTwoPoints, ntNbSep, ntTwoPointsPlus.
 	ntTwoPoints --> ntPoint , ntNbSep , ntPoint | ntPoint , ntNegPoint.
 
 	ntInt --> ($0 - $9).
@@ -112,7 +123,7 @@ SvgPathGrammar >> defineGrammar [
 
 	ntNbSep --> ' ' | ','.
 
-	ntFloat --> ntDigit , '.' , ntDigit.
+	ntFloat --> ntDigit , '.' , ntDigit | ntDigit , '.' | '.', ntDigit.
 
 	ntRadius --> ntDecimal.
 
