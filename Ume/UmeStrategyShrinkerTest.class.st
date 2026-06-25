@@ -124,3 +124,17 @@ UmeStrategyShrinkerTest >> testGrammarReducer10 [
 	
 	self assert:  (shrinker shrink: 'b.*(acca+a*..(.)c|.*|||)(b+|b?|cb*b*)c+' ) equals: 'b.*(acca+a*..(.)c|.*|||)(b+|b?|cb*b*)c+'
 ]
+
+{ #category : 'tests' }
+UmeStrategyShrinkerTest >> testGrammarReducer11 [
+
+	| grammar2 oracle |
+	grammar2 := SvgPathGrammar new.
+	oracle := PerformanceOracle new threshold: 0.9; evalBlock: [ :path | SVGRunner run: path ].
+
+	shrinker oracle: oracle.
+	shrinker grammar: grammar2.
+	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
+	
+	self assert:  (shrinker shrink: 'm-.99,-.4,7-93.,03-.8 -19.9-.2449 -1742 -269 -747 -5 16.-132 21.04-55.9' ) equals: 'b.*(acca+a*..(.)c|.*|||)(b+|b?|cb*b*)c+'
+]
