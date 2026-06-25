@@ -31,6 +31,12 @@ UmeBooleanInputOracle >> block: booleanBlock [
 ]
 
 { #category : 'as yet unclassified' }
+UmeBooleanInputOracle >> evalInput: aBlock [ 
+
+	^ self accepts: aBlock from: nil  
+]
+
+{ #category : 'as yet unclassified' }
 UmeBooleanInputOracle >> valueBound: bound [
 
 	^ bound ifTrue: [ 100 ] ifFalse: [ 0 ]
