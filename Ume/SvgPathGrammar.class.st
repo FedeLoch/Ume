@@ -6,7 +6,6 @@ Class {
 		'ntPath',
 		'ntMove',
 		'ntSep',
-		'ntTrace',
 		'ntCommand',
 		'ntStraight',
 		'ntLine',
@@ -45,7 +44,8 @@ Class {
 		'ntThreePointsPlus',
 		'ntTwoPointsPlus',
 		'ntAparamsPlus',
-		'ntAParams'
+		'ntAParams',
+		'ntCommands'
 	],
 	#category : 'Ume-Grammars',
 	#package : 'Ume',
@@ -56,12 +56,11 @@ Class {
 SvgPathGrammar >> defineGrammar [
 
 	ntPath --> ntStart.
-
-	ntStart --> ntMove , ntSep , ntTrace | ntMove.
-
-	ntTrace --> ntCommand , ntSep , ntTrace | ntCommand |
-		ntCommand, ntSep , ntStraight , ntSep , ntTrace | ntCommand , ntSep , ntStraight.
-
+	
+	ntStart --> ntMove | ntMove, ntSep, ntCommands. 
+	
+	ntCommands --> ntCommand | ntCommand, ntSep, ntCommands.
+	
 	ntCommand --> ntMove | ntLine | ntHorizontalLine | ntVerticalLine
 				| ntCubicCurve | ntSmoothCubicCurve | ntQuadraticCurve
 				| "ntSmoothQuadraticCurve |" ntArc.
@@ -73,7 +72,7 @@ SvgPathGrammar >> defineGrammar [
 	ntPointsPlus --> ntPoint | ntPoint, ntNbSep, ntPointsPlus.
 
 	ntHorizontalLine --> ntH, ntDecimal.
-	ntVerticalLine --> ntV, ntDecimal.
+	ntVerticalLine --> ntV, ntDecimal. "s"
 
 	ntStraight --> ntZ.
 
@@ -88,7 +87,7 @@ SvgPathGrammar >> defineGrammar [
 				 ntA, ntAparamsPlus.
 		
 	ntAparamsPlus --> ntAParams | ntAParams, ntNbSep, ntAparamsPlus.
-	ntAParams --> ntRadius , ntRadius , ntRotation , ntFlag , ntFlag, ntPoint.
+	ntAParams --> ntRadius , ntNbSep, ntRadius , ntNbSep, ntRotation , ntNbSep, ntFlag , ntNbSep, ntFlag, ntNbSep, ntPoint.
 	
 	ntThreePointsPlus --> ntThreePoints | ntThreePoints, ntNbSep, ntThreePointsPlus.
 	ntThreePoints --> ntTwoPoints, ntNbSep, ntPoint | ntTwoPoints, ntNegPoint.
