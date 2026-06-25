@@ -83,6 +83,8 @@ UmeGRABRShrinker >> replaceSubtreeIn: tree by: subtrees index: index [
 
 	treeCopy := self copyTree: tree.
 	treeToMutate := treeCopy at: index.
+	(treeToMutate isLeaf) ifTrue: [ ^ tree ].
+
 	treeToMutate children: { subtrees at: 2 }.
 	
 	^ treeCopy 

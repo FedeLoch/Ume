@@ -108,3 +108,19 @@ UmeStrategyShrinkerTest >> testGrammarReducer09 [
 	
 	self assert:  (shrinker shrink: '3*2+(4*1)' ) equals: '3*1'
 ]
+
+{ #category : 'tests' }
+UmeStrategyShrinkerTest >> testGrammarReducer10 [
+
+	| grammar2 oracle |
+	grammar2 := GncRegexGrammar new.
+	oracle := PerformanceOracle new threshold: 0.9; evalBlock: [ :regex |
+		regex asRegex matches: regex minimalStringMatching
+	].
+
+	shrinker oracle: oracle.
+	shrinker grammar: grammar2.
+	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
+	
+	self assert:  (shrinker shrink: 'b.*(acca+a*..(.)c|.*|||)(b+|b?|cb*b*)c+' ) equals: 'b.*(acca+a*..(.)c|.*|||)(b+|b?|cb*b*)c+'
+]
