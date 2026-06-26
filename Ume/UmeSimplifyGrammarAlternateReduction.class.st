@@ -10,7 +10,7 @@ Class {
 UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: aGrammar matchingWith: symbol [
 	" return all the reduction candidates"
 	| expansions reductions nonTerminal |
-	
+
 	reductions := OrderedCollection new.
 	nonTerminal := aGrammar instVarNamed: ('nt' , symbol asString).
 	expansions := nonTerminal rules.
@@ -19,9 +19,9 @@ UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: a
 	expansions do: [ :expansion | | match newChildReductions |
 		match := true.
 		newChildReductions := OrderedCollection new.
-		expansion fragments do: [ :altSymbol | | childReductions treeCopy |
+		expansion fragments do: [ :altSymbol | | childReductions treeCopy | 
 			(altSymbol isTerminal not) ifTrue: [ 
-			treeCopy := self copyTree: aTree with: aGrammar. 
+			treeCopy := "self copyTree: aTree with: aGrammar. " aTree copy. 
 			childReductions := UmeSimplifyGrammarSubtreeReducer findSubtree: treeCopy mathchingWith: altSymbol name.
 			childReductions ifEmpty: [ match:= false ].
 			match ifTrue: [ newChildReductions add: childReductions ]  ]
