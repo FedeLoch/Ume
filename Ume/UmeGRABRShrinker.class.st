@@ -19,14 +19,16 @@ UmeGRABRShrinker >> asInput: tree [
 { #category : 'shrinking' }
 UmeGRABRShrinker >> candidates: subTree matching: symbol [
 
-	| allCandidates |
+	| allCandidates OrderedCandidates|
 	
 	"TODO: Improve performance here"
 	allCandidates := (reductionStrategy reduce: subTree using: grammar matching: symbol) asSet.
+	1 halt. 
 	allCandidates difference: seen. 
-	allCandidates sorted: [ :treeA :treeB | treeA treeSize  < treeB treeSize ]. 
-
-	^ allCandidates
+	OrderedCandidates := allCandidates asOrderedCollection. 
+	OrderedCandidates sort: [ :treeA :treeB | treeA treeSize  < treeB treeSize ]. 
+	1 halt. 
+	^ OrderedCandidates
 ]
 
 { #category : 'copying' }
@@ -47,15 +49,18 @@ UmeGRABRShrinker >> initialize [
 { #category : 'shrinking' }
 UmeGRABRShrinker >> minimizeOne: originalTree upperBound: bound [
 
-	originalTree allNodes doWithIndex: [ :subTree :index | 
+	originalTree allNodes doWithIndex: [ :subTree :index |
+		1 halt.
 		( subTree isLeaf ) ifFalse: [ | symbol |
 			symbol := subTree tag. 
 			( self candidates: subTree matching: symbol ) do: [ :candidate |
 				seen add: candidate. 
 				( candidate treeSize < originalTree treeSize) ifTrue: [ | newTree |
+					1 halt.
 					newTree := self replaceSubtreeIn: originalTree by: candidate index: index.
 					self minimizationDone.
 					(self triggerBug: newTree upperBound: bound ) ifTrue: [
+						1 halt. 
 						^ newTree
 					] ifFalse: [ self failedMinimization. ]
 				]
@@ -81,15 +86,22 @@ UmeGRABRShrinker >> reductionStrategy: aStrategy [
 { #category : 'copying' }
 UmeGRABRShrinker >> replaceSubtreeIn: tree by: subtrees index: index [
 
-	| treeCopy treeToMutate |
+	| treeCopy treeToMutate parent |
 
+	1 halt. 
 	treeCopy := self copyTree: tree.
-	treeToMutate := treeCopy at: index.
-	(treeToMutate isLeaf) ifTrue: [ ^ tree ].
-
-	treeToMutate children: { subtrees at: 2 }.
 	
-	^ treeCopy 
+	treeToMutate := treeCopy allNodes at: index.
+	(treeToMutate isLeaf) ifTrue: [ ^ tree ].
+	
+	parent := treeToMutate parent. 
+	parent ifNil: [ ^ subtrees ].
+	
+	parent children: ( parent children collect: [ :child |
+		child == treeToMutate ifTrue: [ subtrees ] ifFalse: [ child ]
+		]).
+	
+	^ treeCopy
 ]
 
 { #category : 'shrinking' }

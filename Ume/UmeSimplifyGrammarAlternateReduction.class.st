@@ -17,10 +17,11 @@ UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: a
 	expansions := expansions sorted: [ :expA :expB | expA fragments size < expB fragments size ]. 
 	
 	expansions do: [ :expansion | | match newChildReductions |
+		1 halt. 
 		match := true.
 		newChildReductions := OrderedCollection new.
 		expansion fragments do: [ :altSymbol | | childReductions treeCopy | 
-			(altSymbol isTerminal not) ifTrue: [ 
+			(altSymbol isTerminal ) ifFalse: [ 
 			treeCopy := self copyTree: aTree with: aGrammar. 
 			childReductions := UmeSimplifyGrammarSubtreeReducer findSubtree: treeCopy mathchingWith: altSymbol name.
 			childReductions ifEmpty: [ match:= false ].
