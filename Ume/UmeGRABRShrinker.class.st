@@ -23,11 +23,9 @@ UmeGRABRShrinker >> candidates: subTree matching: symbol [
 	
 	"TODO: Improve performance here"
 	allCandidates := (reductionStrategy reduce: subTree using: grammar matching: symbol) asSet.
-	1 halt. 
 	allCandidates difference: seen. 
 	OrderedCandidates := allCandidates asOrderedCollection. 
 	OrderedCandidates sort: [ :treeA :treeB | treeA treeSize  < treeB treeSize ]. 
-	1 halt. 
 	^ OrderedCandidates
 ]
 
@@ -50,17 +48,14 @@ UmeGRABRShrinker >> initialize [
 UmeGRABRShrinker >> minimizeOne: originalTree upperBound: bound [
 
 	originalTree allNodes doWithIndex: [ :subTree :index |
-		1 halt.
 		( subTree isLeaf ) ifFalse: [ | symbol |
 			symbol := subTree tag. 
 			( self candidates: subTree matching: symbol ) do: [ :candidate |
 				seen add: candidate. 
 				( candidate treeSize < originalTree treeSize) ifTrue: [ | newTree |
-					1 halt.
 					newTree := self replaceSubtreeIn: originalTree by: candidate index: index.
 					self minimizationDone.
 					(self triggerBug: newTree upperBound: bound ) ifTrue: [
-						1 halt. 
 						^ newTree
 					] ifFalse: [ self failedMinimization. ]
 				]
@@ -88,7 +83,6 @@ UmeGRABRShrinker >> replaceSubtreeIn: tree by: subtrees index: index [
 
 	| treeCopy treeToMutate parent |
 
-	1 halt. 
 	treeCopy := self copyTree: tree.
 	
 	treeToMutate := treeCopy allNodes at: index.
