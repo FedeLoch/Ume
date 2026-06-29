@@ -21,7 +21,7 @@ UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: a
 		newChildReductions := OrderedCollection new.
 		expansion fragments do: [ :altSymbol | | childReductions treeCopy | 
 			(altSymbol isTerminal not) ifTrue: [ 
-			treeCopy := "self copyTree: aTree with: aGrammar. " aTree copy. 
+			treeCopy := self copyTree: aTree with: aGrammar. 
 			childReductions := UmeSimplifyGrammarSubtreeReducer findSubtree: treeCopy mathchingWith: altSymbol name.
 			childReductions ifEmpty: [ match:= false ].
 			match ifTrue: [ newChildReductions add: childReductions ]  ]
@@ -32,7 +32,7 @@ UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: a
 				]
 			]
 		].
-    ^ reductions sorted: [ :treeA :treeB | treeA treeSize  < treeB treeSize ]
+    ^ reductions
 ]
 
 { #category : 'enumerating' }

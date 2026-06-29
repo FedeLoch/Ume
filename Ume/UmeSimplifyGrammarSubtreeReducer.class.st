@@ -23,7 +23,7 @@ UmeSimplifyGrammarSubtreeReducer class >> findSubtree: aTree mathchingWith: aSym
 
 	
 
-	^ candidates sorted: [ :treeA :treeB | treeA treeSize  < treeB treeSize ]
+	^ candidates
 ]
 
 { #category : 'enumerating' }

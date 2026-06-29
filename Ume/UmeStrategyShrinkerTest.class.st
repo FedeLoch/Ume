@@ -136,5 +136,5 @@ UmeStrategyShrinkerTest >> testGrammarReducer11 [
 	shrinker grammar: grammar2.
 	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
 	
-	self assert:  (shrinker shrink: 'm-.99,-.4,7-93.,03-.8 -19.9-.2449 -1742 -269 -747 -5 16.-132 21.04-55.9' ) equals: 'b.*(acca+a*..(.)c|.*|||)(b+|b?|cb*b*)c+'
+	self assert:  (shrinker shrink: 'm-.99,-.4,7-93.,03-.8 -19.9-.2449 -1742 -269 -747 -5 16.-132 21.04-55.9' ) equals: '?'
 ]

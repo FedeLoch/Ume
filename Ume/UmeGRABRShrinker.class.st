@@ -23,8 +23,10 @@ UmeGRABRShrinker >> candidates: subTree matching: symbol [
 	
 	"TODO: Improve performance here"
 	allCandidates := (reductionStrategy reduce: subTree using: grammar matching: symbol) asSet.
+	allCandidates difference: seen. 
+	allCandidates sorted: [ :treeA :treeB | treeA treeSize  < treeB treeSize ]. 
 
-	^ allCandidates difference: seen
+	^ allCandidates
 ]
 
 { #category : 'copying' }
