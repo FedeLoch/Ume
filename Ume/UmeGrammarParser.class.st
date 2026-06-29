@@ -26,7 +26,7 @@ UmeGrammarParser class >> parse: string from: grammar [
 	
 	(parsingResult second ~= string size) ifTrue: [ ^ nil ].
 	
-	^ parsingResult first
+	^ parsingResult first repairChildren
 ]
 
 { #category : 'initialization' }
