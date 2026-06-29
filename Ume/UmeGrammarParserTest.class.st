@@ -312,3 +312,15 @@ UmeGrammarParserTest >> testParseSvgPath01 [
 	
 	self assert: node generate equals: input
 ]
+
+{ #category : 'tests' }
+UmeGrammarParserTest >> testParseSvgPathCheckingOnlyOneRoot [
+
+| node input |
+	input := 'm-.99,-.4,7-93.,03-.8'.
+	node := UmeGrammarParser parse: input from: SvgPathGrammar new.
+	
+	self
+		assert: (node allNodes allButFirst collect: #root) asSet size
+		equals: 1
+]
