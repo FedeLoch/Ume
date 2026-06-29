@@ -150,7 +150,7 @@ UmeTest >> isError [
 { #category : 'accessing' }
 UmeTest >> isOutlier [
 
-	^ (self feedback improvement > 0) or: [ self isError ]
+	^ self feedback improvement > 0
 ]
 
 { #category : 'accessing' }

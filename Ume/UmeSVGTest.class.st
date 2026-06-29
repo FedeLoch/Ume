@@ -51,9 +51,10 @@ UmeSVGTest >> testGuidingByMethodsCalls [
 
 	| result methods |
 	
-	runner guidedByExecutionTime.
+	runner guidedByMethodsCalls.
 	methods := RSSVGPath package methods.
 	"runner collectAllCases."
+	runner collectOnlyOutliers.
 	
 	runner methodsToInstrument: methods.
 	result := runner run.
