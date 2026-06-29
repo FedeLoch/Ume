@@ -26,7 +26,7 @@ UmeGrammarParser class >> parse: string from: grammar [
 	
 	(parsingResult second ~= string size) ifTrue: [ ^ nil ].
 	
-	^ parsingResult first repairChildren
+	^ parsingResult first
 ]
 
 { #category : 'initialization' }
@@ -48,9 +48,9 @@ UmeGrammarParser >> initialize [
 UmeGrammarParser >> parseNonTerminal: nonTerminal on: input from: index [
 
 	| key cached best |
-    key := { nonTerminal . index }.
+    key := { nonTerminal name . index }.
     cached := memo at: key ifAbsent: [ nil ].
-    cached ifNotNil: [ ^ cached ].
+    cached ifNotNil: [ ^ {cached first doCopy . cached second } ].
 
     best := nil.
 
