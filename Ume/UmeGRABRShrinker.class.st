@@ -29,12 +29,6 @@ UmeGRABRShrinker >> candidates: subTree matching: symbol [
 	^ OrderedCandidates
 ]
 
-{ #category : 'copying' }
-UmeGRABRShrinker >> copyTree: tree [
- 
-	^ self tree: tree asInput
-]
-
 { #category : 'shrinking' }
 UmeGRABRShrinker >> initialize [ 
 

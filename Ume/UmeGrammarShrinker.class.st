@@ -18,7 +18,7 @@ UmeGrammarShrinker >> asInput: tree [
 { #category : 'testing' }
 UmeGrammarShrinker >> copyTree: tree [
  
-	^ self tree: tree asInput
+	^ tree doCopy
 ]
 
 { #category : 'testing' }

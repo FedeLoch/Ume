@@ -15,15 +15,13 @@ UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: a
 	nonTerminal := aGrammar instVarNamed: ('nt' , symbol asString).
 	expansions := nonTerminal rules.
 	expansions := expansions sorted: [ :expA :expB | expA fragments size < expB fragments size ]. 
-	1 halt.
 	
 	expansions do: [ :expansion | | match newChildReductions |
 		match := true.
 		newChildReductions := OrderedCollection new.
 		expansion fragments do: [ :altSymbol | | childReductions treeCopy | 
 			(altSymbol isTerminal ) ifFalse: [ 
-			treeCopy := self copySubtree: aTree with: aGrammar. 
-			1 halt.
+			treeCopy := aTree doCopy. 
 			childReductions := UmeSimplifyGrammarSubtreeReducer findSubtree: treeCopy mathchingWith: altSymbol name. 
 			childReductions ifEmpty: [ match:= false ].
 			match ifTrue: [ newChildReductions add: childReductions ]  ]
@@ -47,16 +45,6 @@ UmeSimplifyGrammarAlternateReduction class >> buildNewTree: aCombination tag: aS
 	newSubTree children: aCombination.
 	
 	^ newSubTree
-]
-
-{ #category : 'enumerating' }
-UmeSimplifyGrammarAlternateReduction class >> copySubtree: subtree with: grammar [
-
-	| rootTree index |
-	
-	rootTree := self copyTree: (subtree root) with: grammar . 
-	index := rootTree indexOf: subtree.
-	^ rootTree at: index
 ]
 
 { #category : 'as yet unclassified' }

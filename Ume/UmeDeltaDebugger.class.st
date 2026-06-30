@@ -86,3 +86,13 @@ UmeDeltaDebugger >> tree: aString [
 
 	^ aString. 
 ]
+
+{ #category : 'shrinking' }
+UmeDeltaDebugger >> triggerBug: tree upperBound: originalScore [
+
+	|input|
+	
+	input := (self asInput: tree).
+
+	^ oracle accepts: input from: originalScore
+]
