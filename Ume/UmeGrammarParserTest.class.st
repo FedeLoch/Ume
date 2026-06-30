@@ -329,7 +329,7 @@ UmeGrammarParserTest >> testParseSvgPath03 [
 
 	| input node |
 	
-	input := 'm1,2L 1 2-2 2' .
+	input := 'm1,2L 2-2 2-2'.
 	
 	node := UmeGrammarParser parse: input from: SvgPathGrammar new. 
 	self assert: node generate equals: input. 

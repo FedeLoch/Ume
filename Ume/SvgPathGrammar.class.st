@@ -45,7 +45,8 @@ Class {
 		'ntTwoPointsPlus',
 		'ntAparamsPlus',
 		'ntAParams',
-		'ntCommands'
+		'ntCommands',
+		'ntNegPointsPlus'
 	],
 	#category : 'Ume-Grammars',
 	#package : 'Ume',
@@ -68,8 +69,10 @@ SvgPathGrammar >> defineGrammar [
 
 	ntMove --> ntM, ntSep, ntPointsPlus.
 	ntLine --> ntL, ntSep, ntPointsPlus.
-	
-	ntPointsPlus --> ntPoint | ntPoint, ntNbSep, ntPointsPlus.
+
+	ntPointsPlus --> ntPoint | ntPoint, ntNbSep, ntPointsPlus | ntPoint, ntNegPointsPlus .
+
+	ntNegPointsPlus --> ntNegPoint | ntNegPoint, ntNbSep, ntPointsPlus | ntNegPoint, ntNegPointsPlus. 
 
 	ntHorizontalLine --> ntH, ntSep, ntDecimal.
 	ntVerticalLine --> ntV, ntSep, ntDecimal. "s"
