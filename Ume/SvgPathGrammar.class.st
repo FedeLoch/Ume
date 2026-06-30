@@ -63,30 +63,30 @@ SvgPathGrammar >> defineGrammar [
 	
 	ntCommand --> ntMove | ntLine | ntHorizontalLine | ntVerticalLine
 				| ntCubicCurve | ntSmoothCubicCurve | ntQuadraticCurve
-				| "ntSmoothQuadraticCurve |" ntArc.
+				| "ntSmoothQuadraticCurve |" ntArc | ntStraight.
 					"T Not implemented yet"
 
-	ntMove --> ntM, ntPointsPlus.
-	ntLine --> ntL, ntPointsPlus.
+	ntMove --> ntM, ntSep, ntPointsPlus.
+	ntLine --> ntL, ntSep, ntPointsPlus.
 	
 	ntPointsPlus --> ntPoint | ntPoint, ntNbSep, ntPointsPlus.
 
-	ntHorizontalLine --> ntH, ntDecimal.
-	ntVerticalLine --> ntV, ntDecimal. "s"
+	ntHorizontalLine --> ntH, ntSep, ntDecimal.
+	ntVerticalLine --> ntV, ntSep, ntDecimal. "s"
 
-	ntStraight --> ntZ.
+	ntStraight --> ntZ, ntSep.
 
-	ntCubicCurve --> ntC, ntThreePointsPlus.
+	ntCubicCurve --> ntC, ntSep, ntThreePointsPlus.
 	
-	ntSmoothCubicCurve --> ntS, ntTwoPointsPlus.
-	ntQuadraticCurve --> ntQ, ntTwoPointsPlus.
+	ntSmoothCubicCurve --> ntS, ntSep, ntTwoPointsPlus.
+	ntQuadraticCurve --> ntQ, ntSep, ntTwoPointsPlus.
 
-	ntSmoothQuadraticCurve --> ntT, ntPointsPlus.
+	ntSmoothQuadraticCurve --> ntT, ntSep, ntPointsPlus.
 
-	ntArc --> ntA | "This case is not supported by the vector definition, but it is accepted by the runner"
-				 ntA, ntAparamsPlus.
+	ntArc --> ntA, ntSep | "This case is not supported by the vector definition, but it is accepted by the runner"
+				 ntA, ntSep, ntAparamsPlus.
 		
-	ntAparamsPlus --> ntAParams | ntAParams, ntNbSep, ntAparamsPlus.
+	ntAparamsPlus --> ntAParams, ntSep | ntAParams, ntNbSep, ntAparamsPlus, ntSep.
 	ntAParams --> ntRadius , ntNbSep, ntRadius , ntNbSep, ntRotation , ntNbSep, ntFlag , ntNbSep, ntFlag, ntNbSep, ntPoint.
 	
 	ntThreePointsPlus --> ntThreePoints | ntThreePoints, ntNbSep, ntThreePointsPlus.
