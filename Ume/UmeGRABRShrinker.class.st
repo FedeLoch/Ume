@@ -46,7 +46,7 @@ UmeGRABRShrinker >> minimizeOne: originalTree upperBound: bound [
 			symbol := subTree tag. 
 			( self candidates: subTree matching: symbol ) do: [ :candidate |
 				seen add: candidate. 
-				( candidate treeSize < originalTree treeSize) ifTrue: [ | newTree |
+				( candidate treeSize < subTree treeSize) ifTrue: [ | newTree |
 					newTree := self replaceSubtreeIn: originalTree by: candidate index: index.
 					self minimizationDone.
 					(self triggerBug: newTree upperBound: bound ) ifTrue: [
