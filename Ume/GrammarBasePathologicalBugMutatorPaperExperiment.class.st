@@ -68,7 +68,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> grammarDerivationMutators [
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> grammarDerivationsSchema [
 
-	^ self schemaCorpusWith: self grammarDerivationMutators
+	^ self schemaCorpusWith: self grammarDerivationMutators selector: UmeWeightedMutatorSelector new
 ]
 
 { #category : 'running' }
@@ -80,7 +80,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralMutators [
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralsSchema [
 
-	^ self schemaCorpusWith: self grammarLiteralMutators
+	^ self schemaCorpusWith: self grammarLiteralMutators selector: UmeWeightedMutatorSelector new
 ]
 
 { #category : 'running' }
@@ -109,11 +109,11 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> maxInputSize [
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> moptSelectionSchedulerSchema [
 
-	^ self schemaMOPTCorpusWith: (
+	^ self schemaCorpusWith: (
 		self grammarLiteralMutators,
 		self grammarDerivationMutators,
 		self stochasticMutators
-	)
+	) selector: UmeMOPTMutatorSelector new
 ]
 
 { #category : 'running' }
@@ -137,11 +137,11 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> newGrammar [
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> randomSelectionSchedulerSchema [
 
-	^ self schemaRandomCorpusWith: (
+	^ self schemaCorpusWith: (
 		self grammarLiteralMutators,
 		self grammarDerivationMutators,
 		self stochasticMutators
-	)
+	) selector: UmeRandomMutatorSelector new
 ]
 
 { #category : 'running' }
@@ -180,33 +180,9 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> schema: config [
 ]
 
 { #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> schemaCorpusWith: mutators [
+GrammarBasePathologicalBugMutatorPaperExperiment >> schemaCorpusWith: mutators selector: selector [
 
 	self subclassResponsibility 
-]
-
-{ #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> schemaMOPTCorpusWith: mutators [
-
-	| schema |
-	
-	schema := self schemaCorpusWith: mutators.
-		
-	schema argumentConstraints first generator mutatorSelector: UmeMOPTMutatorSelector new.
-
-	^ schema
-]
-
-{ #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> schemaRandomCorpusWith: mutators [
-
-	| schema |
-	
-	schema := self schemaCorpusWith: mutators.
-		
-	schema argumentConstraints first generator mutatorSelector: UmeRandomMutatorSelector new.
-
-	^ schema
 ]
 
 { #category : 'running' }
@@ -226,7 +202,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> stochasticMutators [
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> stochasticSchema [
 
-	^ self schemaCorpusWith: self stochasticMutators
+	^ self schemaCorpusWith: self stochasticMutators selector: UmeWeightedMutatorSelector new
 ]
 
 { #category : 'running' }
@@ -242,7 +218,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> weightSelectionSchedulerSche
 		self grammarLiteralMutators,
 		self grammarDerivationMutators,
 		self stochasticMutators
-	)
+	) selector: UmeWeightedMutatorSelector new
 ]
 
 { #category : 'running' }

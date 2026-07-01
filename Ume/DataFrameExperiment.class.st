@@ -25,7 +25,7 @@ DataFrameExperiment >> newGrammar [
 ]
 
 { #category : 'running' }
-DataFrameExperiment >> schemaCorpusWith: mutators [
+DataFrameExperiment >> schemaCorpusWith: mutators selector: selector [
 
 	| csvGenerator |
 	
@@ -33,6 +33,7 @@ DataFrameExperiment >> schemaCorpusWith: mutators [
 		  seeds: self seeds deepCopy;
 		  mutationsPerIteration: self mpi;
 		  mutators: mutators;
+		  mutatorSelector: selector;
 		  heuristic: UmePickBestElementDifferenceHeuristic new.
 	
 	^ UmeSchema new

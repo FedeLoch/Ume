@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'enumerating' }
-UmeRandomMutatorSelector >> select: mutators [
+UmeRandomMutatorSelector >> selectMutator: mutators [
 
 	^ mutators atRandom
 ]

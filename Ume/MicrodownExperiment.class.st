@@ -25,7 +25,7 @@ MicrodownExperiment >> newGrammar [
 ]
 
 { #category : 'running' }
-MicrodownExperiment >> schemaCorpusWith: mutators [
+MicrodownExperiment >> schemaCorpusWith: mutators selector: selector [
 
 	| markdownGenerator |
 	
@@ -33,6 +33,7 @@ MicrodownExperiment >> schemaCorpusWith: mutators [
 		  seeds: self seeds deepCopy;
 		  mutationsPerIteration: self mpi;
 		  mutators: mutators;
+		  mutatorSelector: selector;
 		  heuristic: UmePickBestElementDifferenceHeuristic new.
 
 	^ UmeSchema new
