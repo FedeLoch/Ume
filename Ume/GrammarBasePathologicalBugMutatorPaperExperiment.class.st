@@ -87,7 +87,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralsSchema [
 GrammarBasePathologicalBugMutatorPaperExperiment >> initialize [ 
 
 	super initialize.
-	experimentTime := 1 hour.
+	experimentTime := 5 seconds.
 	times := 20.
 	schemas := {
 		'weighted-grammar-base' -> self weightedGrammarSchema.
@@ -109,11 +109,11 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> maxInputSize [
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> moptSelectionSchedulerSchema [
 
-	^ self schemaMOPTCorpusWith: (
+	^ self schemaCorpusWith: (
 		self grammarLiteralMutators,
 		self grammarDerivationMutators,
 		self stochasticMutators
-	)
+	) selector: UmeMOPTMutatorSelector new
 ]
 
 { #category : 'running' }
@@ -137,11 +137,11 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> newGrammar [
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> randomSelectionSchedulerSchema [
 
-	^ self schemaRandomCorpusWith: (
+	^ self schemaCorpusWith: (
 		self grammarLiteralMutators,
 		self grammarDerivationMutators,
 		self stochasticMutators
-	)
+	) selector: UmeRandomMutatorSelector new
 ]
 
 { #category : 'running' }
@@ -180,33 +180,9 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> schema: config [
 ]
 
 { #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> schemaCorpusWith: mutators [
+GrammarBasePathologicalBugMutatorPaperExperiment >> schemaCorpusWith: mutators selector: selector [
 
 	self subclassResponsibility 
-]
-
-{ #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> schemaMOPTCorpusWith: mutators [
-
-	| schema |
-	
-	schema := self schemaCorpusWith: mutators.
-		
-	schema argumentConstraints first generator mutatorSelector: UmeMOPTMutatorSelector new.
-
-	^ schema
-]
-
-{ #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> schemaRandomCorpusWith: mutators [
-
-	| schema |
-	
-	schema := self schemaCorpusWith: mutators.
-		
-	schema argumentConstraints first generator mutatorSelector: UmeRandomMutatorSelector new.
-
-	^ schema
 ]
 
 { #category : 'running' }
@@ -242,7 +218,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> weightSelectionSchedulerSche
 		self grammarLiteralMutators,
 		self grammarDerivationMutators,
 		self stochasticMutators
-	)
+	) selector: UmeWeightedMutatorSelector new
 ]
 
 { #category : 'running' }

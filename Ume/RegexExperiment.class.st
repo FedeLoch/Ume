@@ -44,7 +44,7 @@ RegexExperiment >> regexByProp: props and: feedback [
 ]
 
 { #category : 'running' }
-RegexExperiment >> schemaCorpusWith: mutators [
+RegexExperiment >> schemaCorpusWith: mutators selector: selector [
 
 | assert sharedProperties argumentConstraints receiverConstraint regexGenerator regexConstraint |
 
@@ -52,7 +52,9 @@ RegexExperiment >> schemaCorpusWith: mutators [
 		unwrap: [ :case | (case class = UmeRegex) ifTrue: [ case regexString ] ifFalse: [ case ] ];
 		generator: (UmeCorpusGenerator new
 		seeds: self seeds deepCopy;
-		mutationsPerIteration: self mpi; mutators: mutators;
+		mutationsPerIteration: self mpi;
+		mutators: mutators;
+		mutatorSelector: selector;
 		heuristic: UmePickBestElementDifferenceHeuristic new).
 	
 	sharedProperties := UmeInternalConstraintProperties
