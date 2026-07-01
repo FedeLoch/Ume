@@ -41,6 +41,15 @@ UmeCaseFeedback >> initialize [
 	argumentsMutationMetadata := OrderedCollection new.
 ]
 
+{ #category : 'accessing' }
+UmeCaseFeedback >> mutationMetadata [
+
+	^ {
+		'argumentsMutationMetadata' -> argumentsMutationMetadata.
+		'receiverMutationMetadata' -> receiverMutationMetadata
+	} asDictionary
+]
+
 { #category : 'as yet unclassified' }
 UmeCaseFeedback >> receiverFeedback [
 

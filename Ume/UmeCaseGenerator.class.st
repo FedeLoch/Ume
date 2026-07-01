@@ -32,7 +32,8 @@ UmeCaseGenerator >> feedArgumentsGenerators: caseFeedback [
 UmeCaseGenerator >> feedReceiverGenerator: caseFeedback [
 
 	schema receiverConstraint feed: (caseFeedback receiverFeedback).
-	caseFeedback ifNotNil:[
+
+	caseFeedback ifNotNil: [
 		caseFeedback receiverMutationMetadata: schema receiverConstraint mutationMetadata
 	].
 ]

@@ -32,15 +32,6 @@ UmeCorpusGenerator >> corpus: cases [
 ]
 
 { #category : 'as yet unclassified' }
-UmeCorpusGenerator >> currentMutationData [
-
-	^ {
-		'selectedMutatorIndex' -> (mutators indexOf: lastSelectedMutator).
-		'mutatorWeights' -> (mutators collect: #weight)
-	} asDictionary
-]
-
-{ #category : 'as yet unclassified' }
 UmeCorpusGenerator >> feed: feedback [
 
 	mutators do: [ :mutator | mutator feed: feedback ].
@@ -118,6 +109,15 @@ UmeCorpusGenerator >> mutate: seed [
 	times timesRepeat: [ mutated := lastSelectedMutator mutate: mutated ].
 	
 	^ mutated
+]
+
+{ #category : 'as yet unclassified' }
+UmeCorpusGenerator >> mutationMetadata [
+
+	^ {
+		'selectedMutatorIndex' -> (mutators indexOf: lastSelectedMutator).
+		'mutatorWeights' -> (mutators collect: #weight)
+	} asDictionary
 ]
 
 { #category : 'accessing' }
