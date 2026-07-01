@@ -59,3 +59,9 @@ UmeGenerator >> gen: instance [
 	
 	self subclassResponsibility 
 ]
+
+{ #category : 'accessing' }
+UmeGenerator >> mutationMetadata [
+
+	^ nil
+]

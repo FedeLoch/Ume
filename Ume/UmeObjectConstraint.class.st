@@ -42,6 +42,12 @@ UmeObjectConstraint >> generator: aBlock [
 ]
 
 { #category : 'accessing' }
+UmeObjectConstraint >> mutationMetadata [
+
+	^ generator mutationMetadata
+]
+
+{ #category : 'accessing' }
 UmeObjectConstraint >> objectClass [
 
 	^ objectClass 

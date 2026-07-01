@@ -10,8 +10,8 @@ Class {
 		'mutationsPerIteration',
 		'seeds',
 		'iteration',
-		'lastSelectedMutator',
-		'mutatorSelector'
+		'mutatorSelector',
+		'lastSelectedMutator'
 	],
 	#category : 'Ume-Generators',
 	#package : 'Ume',
@@ -29,6 +29,15 @@ UmeCorpusGenerator >> addToCorpus: feedback [
 UmeCorpusGenerator >> corpus: cases [ 
 
 	corpus := cases
+]
+
+{ #category : 'as yet unclassified' }
+UmeCorpusGenerator >> currentMutationData [
+
+	^ {
+		'selectedMutatorIndex' -> (mutators indexOf: lastSelectedMutator).
+		'mutatorWeights' -> (mutators collect: #weight)
+	} asDictionary
 ]
 
 { #category : 'as yet unclassified' }

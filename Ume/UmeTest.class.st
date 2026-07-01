@@ -177,6 +177,12 @@ UmeTest >> lastTimeToRun [
 ]
 
 { #category : 'accessing' }
+UmeTest >> mutationMetadata [
+
+	^ feedback mutationMetadata
+]
+
+{ #category : 'accessing' }
 UmeTest >> name [
 	
 	id ifNil: [ id := self identityHash ].

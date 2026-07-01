@@ -155,11 +155,14 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> run: config iteration: i [
 	
 	runner := UmeRunner test: self targetMethod from: schema for: self experimentTime.
 	
+	"We collect all cases, not only outliers"
+	runner collectAllCases.
+	
 	"Guided by methods called"
 	runner guidedByMethodsCalls.
 	
 	result := runner run.
-	
+	1 halt.
 	"We export the result as csv"
 	result exportAsCSV: fileName.
 ]
