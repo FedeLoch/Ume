@@ -87,14 +87,15 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralsSchema [
 GrammarBasePathologicalBugMutatorPaperExperiment >> initialize [ 
 
 	super initialize.
-	experimentTime := 2 seconds.
+	experimentTime := 1 hour.
 	times := 20.
 	schemas := {
 		'weighted-grammar-base' -> self weightedGrammarSchema.
 		'stochastic-base' -> self stochasticSchema.
 		'grammar-literals' -> self grammarLiteralsSchema.
 		'grammar-derivations' -> self grammarDerivationsSchema.
-		'weighted-scheduling' -> self weightSelectionSchedulerSchema
+		'weighted-scheduling' -> self weightSelectionSchedulerSchema.
+		'random-scheduling' -> self randomSelectionSchedulerSchema.
 	} asDictionary.
 ]
 
@@ -120,6 +121,16 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> name [
 GrammarBasePathologicalBugMutatorPaperExperiment >> newGrammar [
 
 	self subclassResponsibility 
+]
+
+{ #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> randomSelectionSchedulerSchema [
+
+	^ self schemaRandomCorpusWith: (
+		self grammarLiteralMutators,
+		self grammarDerivationMutators,
+		self stochasticMutators
+	)
 ]
 
 { #category : 'running' }
@@ -161,6 +172,15 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> schema: config [
 GrammarBasePathologicalBugMutatorPaperExperiment >> schemaCorpusWith: mutators [
 
 	self subclassResponsibility 
+]
+
+{ #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> schemaRandomCorpusWith: mutators [
+
+	| schema |
+	
+	schema := self schemaCorpusWith: mutators.
+	1 halt.	
 ]
 
 { #category : 'running' }
