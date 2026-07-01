@@ -336,6 +336,17 @@ UmeGrammarParserTest >> testParseSvgPath03 [
 ]
 
 { #category : 'tests' }
+UmeGrammarParserTest >> testParseSvgPath04 [
+
+	| input node |
+	
+	input := 'm1,3L,16,95'.
+	
+	node := UmeGrammarParser parse: input from: SvgPathGrammar new. 
+	self assert: node generate equals: input. 
+]
+
+{ #category : 'tests' }
 UmeGrammarParserTest >> testParseSvgPathCheckingOnlyOneRoot [
 
 | node input |
