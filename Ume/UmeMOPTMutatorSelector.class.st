@@ -41,17 +41,16 @@ UmeMOPTMutatorSelector >> initialize [
 { #category : 'initialization' }
 UmeMOPTMutatorSelector >> initializeProbabilities: mutators [
 
-	(probabilities isNil or: [ probabilities size ~= mutators size ]) ifTrue: [
-		| count uniform |
-		count := mutators size.
-		uniform := 1.0 / count asFloat.
-		probabilities := (1 to: count) collect: [ :i | uniform ].
-		selectionCounts := Array new: count withAll: 0.
-		successCounts := Array new: count withAll: 0.
-		velocities := Array new: count withAll: 0.0.
-		lastIndex := 1.
-		selectionCounter := 0
-	]
+	| count uniform |
+
+	count := mutators size.
+	uniform := 1.0 / count asFloat.
+	probabilities := (1 to: count) collect: [ :i | uniform ].
+	selectionCounts := Array new: count withAll: 0.
+	successCounts := Array new: count withAll: 0.
+	velocities := Array new: count withAll: 0.0.
+	lastIndex := 1.
+	selectionCounter := 0
 ]
 
 { #category : 'accessing' }
@@ -94,7 +93,11 @@ UmeMOPTMutatorSelector >> random [
 UmeMOPTMutatorSelector >> selectMutator: mutators [
 
 	| total roll cumulative |
-	self initializeProbabilities: mutators.
+
+	(probabilities isNil or: [ probabilities size ~= mutators size ]) ifTrue: [
+		self initializeProbabilities: mutators.
+	].
+
 	total := probabilities sum.
 	roll := total * random next.
 	cumulative := 0.0.
@@ -110,13 +113,14 @@ UmeMOPTMutatorSelector >> selectMutator: mutators [
 		]
 	].
 
-	"Fallback — should not reach here"
 	lastIndex := probabilities size.
+
 	^ mutators last
 ]
 
 { #category : 'accessing' }
 UmeMOPTMutatorSelector >> selectionCounter [
+
 	^ selectionCounter	
 ]
 
@@ -152,8 +156,7 @@ UmeMOPTMutatorSelector >> updateProbabilities [
 	totalEffectiveness := 0.0.
 	targetProbabilities := Array new: probabilities size.
 
-	1 to: probabilities size do: [ :i |
-		| sel suc eff |
+	(1 to: probabilities size) do: [ :i | | sel suc eff |
 		sel := selectionCounts at: i.
 		suc := successCounts at: i.
 		eff := sel > 0
@@ -164,13 +167,10 @@ UmeMOPTMutatorSelector >> updateProbabilities [
 		totalEffectiveness := totalEffectiveness + eff
 	].
 
-	1 to: targetProbabilities size do: [ :i |
-		targetProbabilities at: i put: (targetProbabilities at: i) / totalEffectiveness
-	].
+	targetProbabilities := targetProbabilities collect: [ :p | p / totalEffectiveness ].
 
 	sum := 0.0.
-	1 to: probabilities size do: [ :i |
-		| target velocity newProb |
+	(1 to: probabilities size) do: [ :i | | target velocity newProb |
 		target := targetProbabilities at: i.
 		velocity := velocities at: i.
 		velocity := (omega * velocity) + (phi * random next * (target - (probabilities at: i))).
@@ -181,22 +181,16 @@ UmeMOPTMutatorSelector >> updateProbabilities [
 		sum := sum + newProb
 	].
 
-	sum > 0
-		ifTrue: [
-			1 to: probabilities size do: [ :i |
-				probabilities at: i put: (probabilities at: i) / sum
-			]
-		]
-		ifFalse: [
-			1 to: probabilities size do: [ :i |
-				probabilities at: i put: 1.0 / probabilities size
-			]
-		].
+	probabilities :=  (sum > 0 ifTrue: [
+		probabilities collect: [ :p | p / sum ] ] ifFalse: [
+		probabilities collect: [ :_ | 1.0 / probabilities size ].
+	]).
 
-	1 to: selectionCounts size do: [ :i |
+	(1 to: selectionCounts size) do: [ :i |
 		selectionCounts at: i put: 0.
 		successCounts at: i put: 0
 	].
+
 	selectionCounter := 0
 ]
 

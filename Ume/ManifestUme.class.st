@@ -17,8 +17,22 @@ ManifestUme class >> ruleCollectionProtocolRuleV1FalsePositive [
 ]
 
 { #category : 'code-critics' }
+ManifestUme class >> ruleModifiesCollectionRuleV1FalsePositive [
+
+	<ignoreForCoverage>
+	^ #(#(#(#RGClassDefinition #(#UmeMOPTMutatorSelector)) #'2026-07-01T15:23:59.044454+02:00') )
+]
+
+{ #category : 'code-critics' }
 ManifestUme class >> ruleReIsNotNilAndConditionalRuleV1FalsePositive [
 
 	<ignoreForCoverage>
 	^ #(#(#(#RGMethodDefinition #(#UmeNautilusShrinker #minimizeOne:upperBound: #false)) #'2026-06-17T10:24:47.051485+02:00') #(#(#RGClassDefinition #(#UmeNautilusShrinker)) #'2026-06-17T10:25:15.980842+02:00') )
+]
+
+{ #category : 'code-critics' }
+ManifestUme class >> ruleUnoptimizedToDoRuleV1FalsePositive [
+
+	<ignoreForCoverage>
+	^ #(#(#(#RGMethodDefinition #(#UmeMOPTMutatorSelector #updateProbabilities #false)) #'2026-07-01T15:17:13.69196+02:00') #(#(#RGClassDefinition #(#UmeMOPTMutatorSelector)) #'2026-07-01T15:17:21.313483+02:00') )
 ]

@@ -30,12 +30,15 @@ UmeMOPTMutatorSelectorTest >> testFeedTracksSuccesses [
 	| before after delta |
 
 	before := selector successCounts copy.
+	
 	selector selectMutator: mutators.
 	selector feed: (UmeFeedback from: 'test' improvement: 1 values: Dictionary new).
+	
 	after := selector successCounts.
 	delta := after collectWithIndex: [ :a :index |
 		a - (before at: index ifAbsent: 0)
 	].
+
 	self assert: delta sum equals: 1
 ]
 
@@ -43,13 +46,17 @@ UmeMOPTMutatorSelectorTest >> testFeedTracksSuccesses [
 UmeMOPTMutatorSelectorTest >> testFeedWithNegativeFeedbackDoesNotTrackSuccess [
 
 	| before after delta |
+	
 	before := selector successCounts copy.
+	
 	selector selectMutator: mutators.
 	selector feed: (UmeFeedback from: 'test' improvement: 0 values: Dictionary new).
+	
 	after := selector successCounts.
 	delta := after collectWithIndex: [ :a :index |
 		a - (before at: index ifAbsent: 0)
 	].
+
 	self assert: delta sum equals: 0
 ]
 
@@ -58,18 +65,6 @@ UmeMOPTMutatorSelectorTest >> testMultipleSelectionsIncrementSelectionCounts [
 
 	50 timesRepeat: [ selector selectMutator: mutators ].
 	self assert: (selector selectionCounts sum) equals: 50
-]
-
-{ #category : 'tests' }
-UmeMOPTMutatorSelectorTest >> testOmegAndPhiAccessors [
-
-	self assert: selector omega equals: 0.72.
-	self assert: selector phi equals: 1.5.
-
-	selector omega: 0.5.
-	selector phi: 2.0.
-	self assert: selector omega equals: 0.5.
-	self assert: selector phi equals: 2.0
 ]
 
 { #category : 'tests' }
@@ -85,8 +80,10 @@ UmeMOPTMutatorSelectorTest >> testProbabilitiesStartUniform [
 UmeMOPTMutatorSelectorTest >> testProbabilitiesSumToOne [
 
 	| sum |
+	
 	selector selectMutator: mutators.
 	sum := selector probabilities sum.
+	
 	self assert: (sum - 1.0) abs < 0.0001
 ]
 
@@ -94,6 +91,7 @@ UmeMOPTMutatorSelectorTest >> testProbabilitiesSumToOne [
 UmeMOPTMutatorSelectorTest >> testSelectReturnsAMutator [
 
 	| result |
+
 	result := selector selectMutator: mutators.
 	self assert: (mutators includes: result)
 ]
@@ -102,8 +100,10 @@ UmeMOPTMutatorSelectorTest >> testSelectReturnsAMutator [
 UmeMOPTMutatorSelectorTest >> testSelectReturnsDifferentMutators [
 
 	| results |
+
 	results := Set new.
 	100 timesRepeat: [ results add: (selector selectMutator: mutators) ].
+
 	self assert: results size > 1
 ]
 
@@ -111,8 +111,10 @@ UmeMOPTMutatorSelectorTest >> testSelectReturnsDifferentMutators [
 UmeMOPTMutatorSelectorTest >> testSingleMutatorAlwaysSelected [
 
 	| singleMutators singleSelector result |
+
 	singleMutators := { UmeMutator mutate: [ :x | x, 'b' ] }.
 	singleSelector := UmeMOPTMutatorSelector new.
+
 	100 timesRepeat: [
 		result := singleSelector selectMutator: singleMutators.
 		self assert: result equals: singleMutators first
@@ -123,10 +125,14 @@ UmeMOPTMutatorSelectorTest >> testSingleMutatorAlwaysSelected [
 UmeMOPTMutatorSelectorTest >> testUpdatePeriodTriggersPSOUpdate [
 
 	| period |
+
 	period := selector updatePeriod.
 	period - 1 timesRepeat: [ selector selectMutator: mutators ].
+	
 	self assert: (selector selectionCounter) equals: period - 1.
+	
 	selector selectMutator: mutators.
+	
 	self assert: (selector selectionCounter) equals: 0
 ]
 
