@@ -56,7 +56,7 @@ UmeMOPTMutatorSelectorTest >> testFeedTracksSuccesses [
 	| before after delta |
 	before := selector successCounts copy.
 	selector select: mutators.
-	selector feed: (UmeFeedback from: 'test' value: true).
+	selector feed: (UmeFeedback from: 'test' improvement: 1 values: #{}).
 	after := selector successCounts.
 	delta := after with: before collect: [ :a :b | a - b ].
 	self assert: delta sum equals: 1
@@ -68,7 +68,7 @@ UmeMOPTMutatorSelectorTest >> testFeedWithNegativeFeedbackDoesNotTrackSuccess [
 	| before after delta |
 	before := selector successCounts copy.
 	selector select: mutators.
-	selector feed: (UmeFeedback from: 'test' value: false).
+	selector feed: (UmeFeedback from: 'test' improvement: 0 values: #{}).
 	after := selector successCounts.
 	delta := after with: before collect: [ :a :b | a - b ].
 	self assert: delta sum equals: 0
@@ -86,7 +86,7 @@ UmeMOPTMutatorSelectorTest >> testUpdateProbabilitiesResetsCounters [
 
 	10 timesRepeat: [
 		selector select: mutators.
-		selector feed: (UmeFeedback from: 'test' value: true)
+		selector feed: (UmeFeedback from: 'test' improvement: 1 values: #{})
 	].
 	selector updateProbabilities.
 	selector selectionCounts do: [ :c | self assert: c equals: 0 ].
