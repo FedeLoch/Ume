@@ -8,5 +8,6 @@ Class {
 
 { #category : 'enumerating' }
 UmeRandomMutatorSelector >> select: mutators [
-	1 halt.
+
+	^ mutators atRandom
 ]
