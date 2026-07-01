@@ -6,7 +6,8 @@ Class {
 		'generator',
 		'props',
 		'wrapBlock',
-		'unwrapBlock'
+		'unwrapBlock',
+		'mutatorSelector'
 	],
 	#category : 'Ume-Property Schema',
 	#package : 'Ume',

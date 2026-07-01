@@ -180,7 +180,10 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> schemaRandomCorpusWith: muta
 	| schema |
 	
 	schema := self schemaCorpusWith: mutators.
-	1 halt.	
+		
+	schema argumentConstraints first generator mutatorSelector: UmeRandomMutatorSelector new.
+
+	^ schema
 ]
 
 { #category : 'running' }

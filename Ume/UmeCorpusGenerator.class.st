@@ -10,7 +10,8 @@ Class {
 		'mutationsPerIteration',
 		'seeds',
 		'iteration',
-		'lastSelectedMutator'
+		'lastSelectedMutator',
+		'mutatorSelector'
 	],
 	#category : 'Ume-Generators',
 	#package : 'Ume',
@@ -83,6 +84,7 @@ UmeCorpusGenerator >> initialize [
 	corpus := OrderedCollection new.
 	feedbacks := OrderedCollection new.
 	seeds := OrderedCollection new.
+	mutatorSelector := UmeWeightedMutatorSelector new.
 	iteration := 0
 ]
 
@@ -118,6 +120,12 @@ UmeCorpusGenerator >> mutationsPerIteration [
 UmeCorpusGenerator >> mutationsPerIteration: count [
 
 	mutationsPerIteration := count
+]
+
+{ #category : 'as yet unclassified' }
+UmeCorpusGenerator >> mutatorSelector: aMutatorSelector [
+
+	mutatorSelector := aMutatorSelector 
 ]
 
 { #category : 'as yet unclassified' }
@@ -157,20 +165,7 @@ UmeCorpusGenerator >> seeds: someSeeds [
 { #category : 'as yet unclassified' }
 UmeCorpusGenerator >> selectMutator [
 
-	| totalWeights weights random cumulative |
-
-	totalWeights := (mutators collect: #weight) sum.
-	weights := OrderedCollection new.
-	cumulative := 0.
-    
-    mutators do: [ :wrapper |
-        cumulative := cumulative + wrapper weight.
-        weights add: cumulative
-    ].
-	
-	random := (1 to: totalWeights) atRandom.
-	
-	^ mutators at: (weights findFirst: [ :weight | random <= weight ])
+	^ mutatorSelector select: mutators
 ]
 
 { #category : 'as yet unclassified' }
