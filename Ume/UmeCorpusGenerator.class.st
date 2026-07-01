@@ -35,6 +35,7 @@ UmeCorpusGenerator >> corpus: cases [
 UmeCorpusGenerator >> feed: feedback [
 
 	mutators do: [ :mutator | mutator feed: feedback ].
+	mutatorSelector feed: feedback.
 	
 	self updateWeight: feedback.
 	

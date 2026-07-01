@@ -11,3 +11,8 @@ UmeMutatorSelector >> select: mutators [
 
 	self subclassResponsibility 
 ]
+
+{ #category : 'feedback' }
+UmeMutatorSelector >> feed: feedback [
+	"Do nothing by default — subclasses can override to track feedback"
+]
