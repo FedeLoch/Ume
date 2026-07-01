@@ -156,15 +156,13 @@ UmeMOPTMutatorSelector >> updateProbabilities [
 	totalEffectiveness := 0.0.
 	targetProbabilities := Array new: probabilities size.
 
-	(1 to: probabilities size) do: [ :i | | sel suc eff |
+	(1 to: probabilities size) do: [ :i | | sel success effectiveness |
 		sel := selectionCounts at: i.
-		suc := successCounts at: i.
-		eff := sel > 0
-			ifTrue: [ suc / sel asFloat ]
-			ifFalse: [ 0.0 ].
-		eff := eff + 0.001.
-		targetProbabilities at: i put: eff.
-		totalEffectiveness := totalEffectiveness + eff
+		success := successCounts at: i.
+		effectiveness := sel > 0 ifTrue: [ success / sel asFloat ] ifFalse: [ 0.0 ].
+		effectiveness := effectiveness + 0.001.
+		targetProbabilities at: i put: effectiveness.
+		totalEffectiveness := totalEffectiveness + effectiveness
 	].
 
 	targetProbabilities := targetProbabilities collect: [ :p | p / totalEffectiveness ].
