@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'enumerating' }
-UmeWeightedMutatorSelector >> select: mutators [
+UmeWeightedMutatorSelector >> selectMutator: mutators [
 
 	| totalWeights weights random cumulative |
 

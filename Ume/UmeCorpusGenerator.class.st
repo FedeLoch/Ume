@@ -166,7 +166,7 @@ UmeCorpusGenerator >> seeds: someSeeds [
 { #category : 'as yet unclassified' }
 UmeCorpusGenerator >> selectMutator [
 
-	^ mutatorSelector select: mutators
+	^ mutatorSelector selectMutator: mutators
 ]
 
 { #category : 'as yet unclassified' }

@@ -18,6 +18,14 @@ Class {
 	#tag : 'Selector Heuristics'
 }
 
+{ #category : 'feedback' }
+UmeMOPTMutatorSelector >> feed: feedback [
+
+	feedback isPositive ifTrue: [
+		successCounts at: lastIndex put: (successCounts at: lastIndex) + 1
+	]
+]
+
 { #category : 'initialization' }
 UmeMOPTMutatorSelector >> initialize [
 
@@ -45,8 +53,44 @@ UmeMOPTMutatorSelector >> initializeProbabilities: mutators [
 	]
 ]
 
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> omega [
+
+	^ omega
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> omega: aFloat [
+
+	omega := aFloat
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> phi [
+
+	^ phi
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> phi: aFloat [
+
+	phi := aFloat
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> probabilities [
+
+	^ probabilities
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> random [
+
+	^ random
+]
+
 { #category : 'enumerating' }
-UmeMOPTMutatorSelector >> select: mutators [
+UmeMOPTMutatorSelector >> selectMutator: mutators [
 
 	| total roll cumulative |
 	self initializeProbabilities: mutators.
@@ -70,12 +114,28 @@ UmeMOPTMutatorSelector >> select: mutators [
 	^ mutators last
 ]
 
-{ #category : 'feedback' }
-UmeMOPTMutatorSelector >> feed: feedback [
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> selectionCounts [
 
-	feedback isPositive ifTrue: [
-		successCounts at: lastIndex put: (successCounts at: lastIndex) + 1
-	]
+	^ selectionCounts
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> successCounts [
+
+	^ successCounts
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> updatePeriod [
+
+	^ updatePeriod
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> updatePeriod: anInteger [
+
+	updatePeriod := anInteger
 ]
 
 { #category : 'updating' }
@@ -135,67 +195,7 @@ UmeMOPTMutatorSelector >> updateProbabilities [
 ]
 
 { #category : 'accessing' }
-UmeMOPTMutatorSelector >> omega: aFloat [
-
-	omega := aFloat
-]
-
-{ #category : 'accessing' }
-UmeMOPTMutatorSelector >> omega [
-
-	^ omega
-]
-
-{ #category : 'accessing' }
-UmeMOPTMutatorSelector >> phi: aFloat [
-
-	phi := aFloat
-]
-
-{ #category : 'accessing' }
-UmeMOPTMutatorSelector >> phi [
-
-	^ phi
-]
-
-{ #category : 'accessing' }
-UmeMOPTMutatorSelector >> updatePeriod: anInteger [
-
-	updatePeriod := anInteger
-]
-
-{ #category : 'accessing' }
-UmeMOPTMutatorSelector >> updatePeriod [
-
-	^ updatePeriod
-]
-
-{ #category : 'accessing' }
-UmeMOPTMutatorSelector >> probabilities [
-
-	^ probabilities
-]
-
-{ #category : 'accessing' }
-UmeMOPTMutatorSelector >> selectionCounts [
-
-	^ selectionCounts
-]
-
-{ #category : 'accessing' }
-UmeMOPTMutatorSelector >> successCounts [
-
-	^ successCounts
-]
-
-{ #category : 'accessing' }
 UmeMOPTMutatorSelector >> velocities [
 
 	^ velocities
-]
-
-{ #category : 'accessing' }
-UmeMOPTMutatorSelector >> random [
-
-	^ random
 ]
