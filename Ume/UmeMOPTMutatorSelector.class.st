@@ -10,7 +10,8 @@ Class {
 		'updatePeriod',
 		'selectionCounter',
 		'omega',
-		'phi'
+		'phi',
+		'random'
 	],
 	#category : 'Ume-Selector Heuristics',
 	#package : 'Ume',
@@ -24,7 +25,8 @@ UmeMOPTMutatorSelector >> initialize [
 	omega := 0.72.
 	phi := 1.5.
 	updatePeriod := 100.
-	selectionCounter := 0
+	selectionCounter := 0.
+	random := Random new
 ]
 
 { #category : 'initialization' }
@@ -46,15 +48,15 @@ UmeMOPTMutatorSelector >> initializeProbabilities: mutators [
 { #category : 'enumerating' }
 UmeMOPTMutatorSelector >> select: mutators [
 
-	| total random cumulative |
+	| total roll cumulative |
 	self initializeProbabilities: mutators.
 	total := probabilities sum.
-	random := total * (1.0 atRandom).
+	roll := total * random next.
 	cumulative := 0.0.
 
 	probabilities withIndexDo: [ :prob :index |
 		cumulative := cumulative + prob.
-		random <= cumulative ifTrue: [
+		roll <= cumulative ifTrue: [
 			lastIndex := index.
 			selectionCounts at: index put: (selectionCounts at: index) + 1.
 			selectionCounter := selectionCounter + 1.
@@ -105,7 +107,7 @@ UmeMOPTMutatorSelector >> updateProbabilities [
 		| target velocity newProb |
 		target := targetProbabilities at: i.
 		velocity := velocities at: i.
-		velocity := (omega * velocity) + (phi * (1.0 atRandom) * (target - (probabilities at: i))).
+		velocity := (omega * velocity) + (phi * random next * (target - (probabilities at: i))).
 		velocities at: i put: velocity.
 		newProb := (probabilities at: i) + velocity.
 		newProb := newProb max: 0.0.
@@ -190,4 +192,10 @@ UmeMOPTMutatorSelector >> successCounts [
 UmeMOPTMutatorSelector >> velocities [
 
 	^ velocities
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> random [
+
+	^ random
 ]
