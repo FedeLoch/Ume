@@ -34,6 +34,7 @@ UmeMOPTMutatorSelector >> initialize [
 	phi := 1.5.
 	updatePeriod := 100.
 	selectionCounter := 0.
+	successCounts := {}.
 	random := Random new
 ]
 
@@ -112,6 +113,11 @@ UmeMOPTMutatorSelector >> selectMutator: mutators [
 	"Fallback — should not reach here"
 	lastIndex := probabilities size.
 	^ mutators last
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> selectionCounter [
+	^ selectionCounter	
 ]
 
 { #category : 'accessing' }

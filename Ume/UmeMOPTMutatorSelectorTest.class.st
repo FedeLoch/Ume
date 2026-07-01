@@ -28,11 +28,14 @@ UmeMOPTMutatorSelectorTest >> setUp [
 UmeMOPTMutatorSelectorTest >> testFeedTracksSuccesses [
 
 	| before after delta |
+
 	before := selector successCounts copy.
 	selector selectMutator: mutators.
 	selector feed: (UmeFeedback from: 'test' improvement: 1 values: Dictionary new).
 	after := selector successCounts.
-	delta := after with: before collect: [ :a :b | a - b ].
+	delta := after collectWithIndex: [ :a :index |
+		a - (before at: index ifAbsent: 0)
+	].
 	self assert: delta sum equals: 1
 ]
 
@@ -44,7 +47,9 @@ UmeMOPTMutatorSelectorTest >> testFeedWithNegativeFeedbackDoesNotTrackSuccess [
 	selector selectMutator: mutators.
 	selector feed: (UmeFeedback from: 'test' improvement: 0 values: Dictionary new).
 	after := selector successCounts.
-	delta := after with: before collect: [ :a :b | a - b ].
+	delta := after collectWithIndex: [ :a :index |
+		a - (before at: index ifAbsent: 0)
+	].
 	self assert: delta sum equals: 0
 ]
 
@@ -109,7 +114,7 @@ UmeMOPTMutatorSelectorTest >> testSingleMutatorAlwaysSelected [
 	singleMutators := { UmeMutator mutate: [ :x | x, 'b' ] }.
 	singleSelector := UmeMOPTMutatorSelector new.
 	100 timesRepeat: [
-		result := singleSelector select: singleMutators.
+		result := singleSelector selectMutator: singleMutators.
 		self assert: result equals: singleMutators first
 	]
 ]
@@ -120,9 +125,9 @@ UmeMOPTMutatorSelectorTest >> testUpdatePeriodTriggersPSOUpdate [
 	| period |
 	period := selector updatePeriod.
 	period - 1 timesRepeat: [ selector selectMutator: mutators ].
-	self assert: selector selectionCounter equals: period - 1.
+	self assert: (selector selectionCounter) equals: period - 1.
 	selector selectMutator: mutators.
-	self assert: selector selectionCounter equals: 0
+	self assert: (selector selectionCounter) equals: 0
 ]
 
 { #category : 'tests' }
