@@ -20,10 +20,16 @@ UmeShrinker >> asInput: tree [
 ]
 
 { #category : 'shrinking' }
+UmeShrinker >> checkGrammar: aInput [
+
+	^ UmeGrammarParser accept: aInput from: grammar
+]
+
+{ #category : 'shrinking' }
 UmeShrinker >> evalInput: input [
 
 	"Returns true if the input triggers the bug, otherwise, it returns false"
-	^ oracle accepts: input from: nil
+	^ oracle evalInput: input
 ]
 
 { #category : 'shrinking' }
@@ -119,8 +125,8 @@ UmeShrinker >> percentageProblemPreservation: upperBound given: currentBound [
 
 	| baseline current |
 	
-	baseline := oracle problemPresence: upperBound.
-	current := oracle problemPresence: currentBound.
+	baseline := oracle valueBound: upperBound.
+	current := oracle valueBound: currentBound.
 	
 	(baseline = 0) ifTrue: [ ^ 0 ].
 	
@@ -130,7 +136,7 @@ UmeShrinker >> percentageProblemPreservation: upperBound given: currentBound [
 { #category : 'shrinking' }
 UmeShrinker >> profiledShrink: input [
 
-	| tree minimizedTree upperBound initialTime totalTime minimizedInput |
+	| tree minimizedTree upperBound initialTime totalTime minimizedInput minimizedBound |
 	
 	initialTime := Time microsecondClockValue.
 	(self tree: input) ifNil: [ Error signal: 'Trying to reduce a non valid input' ].
@@ -141,14 +147,18 @@ UmeShrinker >> profiledShrink: input [
 	minimizedTree := self minimizeTree: tree upperBound: upperBound.	
 	totalTime := Time microsecondClockValue - initialTime.
 	minimizedInput := self asInput: minimizedTree.
+	minimizedBound := self evalInput: minimizedInput.
 
 	^ {
-		'totalTime' -> (Duration microSeconds: totalTime).
+		'originalInput' -> input.
+		'minimizedInput' -> minimizedInput.
+		'totalTime' -> ((Duration microSeconds: totalTime) asString).
 		'neededReductions' -> reductionsDone asFloat.
 		'failedReductions' -> failedReductionsDone asFloat.
-		'%problemPreservation' -> (self percentageProblemPreservation: upperBound given: (self evalInput: minimizedInput)).
+		'%problemPreservation' -> (self percentageProblemPreservation: upperBound given: minimizedBound).
 		'%inputReduction' -> (self percentageInputReduced: tree given: minimizedTree).
-		'minimizedInput' -> minimizedInput
+		'originalBound' -> upperBound.
+		'minimizedBound' -> minimizedBound
 	} asDictionary
 ]
 
@@ -185,7 +195,12 @@ UmeShrinker >> tree: input [
 ]
 
 { #category : 'testing' }
-UmeShrinker >> triggerBug: score upperBound: originalScore [
+UmeShrinker >> triggerBug: tree upperBound: originalScore [
 
-	self subclassResponsibility 
+	|input|
+	
+	input := (self asInput: tree).
+	(self checkGrammar: input) ifFalse: [ ^ false ].
+
+	^ oracle accepts: input from: originalScore
 ]

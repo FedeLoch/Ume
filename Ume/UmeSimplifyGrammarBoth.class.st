@@ -17,5 +17,5 @@ UmeSimplifyGrammarBoth class >> reduce: subtree using: grammar matching: symbol 
 	candidatesSubtree := UmeSimplifyGrammarSubtreeReducer findSubtree: subtree mathchingWith: symbol.
 	candidates := candidatesSubtree, candidatesAlternate.
 
-	^ candidates sorted: [ :treeA :treeB | treeA treeSize  < treeB treeSize ]
+	^ candidates 
 ]

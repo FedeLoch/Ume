@@ -7,6 +7,12 @@ Class {
 }
 
 { #category : 'accessing' }
+UmeMethodsCallsGuide >> category: value [
+
+	^ value
+]
+
+{ #category : 'accessing' }
 UmeMethodsCallsGuide >> setBase: base [
 
 	evaluator methodsCalled: base

@@ -15,16 +15,10 @@ UmeGrammarShrinker >> asInput: tree [
 	^ tree asInput
 ]
 
-{ #category : 'shrinking' }
-UmeGrammarShrinker >> checkGrammar: aInput [
-
-	^ UmeGrammarParser accept: aInput from: grammar
-]
-
 { #category : 'testing' }
 UmeGrammarShrinker >> copyTree: tree [
  
-	^ self tree: tree asInput
+	^ tree doCopy
 ]
 
 { #category : 'testing' }
@@ -75,15 +69,4 @@ UmeGrammarShrinker >> parse: input [
 UmeGrammarShrinker >> tree: input [
 
 	^ self parse: input
-]
-
-{ #category : 'testing' }
-UmeGrammarShrinker >> triggerBug: tree upperBound: originalScore [
-
-	|input|
-	
-	input := (self asInput: tree).
-	(self checkGrammar: input) ifFalse: [ ^ false ].
-
-	^ oracle accepts: input from: originalScore
 ]

@@ -7,9 +7,9 @@ Class {
 }
 
 { #category : 'copying' }
-UmeShrinkingStrategy class >> copyTree: aTree with: aGrammar [
+UmeShrinkingStrategy class >> copyTree: aTree [
 
-	^ UmeGrammarParser parse: (aTree asInput ) from: aGrammar
+	^ aTree doCopy. 
 ]
 
 { #category : 'enumerating' }

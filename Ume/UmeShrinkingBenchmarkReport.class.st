@@ -9,22 +9,10 @@ Class {
 	#tag : 'Shrinking'
 }
 
-{ #category : 'accessing' }
-UmeShrinkingBenchmarkReport class >> keys [
-
-	^ {
-		'totalTime'.
-		'%inputReduction'.
-		'neededReductions'.
-	 	'failedReductions'.
-		'%problemPreservation'
-	}
-]
-
 { #category : 'adding' }
 UmeShrinkingBenchmarkReport >> add: result for: shrinkerClass [
 
-	results at: shrinkerClass put: result
+	results at: shrinkerClass name put: result
 ]
 
 { #category : 'adding' }
@@ -32,4 +20,12 @@ UmeShrinkingBenchmarkReport >> initialize [
 	
 	super initialize.
 	results := Dictionary new.
+]
+
+{ #category : 'as yet unclassified' }
+UmeShrinkingBenchmarkReport >> saveAsFile: fileName [
+
+	(fileName asFileReference) writeStreamDo: [ :stream |
+		stream nextPutAll: (NeoJSONWriter toStringPretty: results)
+	] 
 ]

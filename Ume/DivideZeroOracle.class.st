@@ -20,7 +20,13 @@ DivideZeroOracle >> accepts: input from: _ [
 ]
 
 { #category : 'as yet unclassified' }
-DivideZeroOracle >> problemPresence: bound [
+DivideZeroOracle >> evalInput: input [
+
+	^ self accepts: input from: nil
+]
+
+{ #category : 'as yet unclassified' }
+DivideZeroOracle >> valueBound: bound [
 
 	^ bound ifTrue: [ 100 ] ifFalse: [ 0 ]
 ]

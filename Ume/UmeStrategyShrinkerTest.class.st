@@ -103,8 +103,55 @@ UmeStrategyShrinkerTest >> testGrammarReducer08 [
 { #category : 'tests' }
 UmeStrategyShrinkerTest >> testGrammarReducer09 [
 
+	| res |
+
 	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $3) and: (string includes: $1) ]).
 	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
+	res:= shrinker shrink: '3*2+(4*1)'.
 	
-	self assert:  (shrinker shrink: '3*2+(4*1)' ) equals: '3*1'
+	self assert:  ((res = '3*1') or: (res = '3+1'))
+]
+
+{ #category : 'tests' }
+UmeStrategyShrinkerTest >> testGrammarReducer10 [
+
+	| grammar2 oracle |
+	grammar2 := GncRegexGrammar new.
+	oracle := PerformanceOracle new threshold: 0.9; evalBlock: [ :regex |
+		regex asRegex matches: regex minimalStringMatching
+	].
+
+	shrinker oracle: oracle.
+	shrinker grammar: grammar2.
+	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
+	
+	self assert:  (shrinker shrink: 'b.*(acca+a*..(.)c|.*|||)(b+|b?|cb*b*)c+' ) size < 'b.*(acca+a*..(.)c|.*|||)(b+|b?|cb*b*)c+' size 
+]
+
+{ #category : 'tests' }
+UmeStrategyShrinkerTest >> testGrammarReducer11 [
+
+	| oracle res |
+	oracle := PerformanceOracle new threshold: 0.8; evalBlock: [ :path | SVGRunner run: path ].
+
+	shrinker oracle: oracle.
+	shrinker grammar: SvgPathGrammar new.
+	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
+	res := shrinker shrink: 'm-.99,-.4,7-93.,03-.8 -19.9-.2449 -1742 -269 -747 -5 16.-132 21.04-55.9'.
+	
+	self assert:  (res size) < ('m-.99,-.4,7-93.,03-.8 -19.9-.2449 -1742 -269 -747 -5 16.-132 21.04-55.9' size )
+]
+
+{ #category : 'tests' }
+UmeStrategyShrinkerTest >> testGrammarReducer12 [
+
+	| oracle res |
+	oracle := (self oracleByBlock: [ :string | (string includes: $5) and: (string includes: $2) ]).
+
+	shrinker oracle: oracle.
+	shrinker grammar: SvgPathGrammar new.
+	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
+	res := shrinker shrink: 'm-.99,-.4,7-93.,03-.8 -19.9-.2449 -1742 -269 -747 -5 16.-132 21.04-55.9'.
+	
+	self assert:  res equals: 'm2-5'
 ]

@@ -10,7 +10,8 @@ Class {
 		'lastFeedback',
 		'methodsToInstrument',
 		'feedbackEvaluator',
-		'shouldSaveAll'
+		'shouldSaveAll',
+		'onlyOutliers'
 	],
 	#category : 'Ume-Runner',
 	#package : 'Ume',
@@ -219,7 +220,16 @@ UmeRunner >> classesToInstrument [
 
 { #category : 'as yet unclassified' }
 UmeRunner >> collectAllCases [
-	shouldSaveAll := true. 
+ 
+	shouldSaveAll := true.
+	onlyOutliers := false.
+]
+
+{ #category : 'as yet unclassified' }
+UmeRunner >> collectOnlyOutliers [
+
+	onlyOutliers := true.
+	shouldSaveAll := false.
 ]
 
 { #category : 'as yet unclassified' }
@@ -362,6 +372,7 @@ UmeRunner >> initialize [
 	feedbackEvaluator := UmeFeedbackEvaluator new.
 	stopCriteria := UmeCountCriteria new times: 100.
 	shouldSaveAll := false. 
+	onlyOutliers := false.
 	
 	
 ]
@@ -463,7 +474,11 @@ UmeRunner >> scoreFor: receiver with: arguments and: testResult [
 { #category : 'tests' }
 UmeRunner >> shouldCollect: test [
 
-	^ shouldSaveAll or: [ test isOutlier ]
+	shouldSaveAll ifTrue: [ ^ true ].
+	
+	onlyOutliers and: [ ^ test isOutlier ].
+	
+	^ (test isOutlier) or: [ test isError ]
 ]
 
 { #category : 'tests' }

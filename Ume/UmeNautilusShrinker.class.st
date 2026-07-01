@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeGrammarBasedShrinker',
+	#name : 'UmeNautilusShrinker',
 	#superclass : 'UmeGrammarShrinker',
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'shrinking' }
-UmeGrammarBasedShrinker >> candidates: root [
+UmeNautilusShrinker >> candidates: root [
 	
 	| worstReward worst |
 	worstReward := SmallInteger maxVal.
@@ -23,7 +23,7 @@ UmeGrammarBasedShrinker >> candidates: root [
 ]
 
 { #category : 'shrinking' }
-UmeGrammarBasedShrinker >> minimizeOne: givenTree upperBound: upperBound [
+UmeNautilusShrinker >> minimizeOne: givenTree upperBound: upperBound [
 
 	| seen candidates tree |
 
@@ -71,7 +71,7 @@ UmeGrammarBasedShrinker >> minimizeOne: givenTree upperBound: upperBound [
 ]
 
 { #category : 'shrinking' }
-UmeGrammarBasedShrinker >> shouldStop: minimized size: size from: current size: currentSize [
+UmeNautilusShrinker >> shouldStop: minimized size: size from: current size: currentSize [
 
 	^ minimized asInput = current asInput
 ]

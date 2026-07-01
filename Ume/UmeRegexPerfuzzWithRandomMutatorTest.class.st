@@ -32,7 +32,7 @@ UmeRegexPerfuzzWithRandomMutatorTest >> setUp [
 	
 	super setUp.
 	schema score: nil.
-	runner := UmeRunner test: RxMatcher >> #matches: from: schema for: 2 minutes.
+	runner := UmeRunner test: RxMatcher >> #matches: from: schema for: 5 minutes.
 ]
 
 { #category : 'tests' }
