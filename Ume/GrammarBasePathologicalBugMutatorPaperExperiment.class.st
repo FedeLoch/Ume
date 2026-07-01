@@ -96,6 +96,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> initialize [
 		'grammar-derivations' -> self grammarDerivationsSchema.
 		'weighted-scheduling' -> self weightSelectionSchedulerSchema.
 		'random-scheduling' -> self randomSelectionSchedulerSchema.
+		'mopt-scheduling' -> self moptSelectionSchedulerSchema.
 	} asDictionary.
 ]
 
@@ -103,6 +104,16 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> initialize [
 GrammarBasePathologicalBugMutatorPaperExperiment >> maxInputSize [
 
 	^ SmallInteger maxVal 
+]
+
+{ #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> moptSelectionSchedulerSchema [
+
+	^ self schemaMOPTCorpusWith: (
+		self grammarLiteralMutators,
+		self grammarDerivationMutators,
+		self stochasticMutators
+	)
 ]
 
 { #category : 'running' }
@@ -172,6 +183,18 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> schema: config [
 GrammarBasePathologicalBugMutatorPaperExperiment >> schemaCorpusWith: mutators [
 
 	self subclassResponsibility 
+]
+
+{ #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> schemaMOPTCorpusWith: mutators [
+
+	| schema |
+	
+	schema := self schemaCorpusWith: mutators.
+		
+	schema argumentConstraints first generator mutatorSelector: UmeMOPTMutatorSelector new.
+
+	^ schema
 ]
 
 { #category : 'running' }

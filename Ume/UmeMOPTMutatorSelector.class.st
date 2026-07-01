@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeRandomMutatorSelector',
+	#name : 'UmeMOPTMutatorSelector',
 	#superclass : 'UmeMutatorSelector',
 	#category : 'Ume-Selector Heuristics',
 	#package : 'Ume',
@@ -7,6 +7,7 @@ Class {
 }
 
 { #category : 'enumerating' }
-UmeRandomMutatorSelector >> select: mutators [
-	1 halt.
+UmeMOPTMutatorSelector >> select: mutators [
+
+	^ mutators atRandom
 ]
