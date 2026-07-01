@@ -21,8 +21,8 @@ Class {
 { #category : 'feedback' }
 UmeMOPTMutatorSelector >> feed: feedback [
 
-	feedback isPositive ifTrue: [
-		successCounts at: lastIndex put: (successCounts at: lastIndex) + 1
+	(((feedback isNotNil) and: [ feedback isPositive ]) and: [ lastIndex isNotNil ]) ifTrue: [ 
+			successCounts at: lastIndex put: (successCounts at: lastIndex) + 1
 	]
 ]
 

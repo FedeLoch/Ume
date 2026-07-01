@@ -68,7 +68,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> grammarDerivationMutators [
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> grammarDerivationsSchema [
 
-	^ self schemaCorpusWith: self grammarDerivationMutators
+	^ self schemaCorpusWith: self grammarDerivationMutators selector: UmeWeightedMutatorSelector new
 ]
 
 { #category : 'running' }
@@ -80,14 +80,14 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralMutators [
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralsSchema [
 
-	^ self schemaCorpusWith: self grammarLiteralMutators
+	^ self schemaCorpusWith: self grammarLiteralMutators selector: UmeWeightedMutatorSelector new
 ]
 
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> initialize [ 
 
 	super initialize.
-	experimentTime := 5 seconds.
+	experimentTime := 1 hour.
 	times := 20.
 	schemas := {
 		'weighted-grammar-base' -> self weightedGrammarSchema.
@@ -202,7 +202,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> stochasticMutators [
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> stochasticSchema [
 
-	^ self schemaCorpusWith: self stochasticMutators
+	^ self schemaCorpusWith: self stochasticMutators selector: UmeWeightedMutatorSelector new
 ]
 
 { #category : 'running' }
