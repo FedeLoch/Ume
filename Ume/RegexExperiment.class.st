@@ -76,7 +76,7 @@ RegexExperiment >> schemaCorpusWith: mutators selector: selector [
 			props: sharedProperties;
 			generator: (UmeGenerator do: [ :props :feedback | props at: 'input' ]))
 	}.
-	
+
 	assert := [ :regex :input :result | result ].
 	
 	^ UmeSchema new
