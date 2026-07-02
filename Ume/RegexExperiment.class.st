@@ -65,6 +65,8 @@ RegexExperiment >> schemaCorpusWith: mutators selector: selector [
 		props at: 'input' put: regex minimalStringMatching.
 		UmeRegex fromString: regex ].
 	
+	regexGenerator mutationMetadataBlock: [ (sharedProperties at: 'grammar') mutationMetadata ].
+	
 	receiverConstraint := UmeObjectConstraint new objectClass: RxMatcher;
 		generator: regexGenerator;
 		props: sharedProperties.

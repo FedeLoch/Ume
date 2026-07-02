@@ -77,7 +77,7 @@ UmeResult >> exportAsCSV [
 UmeResult >> exportAsCSV: fileName [
 
 	| writer |
-	
+
 	fileName asFileReference writeStreamDo: [ :stream |
 		writer := (NeoCSVWriter on: stream)
 			writeHeader: #( 'time-microseconds' 'improvement' );

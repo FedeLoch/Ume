@@ -162,7 +162,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> run: config iteration: i [
 	runner guidedByMethodsCalls.
 	
 	result := runner run.
-	1 halt.
+	
 	"We export the result as csv"
 	result exportAsCSV: fileName.
 ]

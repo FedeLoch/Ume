@@ -3,7 +3,8 @@ Class {
 	#superclass : 'UmeGenerator',
 	#instVars : [
 		'do',
-		'prevFeedback'
+		'prevFeedback',
+		'mutationMetadataBlock'
 	],
 	#category : 'Ume-Generators',
 	#package : 'Ume',
@@ -38,4 +39,16 @@ UmeGenericGenerator >> feed: feedback [
 UmeGenericGenerator >> gen: constraint [
 
 	^ do value: (constraint ifNotNil: [ constraint props ] ifNil: nil) value: prevFeedback
+]
+
+{ #category : 'accessing' }
+UmeGenericGenerator >> mutationMetadata [
+
+	^ mutationMetadataBlock ifNotNil: [ mutationMetadataBlock value ] ifNil: [ nil ]
+]
+
+{ #category : 'accessing' }
+UmeGenericGenerator >> mutationMetadataBlock: aBlock [
+
+	mutationMetadataBlock := aBlock 
 ]
