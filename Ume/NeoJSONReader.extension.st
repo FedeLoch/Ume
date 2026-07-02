@@ -15,14 +15,11 @@ NeoJSONReader class >> mutate: input with: anotherInput [
 { #category : '*Ume' }
 NeoJSONReader >> parseList [
 
-	self perturbation: 100.
-	
 	^ self listClass 
 		streamContents: [ :stream |
 			self parseListElementsDo: [ :each |
 				stream nextPut: each ] ]
 
-		
 ]
 
 { #category : '*Ume' }

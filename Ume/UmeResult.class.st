@@ -85,7 +85,7 @@ UmeResult >> exportAsCSV: fileName [
 				(argumentsSize timesCollect: [ :i | 'argumentMutationMetadata_', i asString ]);
 			fieldWriter: #raw;
 			yourself.
-			
+
 		tests do: [ :test |
 			writer nextPut: {
 					test time asMicroseconds.
