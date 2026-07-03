@@ -3,7 +3,6 @@ Extension { #name : 'DataFrameTypeDetector' }
 { #category : '*Ume' }
 DataFrameTypeDetector >> convertToBoolean: anArray [
 
-	self perturbation: 100.
 	^ anArray collect: [ :each | each ifNotNil: [ each asLowercase = 'true' ] ]
 ]
 

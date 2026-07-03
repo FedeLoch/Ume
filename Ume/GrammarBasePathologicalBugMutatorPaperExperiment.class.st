@@ -98,7 +98,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralsSchema [
 GrammarBasePathologicalBugMutatorPaperExperiment >> initialize [ 
 
 	super initialize.
-	experimentTime := 1 hour.
+	experimentTime := 10 seconds.
 	times := 20.
 	schemas := {
 		'weighted-grammar-base' -> self weightedGrammarSchema.
@@ -107,7 +107,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> initialize [
 		'grammar-derivations' -> self grammarDerivationsSchema.
 		'weighted-scheduling' -> self weightSelectionSchedulerSchema.
 		'random-scheduling' -> self randomSelectionSchedulerSchema.
-		'mopt-scheduling' -> self moptSelectionSchedulerSchema.
+		'mopt-scheduling' -> self moptSelectionSchedulerSchema
 	} asDictionary.
 ]
 
