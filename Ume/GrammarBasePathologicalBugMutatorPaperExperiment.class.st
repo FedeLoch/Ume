@@ -98,7 +98,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralsSchema [
 GrammarBasePathologicalBugMutatorPaperExperiment >> initialize [ 
 
 	super initialize.
-	experimentTime := 10 seconds.
+	experimentTime := 1 hour.
 	times := 20.
 	schemas := {
 		'weighted-grammar-base' -> self weightedGrammarSchema.
