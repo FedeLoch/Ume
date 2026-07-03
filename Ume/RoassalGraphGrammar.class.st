@@ -17,19 +17,21 @@ Class {
 { #category : 'initialization' }
 RoassalGraphGrammar >> defineGrammar [
 
-	ntGraphConfig --> ntLayout, Character cr asString , ntShape , Character cr asString , ntEdges.
+	ntGraphConfig --> ntLayout , Character cr asString , ntShape , Character cr asString , ntEdges.
 
-	ntEdges --> ntNode , '->' , ntNode | ntNode , '->' , ntNode , ',' , ntEdges.
+	ntEdges --> ntNode , '->' , ntNode | ntNode , '->' , ntNode , ' . ' , ntEdges.
 
 	ntNode --> ntInt , ntInt , ntInt.
 
-	ntShape --> 'RSEllipse' | 'RSCircle' | 'RSBox' | 'RSBitmap'.
+	ntShape --> 'RSEllipse' | 'RSCircle' | 'RSBox' | 'RSBitmap' | 'RSLabel' | 'RSPieSlice' | 'RSPolygon'.
 
-	ntLayout --> 'RSSugiyamaLayout'
-	| 'RSRadialTreeLayout'
-	| 'RSHorizontalDominanceTreeLayout'
-	| 'RSHorizontalVanDerPloegTreeLayout'
-	| 'RSClusterRadialTreeLayout'.
+	ntLayout --> 'RSClusteringLayout' | 'RSConditionalLayout' | 'RSNoLayout' | 'RSRectanglePackLayout' | 'RSSimpleForceBasedLayout'
+	| 'RSCircleLayout' | 'RSCircularAroundAVertexLayout' | 'RSOvalLayout' | 'RSForceBasedLayout' | 'RSSunburstConstantWidthLayout'
+	| 'RSSunburstExtentLayout' | 'RSFlowLayout' | 'RSHorizontalFlowLayout' | 'RSCellLayout' | 'RSGridLayout' | 'RSVerticalCellLayout'
+	| 'RSAngleLineLayout' | 'RSHorizontalLineLayout' | 'RSVerticalLineLayout' | 'RSClusterTreeLayout' | 'RSSugiyamaLayout'
+	| 'RSRectangleForceLayout' | 'RSEquidistantCircleLayout' | 'RSWeightedCircleLayout' | 'RSRadialTreeLayout'
+	| 'RSClusterRadialTreeLayout' | 'RSHorizontalDominanceTreeLayout' | 'RSHorizontalTreeLayout' | 'RSDominanceTreeLayout'
+	| 'RSTreeLayout' | 'RSHorizontalVanDerPloegTreeLayout' | 'RSVanDerPloegTreeLayout'.
 
 	ntInt --> ($0 - $9).
 

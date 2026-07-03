@@ -9,13 +9,17 @@ Class {
 { #category : 'running' }
 GraphExperiment >> baseSeed [
 
-	1 halt.
+	^ 'RSSugiyamaLayout
+RSBox
+552->882 . 583->865'
 ]
 
 { #category : 'running' }
 GraphExperiment >> complexSeed [
 
-	1 halt.
+	^ 'RSHorizontalDominanceTreeLayout
+RSPolygon
+534->657 . 768->178'
 ]
 
 { #category : 'running' }
@@ -27,7 +31,7 @@ GraphExperiment >> maxInputSize [
 { #category : 'running' }
 GraphExperiment >> methodsToInstrument [
 
-	^ RSLineBuilder package methods
+	^ RSLineBuilder package methods, RSClusterRadialTreeLayout package methods
 ]
 
 { #category : 'running' }
@@ -47,12 +51,10 @@ GraphExperiment >> schemaCorpusWith: mutators selector: selector [
 
 	| graphCodeGenerator |
 	
-	graphCodeGenerator := UmeGraphCodeParserGenerator new inputGenerator: (
-		self corpusGenerator: mutators selector: selector
-	).
+	graphCodeGenerator := self corpusGenerator: mutators selector: selector.
 
 	^ UmeSchema new
-		  receiverConstraint: (UmeConstantGenerator new value: UmeCodeRunner);
+		  receiverConstraint: (UmeConstantGenerator new value: UmeRoassalGrapher);
 		  argumentConstraints: { graphCodeGenerator };
 		  property: [ :regex :input :result | true ]
 ]
@@ -66,7 +68,7 @@ GraphExperiment >> seeds [
 { #category : 'running' }
 GraphExperiment >> targetMethod [
 
-	^ UmeCodeRunner class >> #run:
+	^ UmeRoassalGrapher class >> #run:
 ]
 
 { #category : 'running' }
@@ -74,11 +76,10 @@ GraphExperiment >> weightedGrammarSchema [
 
 	| graphCodeGenerator |
 	
-	graphCodeGenerator := UmeGraphCodeParserGenerator new inputGenerator: (
-		UmeGrammarGenerator new grammar: self newGrammar; maxSize: self maxInputSize).
+	graphCodeGenerator := UmeGrammarGenerator new grammar: self newGrammar; maxSize: self maxInputSize.
 
 	^ UmeSchema new
-		receiverConstraint: (UmeConstantGenerator new value: UmeCodeRunner);
+		receiverConstraint: (UmeConstantGenerator new value: UmeRoassalGrapher);
 		argumentConstraints: { graphCodeGenerator };
 		property: [ :regex :input :result | true ].
 ]

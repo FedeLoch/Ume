@@ -8,7 +8,13 @@ Class {
 
 { #category : 'as yet unclassified' }
 UmeGraphCodeParserGenerator >> parse: grammarBasedInput [
-1 halt.
+
+	| lines layout shape edges |
+	lines := grammarBasedInput lines.
+	layout := lines first.
+	shape := lines second.
+	edges := lines third.
+	1 halt.
 "| c shapes eb |
 edges := (1 to: 100) collect: [ :e |
     e -> (e + 1)
