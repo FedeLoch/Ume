@@ -10,11 +10,11 @@ Class {
 UmeRoassalGrapher class >> run: graphDescrption [
 
 	| line eb lines layoutClass shapeClass edges shapes c |
+
 	lines := graphDescrption lines.
-	layoutClass := self environment at: lines first.
-	shapeClass := self environment at: lines second.
+	layoutClass := self environment at: lines first asSymbol.
+	shapeClass := self environment at: lines second asSymbol.
 	edges := OpalCompiler new evaluate: '{', lines third, '}'.
-	1 halt.
 
 	line := RSLineBuilder arrowedDirectedBezier.
 
