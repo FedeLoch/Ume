@@ -1,3 +1,6 @@
+"
+DEPRECATED: DON'T CALL ME, IT'S NOT YOU, ITS ME.
+"
 Class {
 	#name : 'NeoJSONExperiment',
 	#superclass : 'GrammarBasePathologicalBugMutatorPaperExperiment',

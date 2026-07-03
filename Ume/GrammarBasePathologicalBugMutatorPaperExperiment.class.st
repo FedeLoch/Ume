@@ -42,6 +42,17 @@ GrammarBasePathologicalBugMutatorPaperExperiment class >> run: confName [
 ]
 
 { #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> corpusGenerator: mutators selector: selector [
+
+	^ UmeCorpusGenerator new
+		  seeds: self seeds deepCopy;
+		  mutationsPerIteration: self mpi;
+		  mutators: mutators;
+		  mutatorSelector: selector;
+		  heuristic: UmePickBestElementDifferenceHeuristic new.
+]
+
+{ #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> csvFileName: config iteration: iteration [
 
 	^ self name, '-', config, '-', iteration asString, '.csv'
@@ -107,6 +118,12 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> maxInputSize [
 ]
 
 { #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> methodsToInstrument [
+
+	self subclassResponsibility 
+]
+
+{ #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> moptSelectionSchedulerSchema [
 
 	^ self schemaCorpusWith: (
@@ -161,8 +178,12 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> run: config iteration: i [
 	"Guided by methods called"
 	runner guidedByMethodsCalls.
 	
+	"Specify methods to instrument"
+	runner methodsToInstrument: self methodsToInstrument.
+
+	"Run the Experiment"	
 	result := runner run.
-	
+
 	"We export the result as csv"
 	result exportAsCSV: fileName.
 ]

@@ -368,8 +368,7 @@ UmeGrammarParserTest >> testParseSvgPathN [
 	'm-.99,-.4,7-93.,03-.8 -19.9-.2449 7-1742 -269 -747L -5 16.-132 2L1.04-55.9' 
 	}.
 	
-	inputs do: [ :input |
-			| node |
+	inputs do: [ :input | | node |
 			node := UmeGrammarParser parse: input from: SvgPathGrammar new.
 			self assert: node generate equals: input ]
 ]
