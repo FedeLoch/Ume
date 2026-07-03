@@ -1,3 +1,6 @@
+"
+DEPRECATED: DON'T CALL ME, IT'S NOT YOU, ITS ME.
+"
 Class {
 	#name : 'NeoJSONExperiment',
 	#superclass : 'GrammarBasePathologicalBugMutatorPaperExperiment',
@@ -13,6 +16,12 @@ NeoJSONExperiment >> maxInputSize [
 ]
 
 { #category : 'running' }
+NeoJSONExperiment >> methodsToInstrument [
+
+	^ NeoJSONReader package methods
+]
+
+{ #category : 'running' }
 NeoJSONExperiment >> name [
 
 	^ 'NeoJSON'
@@ -25,7 +34,7 @@ NeoJSONExperiment >> newGrammar [
 ]
 
 { #category : 'running' }
-NeoJSONExperiment >> schemaCorpusWith: mutators [
+NeoJSONExperiment >> schemaCorpusWith: mutators selector: selector [
 
 	| receiverConstraint argumentConstraints jsonGenerator |
 	
@@ -33,6 +42,7 @@ NeoJSONExperiment >> schemaCorpusWith: mutators [
 		  seeds: self seeds deepCopy;
 		  mutationsPerIteration: self mpi;
 		  mutators: mutators;
+		  mutatorSelector: selector;
 		  heuristic: UmePickBestElementDifferenceHeuristic new.
 	
 	receiverConstraint := UmeObjectConstraint new generator: (UmeConstantGenerator new value: NeoJSONReader).

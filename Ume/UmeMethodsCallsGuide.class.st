@@ -9,7 +9,9 @@ Class {
 { #category : 'accessing' }
 UmeMethodsCallsGuide >> category: value [
 
-	^ value
+	(value = 1) ifTrue: [ ^ 1 ].
+	
+	^ self lnCategory: value
 ]
 
 { #category : 'accessing' }

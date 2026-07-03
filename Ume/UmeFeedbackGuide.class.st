@@ -12,15 +12,21 @@ Class {
 { #category : 'accessing' }
 UmeFeedbackGuide >> category: value [
 	
-	value isZero ifTrue: [ ^ 0 ].
-	
-	^ value ln rounded
+	^ self lnCategory: value
 ]
 
 { #category : 'accessing' }
 UmeFeedbackGuide >> evaluator: anEvaluator [
 
 	evaluator := anEvaluator
+]
+
+{ #category : 'accessing' }
+UmeFeedbackGuide >> lnCategory: value [
+
+	value isZero ifTrue: [ ^ 0 ].
+	
+	^ value ln rounded
 ]
 
 { #category : 'initialization' }

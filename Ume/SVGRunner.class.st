@@ -1,9 +1,9 @@
 Class {
 	#name : 'SVGRunner',
 	#superclass : 'Object',
-	#category : 'Ume-Shrinking',
+	#category : 'Ume-Paper Experimentation',
 	#package : 'Ume',
-	#tag : 'Shrinking'
+	#tag : 'Paper Experimentation'
 }
 
 { #category : 'running' }

@@ -6,7 +6,8 @@ Class {
 		'generator',
 		'props',
 		'wrapBlock',
-		'unwrapBlock'
+		'unwrapBlock',
+		'mutatorSelector'
 	],
 	#category : 'Ume-Property Schema',
 	#package : 'Ume',
@@ -38,6 +39,12 @@ UmeObjectConstraint >> generator [
 UmeObjectConstraint >> generator: aBlock [
 
 	generator := aBlock
+]
+
+{ #category : 'accessing' }
+UmeObjectConstraint >> mutationMetadata [
+
+	^ generator mutationMetadata
 ]
 
 { #category : 'accessing' }

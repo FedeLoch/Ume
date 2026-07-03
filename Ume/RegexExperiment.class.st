@@ -13,6 +13,12 @@ RegexExperiment >> maxInputSize [
 ]
 
 { #category : 'running' }
+RegexExperiment >> methodsToInstrument [
+
+	^ RxMatcher package methods
+]
+
+{ #category : 'running' }
 RegexExperiment >> name [
 
 	^ 'PharoRegex'
@@ -44,7 +50,7 @@ RegexExperiment >> regexByProp: props and: feedback [
 ]
 
 { #category : 'running' }
-RegexExperiment >> schemaCorpusWith: mutators [
+RegexExperiment >> schemaCorpusWith: mutators selector: selector [
 
 | assert sharedProperties argumentConstraints receiverConstraint regexGenerator regexConstraint |
 
@@ -52,7 +58,9 @@ RegexExperiment >> schemaCorpusWith: mutators [
 		unwrap: [ :case | (case class = UmeRegex) ifTrue: [ case regexString ] ifFalse: [ case ] ];
 		generator: (UmeCorpusGenerator new
 		seeds: self seeds deepCopy;
-		mutationsPerIteration: self mpi; mutators: mutators;
+		mutationsPerIteration: self mpi;
+		mutators: mutators;
+		mutatorSelector: selector;
 		heuristic: UmePickBestElementDifferenceHeuristic new).
 	
 	sharedProperties := UmeInternalConstraintProperties
@@ -63,6 +71,8 @@ RegexExperiment >> schemaCorpusWith: mutators [
 		props at: 'input' put: regex minimalStringMatching.
 		UmeRegex fromString: regex ].
 	
+	regexGenerator mutationMetadataBlock: [ (sharedProperties at: 'grammar') mutationMetadata ].
+	
 	receiverConstraint := UmeObjectConstraint new objectClass: RxMatcher;
 		generator: regexGenerator;
 		props: sharedProperties.
@@ -72,7 +82,7 @@ RegexExperiment >> schemaCorpusWith: mutators [
 			props: sharedProperties;
 			generator: (UmeGenerator do: [ :props :feedback | props at: 'input' ]))
 	}.
-	
+
 	assert := [ :regex :input :result | result ].
 	
 	^ UmeSchema new

@@ -46,6 +46,12 @@ UmeParserGenerator >> inputGenerator: generator [
 	inputGenerator := generator
 ]
 
+{ #category : 'accessing' }
+UmeParserGenerator >> mutationMetadata [
+
+	^ inputGenerator mutationMetadata
+]
+
 { #category : 'as yet unclassified' }
 UmeParserGenerator >> parse: grammarBasedInput [
 	

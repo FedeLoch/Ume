@@ -21,13 +21,21 @@ UmeCaseGenerator >> feedArgumentsGenerators: caseFeedback [
 
 	schema argumentConstraints collectWithIndex: [ :inputConstraint :index |
 		inputConstraint feed: (caseFeedback argumentFeedbackCase: index)
-	]
+	].
+
+	caseFeedback ifNotNil:[
+		caseFeedback argumentsMutationMetadata: (schema argumentConstraints collect: #mutationMetadata)
+	].
 ]
 
 { #category : 'as yet unclassified' }
 UmeCaseGenerator >> feedReceiverGenerator: caseFeedback [
 
-	schema receiverConstraint feed: (caseFeedback receiverFeedback)
+	schema receiverConstraint feed: (caseFeedback receiverFeedback).
+
+	caseFeedback ifNotNil: [
+		caseFeedback receiverMutationMetadata: schema receiverConstraint mutationMetadata
+	].
 ]
 
 { #category : 'as yet unclassified' }

@@ -13,6 +13,12 @@ MicrodownExperiment >> maxInputSize [
 ]
 
 { #category : 'running' }
+MicrodownExperiment >> methodsToInstrument [
+
+	^ Microdown package methods
+]
+
+{ #category : 'running' }
 MicrodownExperiment >> name [
 
 	^ 'Microdown'
@@ -25,7 +31,7 @@ MicrodownExperiment >> newGrammar [
 ]
 
 { #category : 'running' }
-MicrodownExperiment >> schemaCorpusWith: mutators [
+MicrodownExperiment >> schemaCorpusWith: mutators selector: selector [
 
 	| markdownGenerator |
 	
@@ -33,6 +39,7 @@ MicrodownExperiment >> schemaCorpusWith: mutators [
 		  seeds: self seeds deepCopy;
 		  mutationsPerIteration: self mpi;
 		  mutators: mutators;
+		  mutatorSelector: selector;
 		  heuristic: UmePickBestElementDifferenceHeuristic new.
 
 	^ UmeSchema new

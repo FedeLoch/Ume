@@ -76,18 +76,26 @@ UmeResult >> exportAsCSV [
 { #category : 'as yet unclassified' }
 UmeResult >> exportAsCSV: fileName [
 
-	| writer |
+	| writer argumentsSize |
 	
+	argumentsSize := tests ifEmpty: [ 0 ] ifNotEmpty: [ tests first arguments size ].
 	fileName asFileReference writeStreamDo: [ :stream |
 		writer := (NeoCSVWriter on: stream)
-			writeHeader: #( 'time-microseconds' 'improvement' );
+			writeHeader: #( 'time-microseconds' 'improvement' 'receiverMutationMetadata' ),
+				(argumentsSize timesCollect: [ :i | 'argumentMutationMetadata_', i asString ]);
 			fieldWriter: #raw;
 			yourself.
-			
+
 		tests do: [ :test |
 			writer nextPut: {
 					test time asMicroseconds.
-					test feedback improvement } ] ]
+					test feedback improvement.
+					test feedback receiverMutationMetadata asString.
+			}, (argumentsSize timesCollect: [ :i |
+				(test feedback argumentsMutationMetadata at: i) asString
+			])
+		] ]
+			
 ]
 
 { #category : 'as yet unclassified' }

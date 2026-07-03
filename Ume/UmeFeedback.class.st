@@ -6,7 +6,8 @@ Class {
 		'feedback',
 		'improvement',
 		'values',
-		'score'
+		'score',
+		'mutationMetadata'
 	],
 	#category : 'Ume-Feedback',
 	#package : 'Ume',
@@ -65,6 +66,18 @@ UmeFeedback >> improvement: anImprovement [
 UmeFeedback >> isPositive [
 
 	^ feedback
+]
+
+{ #category : 'accessing' }
+UmeFeedback >> mutationMetadata [
+
+	^ mutationMetadata
+]
+
+{ #category : 'accessing' }
+UmeFeedback >> mutationMetadata: metadata [
+
+	mutationMetadata := metadata 
 ]
 
 { #category : 'accessing' }
