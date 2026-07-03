@@ -13,6 +13,12 @@ MicrodownExperiment >> maxInputSize [
 ]
 
 { #category : 'running' }
+MicrodownExperiment >> methodsToInstrument [
+
+	^ Microdown package methods
+]
+
+{ #category : 'running' }
 MicrodownExperiment >> name [
 
 	^ 'Microdown'

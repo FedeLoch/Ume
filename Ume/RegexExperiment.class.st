@@ -13,6 +13,12 @@ RegexExperiment >> maxInputSize [
 ]
 
 { #category : 'running' }
+RegexExperiment >> methodsToInstrument [
+
+	^ RxMatcher package methods
+]
+
+{ #category : 'running' }
 RegexExperiment >> name [
 
 	^ 'PharoRegex'

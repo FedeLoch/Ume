@@ -13,6 +13,12 @@ DataFrameExperiment >> maxInputSize [
 ]
 
 { #category : 'running' }
+DataFrameExperiment >> methodsToInstrument [
+
+	^ DataFrame package methods
+]
+
+{ #category : 'running' }
 DataFrameExperiment >> name [
 
 	^ 'DataFrame'

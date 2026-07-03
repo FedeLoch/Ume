@@ -16,6 +16,12 @@ NeoJSONExperiment >> maxInputSize [
 ]
 
 { #category : 'running' }
+NeoJSONExperiment >> methodsToInstrument [
+
+	^ NeoJSONReader package methods
+]
+
+{ #category : 'running' }
 NeoJSONExperiment >> name [
 
 	^ 'NeoJSON'
