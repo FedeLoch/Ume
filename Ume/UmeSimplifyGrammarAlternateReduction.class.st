@@ -36,6 +36,35 @@ UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: a
 ]
 
 { #category : 'enumerating' }
+UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: aGrammar matchingWith: symbol depth: depth [
+	" return all the reduction candidates"
+	| expansions reductions nonTerminal |
+
+	reductions := OrderedCollection new.
+	nonTerminal := aGrammar instVarNamed: ('nt' , symbol asString).
+	expansions := nonTerminal rules.
+	expansions := expansions sorted: [ :expA :expB | expA fragments size < expB fragments size ]. 
+	
+	expansions do: [ :expansion | | match newChildReductions |
+		match := true.
+		newChildReductions := OrderedCollection new.
+		expansion fragments do: [ :altSymbol | | childReductions treeCopy | 
+			(altSymbol isTerminal ) ifFalse: [ 
+			treeCopy := aTree doCopy. 
+			childReductions := UmeSimplifyGrammarSubtreeReducer findSubtree: treeCopy mathchingWith: altSymbol name depth: depth . 
+			childReductions ifEmpty: [ match:= false ].
+			match ifTrue: [ newChildReductions add: childReductions ]  ]
+		].
+		match ifTrue: [ (self possibleCombination: newChildReductions) do: [ :combination | | newTree|
+				newTree := self buildNewTree: combination tag: symbol.
+				newTree treeSize  < aTree treeSize ifTrue: [ reductions add: newTree ].
+				]
+			]
+		].
+    ^ reductions
+]
+
+{ #category : 'enumerating' }
 UmeSimplifyGrammarAlternateReduction class >> buildNewTree: aCombination tag: aSymbol [
 	
 	| newSubTree |
@@ -71,4 +100,10 @@ UmeSimplifyGrammarAlternateReduction class >> possibleCombination: aListOfLists 
 UmeSimplifyGrammarAlternateReduction class >> reduce: subtree using: grammar matching: symbol [
 
 	^ self alternateReduction: subtree using: grammar matchingWith: symbol
+]
+
+{ #category : 'as yet unclassified' }
+UmeSimplifyGrammarAlternateReduction class >> reduce: subtree using: grammar matching: symbol depth: depth [
+
+	^ self alternateReduction: subtree using: grammar matchingWith: symbol depth: depth
 ]
