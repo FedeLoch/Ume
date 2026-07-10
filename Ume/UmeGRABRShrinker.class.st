@@ -35,7 +35,7 @@ UmeGRABRShrinker >> initialize [
 	super initialize.
 	seen := Set new.
 	reductionStrategy := UmeSimplifyGrammarBoth.
-	depth := 0. 
+	depth := -1. 
 	
 ]
 
