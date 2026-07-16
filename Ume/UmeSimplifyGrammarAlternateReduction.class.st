@@ -37,6 +37,7 @@ UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: a
 
 { #category : 'enumerating' }
 UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: aGrammar matchingWith: symbol depth: depth [
+
 	" return all the reduction candidates"
 	| expansions reductions nonTerminal |
 
@@ -56,11 +57,11 @@ UmeSimplifyGrammarAlternateReduction class >> alternateReduction: aTree using: a
 			match ifTrue: [ newChildReductions add: childReductions ]  ]
 		].
 		match ifTrue: [ (self possibleCombination: newChildReductions) do: [ :combination | | newTree|
-				newTree := self buildNewTree: combination tag: symbol.
-				newTree treeSize  < aTree treeSize ifTrue: [ reductions add: newTree ].
-				]
-			]
-		].
+			newTree := self buildNewTree: combination tag: symbol.
+			newTree treeSize  < aTree treeSize ifTrue: [ reductions add: newTree ].
+		]]
+	].
+
     ^ reductions
 ]
 

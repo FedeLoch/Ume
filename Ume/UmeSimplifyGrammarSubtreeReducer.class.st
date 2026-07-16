@@ -28,6 +28,7 @@ UmeSimplifyGrammarSubtreeReducer class >> findSubtree: aTree mathchingWith: aSym
 
 { #category : 'enumerating' }
 UmeSimplifyGrammarSubtreeReducer class >> findSubtree: aTree mathchingWith: aSymbol depth: depth [
+
 	" return all the reduction candidates based on a symbol"
 	| candidates |
 	
@@ -35,16 +36,12 @@ UmeSimplifyGrammarSubtreeReducer class >> findSubtree: aTree mathchingWith: aSym
 	aTree isLeaf ifTrue: [ ^candidates ].
 	
 	aTree children do: [ :node  |
-		((depth <= 0) and: 
-			(node parent isNotNil and: 
-				[ node isLeaf not and: [ aSymbol = node tag ] ])) ifTrue: [ 
-			candidates add: node. 
-		 ].
-		((depth ~= 0) and: (node isLeaf not)) ifTrue: 
-			[ candidates addAll: (self findSubtree: node mathchingWith: aSymbol  depth: depth-1 ) ]
-	].
+		((depth <= 0) and: (node parent isNotNil and: [ node isLeaf not and: [ aSymbol = node tag ] ])) ifTrue: [
+			candidates add: node ].
 
-	
+		((depth ~= 0) and: (node isLeaf not)) ifTrue: [
+			candidates addAll: (self findSubtree: node mathchingWith: aSymbol  depth: depth - 1 ) ]
+	].
 
 	^ candidates
 ]

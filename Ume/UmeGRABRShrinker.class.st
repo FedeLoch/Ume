@@ -20,13 +20,14 @@ UmeGRABRShrinker >> asInput: tree [
 { #category : 'shrinking' }
 UmeGRABRShrinker >> candidates: subTree matching: symbol [
 
-	| allCandidates orderedCandidates|
+	| allCandidates difference |
 	
 	allCandidates := (reductionStrategy reduce: subTree using: grammar matching: symbol depth: depth) asSet.
-	allCandidates difference: seen. 
-	orderedCandidates := allCandidates asOrderedCollection. 
-	orderedCandidates sort: [ :treeA :treeB | treeA treeSize  < treeB treeSize ]. 
-	^ orderedCandidates
+
+	difference := (allCandidates difference: seen) asOrderedCollection.
+	difference sort: [ :treeA :treeB | treeA treeSize  < treeB treeSize ]. 
+	
+	^ difference
 ]
 
 { #category : 'shrinking' }
@@ -35,7 +36,7 @@ UmeGRABRShrinker >> initialize [
 	super initialize.
 	seen := Set new.
 	reductionStrategy := UmeSimplifyGrammarBoth.
-	depth := -1. 
+	depth := -1.
 	
 ]
 
@@ -43,33 +44,36 @@ UmeGRABRShrinker >> initialize [
 UmeGRABRShrinker >> minimizeOne: originalTree upperBound: bound [
 
 	| tree found |
-	tree := originalTree.
 
-	[tree treeHeight > depth] whileTrue: [ 
-		found := false.
+	tree := originalTree.
+	found := false.
+
+	[tree treeHeight > depth] whileTrue: [
 		tree allNodes doWithIndex: [ :subTree :index |
 			( subTree isLeaf ) ifFalse: [ | symbol |
 				symbol := subTree tag. 
-				( self candidates: subTree matching: symbol) do: [ :candidate |
+				(self candidates: subTree matching: symbol) do: [ :candidate |
 					( seen includes: candidate ) 
 					ifFalse: [ 
 						seen add: candidate. 
 						( candidate treeSize < subTree treeSize) 
 						ifTrue: [ | newTree |
-					newTree := self replaceSubtreeIn: tree by: candidate index: index.
-					self minimizationDone.
-					(self triggerBug: newTree upperBound: bound ) ifTrue: [
-						tree := newTree.
-						found := true.
-						depth := 0.
-						^ self minimizeOne: tree upperBound: bound.  
-					] ifFalse: [ self failedMinimization ]
+							newTree := self replaceSubtreeIn: tree by: candidate index: index.
+							self minimizationDone.
+							(self triggerBug: newTree upperBound: bound ) ifTrue: [
+								tree := newTree.
+								found := true.
+								self restartDepth.
+
+								^ self minimizeOne: tree upperBound: bound.
+							] ifFalse: [ self failedMinimization ]
+						]
 					]
 				]
 			]
-		]
+		].
+		found ifFalse: [ depth:= depth + 1 ]
 	].
-	found ifFalse: [ depth:= depth + 1 ] ].
 
 	^ tree
 ]
@@ -100,10 +104,16 @@ UmeGRABRShrinker >> replaceSubtreeIn: tree by: subtrees index: index [
 	parent ifNil: [ ^ subtrees ].
 	
 	parent children: ( parent children collect: [ :child |
-		child == treeToMutate ifTrue: [ subtrees ] ifFalse: [ child ]
-		]).
+		(child == treeToMutate) ifTrue: [ subtrees ] ifFalse: [ child ]
+	]).
 	
 	^ treeCopy
+]
+
+{ #category : 'shrinking' }
+UmeGRABRShrinker >> restartDepth [
+	
+	depth := 0
 ]
 
 { #category : 'shrinking' }
