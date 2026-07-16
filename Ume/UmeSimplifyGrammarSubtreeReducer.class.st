@@ -36,7 +36,7 @@ UmeSimplifyGrammarSubtreeReducer class >> findSubtree: aTree mathchingWith: aSym
 	aTree isLeaf ifTrue: [ ^candidates ].
 	
 	aTree children do: [ :node  |
-		((depth <= 0) and: (node parent isNotNil and: [ node isLeaf not and: [ aSymbol = node tag ] ])) ifTrue: [
+		((depth <= 0) and: ( self isSuitable: node symbol: aSymbol )) ifTrue: [
 			candidates add: node ].
 
 		((depth ~= 0) and: (node isLeaf not)) ifTrue: [
@@ -44,6 +44,12 @@ UmeSimplifyGrammarSubtreeReducer class >> findSubtree: aTree mathchingWith: aSym
 	].
 
 	^ candidates
+]
+
+{ #category : 'enumerating' }
+UmeSimplifyGrammarSubtreeReducer class >> isSuitable: node symbol: aSymbol [
+
+	^ node parent isNotNil and: [ node isLeaf not and: [ aSymbol = node tag ] ]
 ]
 
 { #category : 'enumerating' }
