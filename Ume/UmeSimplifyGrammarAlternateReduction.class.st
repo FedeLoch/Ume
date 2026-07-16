@@ -97,12 +97,6 @@ UmeSimplifyGrammarAlternateReduction class >> possibleCombination: aListOfLists 
 ]
 
 { #category : 'as yet unclassified' }
-UmeSimplifyGrammarAlternateReduction class >> reduce: subtree using: grammar matching: symbol [
-
-	^ self alternateReduction: subtree using: grammar matchingWith: symbol
-]
-
-{ #category : 'as yet unclassified' }
 UmeSimplifyGrammarAlternateReduction class >> reduce: subtree using: grammar matching: symbol depth: depth [
 
 	^ self alternateReduction: subtree using: grammar matchingWith: symbol depth: depth

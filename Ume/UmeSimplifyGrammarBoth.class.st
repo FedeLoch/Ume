@@ -7,20 +7,6 @@ Class {
 }
 
 { #category : 'enumerating' }
-UmeSimplifyGrammarBoth class >> reduce: subtree using: grammar matching: symbol [
-    
-   | candidatesSubtree candidatesAlternate candidates|
-    
-   candidates := OrderedCollection new.
-   candidatesAlternate := UmeSimplifyGrammarAlternateReduction alternateReduction: subtree using: grammar matchingWith: symbol.
-
-	candidatesSubtree := UmeSimplifyGrammarSubtreeReducer findSubtree: subtree mathchingWith: symbol.
-	candidates := candidatesSubtree, candidatesAlternate.
-
-	^ candidates 
-]
-
-{ #category : 'enumerating' }
 UmeSimplifyGrammarBoth class >> reduce: subtree using: grammar matching: symbol depth: depth [ 
     
    | candidatesSubtree candidatesAlternate candidates|
