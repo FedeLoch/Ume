@@ -21,7 +21,7 @@ UmeShrinkingRegexBenchmark >> initialize [
 	            'b*(b|bc|bc?)b+' 'b*b(b|bc||bac?)b+' 'b*b(b|ba*||bac?)b+'
 	            'b*b(b|b.*||bac?)b+' 'b*b(b|b.*|ba?.*c+bba+|)b+'
 	            'b*b(b|b.*|b*|)b+' 'b*b(b|(bc.*|b*|))b+'
-	            'b*(c|a*|||)(b|.+|b*b*)b+' 'b*(a((c?b.*))*.?|a*|||)(b|b?|b*b*)c+'
+					'b*(c|a*|||)(b|.+|b*b*)b+' 'b*(a((c?b.*))*.?|a*|||)(b|b?|b*b*)c+'
 	            'b*(ac+a*.()c|.*|||)(b+|b?|b*b*)c+'
 	            'b*(ac+a*.a?b*|.*|||)(|b*.|c+a+.*)b+'
 	            'b*(acca+a*..()c|.*|||)(b+|b?|b*b*)c+'

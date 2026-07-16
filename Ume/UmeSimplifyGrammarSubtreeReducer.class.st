@@ -27,25 +27,34 @@ UmeSimplifyGrammarSubtreeReducer class >> findSubtree: aTree mathchingWith: aSym
 ]
 
 { #category : 'enumerating' }
-UmeSimplifyGrammarSubtreeReducer class >> findSubtreesIndex: aTree mathchingWith: aSymbol [
-	" return all the reduction candidates index based on a symbol"
+UmeSimplifyGrammarSubtreeReducer class >> findSubtree: aTree mathchingWith: aSymbol depth: depth [
+
+	" return all the reduction candidates based on a symbol"
 	| candidates |
 	
 	candidates := OrderedCollection new. 
+	aTree isLeaf ifTrue: [ ^candidates ].
 	
-	aTree allNodes doWithIndex: [ :node :index |
-		(node parent isNotNil and: [ node isLeaf not and: [ aSymbol = node tag ] ]) ifTrue: [ 
-			candidates add: index. 
-		 ]
-	].
+	aTree children do: [ :node  |
+		((depth <= 0) and: ( self isSuitable: node symbol: aSymbol )) ifTrue: [
+			candidates add: node ].
 
+		((depth ~= 0) and: (node isLeaf not)) ifTrue: [
+			candidates addAll: (self findSubtree: node mathchingWith: aSymbol  depth: depth - 1 ) ]
+	].
 
 	^ candidates
 ]
 
 { #category : 'enumerating' }
-UmeSimplifyGrammarSubtreeReducer class >> reduce: subtree using: grammar matching: symbol [
+UmeSimplifyGrammarSubtreeReducer class >> isSuitable: node symbol: aSymbol [
 
-	^ self findSubtree: subtree mathchingWith: symbol 
+	^ node parent isNotNil and: [ node isLeaf not and: [ aSymbol = node tag ] ]
+]
+
+{ #category : 'enumerating' }
+UmeSimplifyGrammarSubtreeReducer class >> reduce: subtree using: grammar matching: symbol depth: depth [
+
+	^ self findSubtree: subtree mathchingWith: symbol depth: depth 
 
 ]
