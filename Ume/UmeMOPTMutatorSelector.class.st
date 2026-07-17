@@ -94,25 +94,33 @@ UmeMOPTMutatorSelector >> selectMutator: mutators [
 
 	| total roll cumulative |
 
+	"if the probabilities were not assigned, we initialize them uniformly"
 	(probabilities isNil or: [ probabilities size ~= mutators size ]) ifTrue: [
 		self initializeProbabilities: mutators.
 	].
 
+	"get the total probability sum"
 	total := probabilities sum.
+	"throw a coin"
 	roll := total * random next.
 	cumulative := 0.0.
 
+	"look for the lucky one"
 	probabilities withIndexDo: [ :prob :index |
 		cumulative := cumulative + prob.
 		roll <= cumulative ifTrue: [
+			"found, now we update the last selected and the counter"
 			lastIndex := index.
 			selectionCounts at: index put: (selectionCounts at: index) + 1.
 			selectionCounter := selectionCounter + 1.
 			selectionCounter >= updatePeriod ifTrue: [ self updateProbabilities ].
+	
+			"return the lucky one"
 			^ mutators at: index
 		]
 	].
-
+	
+	"in case the coin is too high is because the lucky one is the last one"
 	lastIndex := probabilities size.
 
 	^ mutators last
@@ -156,6 +164,7 @@ UmeMOPTMutatorSelector >> updateProbabilities [
 	totalEffectiveness := 0.0.
 	targetProbabilities := Array new: probabilities size.
 
+	"recreate the the targetProbabilities based on their effectiveness"
 	(1 to: probabilities size) do: [ :i | | sel success effectiveness |
 		sel := selectionCounts at: i.
 		success := successCounts at: i.
@@ -169,21 +178,26 @@ UmeMOPTMutatorSelector >> updateProbabilities [
 
 	sum := 0.0.
 	(1 to: probabilities size) do: [ :i | | target velocity newProb |
+		"upadte the velocity of each one"
 		target := targetProbabilities at: i.
 		velocity := velocities at: i.
 		velocity := (omega * velocity) + (phi * random next * (target - (probabilities at: i))).
 		velocities at: i put: velocity.
+		
+		"re compute the probability of each one"
 		newProb := (probabilities at: i) + velocity.
 		newProb := newProb max: 0.0.
 		probabilities at: i put: newProb.
 		sum := sum + newProb
 	].
 
-	probabilities :=  (sum > 0 ifTrue: [
+	"reassign the probabolity to uniform them based on the current total sum"
+	probabilities :=  ((sum > 0) ifTrue: [
 		probabilities collect: [ :p | p / sum ] ] ifFalse: [
 		probabilities collect: [ :_ | 1.0 / probabilities size ].
 	]).
 
+	"restart the success and selection counters"
 	(1 to: selectionCounts size) do: [ :i |
 		selectionCounts at: i put: 0.
 		successCounts at: i put: 0
