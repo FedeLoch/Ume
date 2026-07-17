@@ -17,6 +17,13 @@ UmePersesShrinker >> ddmin: tree node: node upperBound: bound [
 UmePersesShrinker >> ddminPlus: tree node: node upperBound: bound [ 
 ]
 
+{ #category : 'initialization' }
+UmePersesShrinker >> initialize [ 
+
+	super initialize.
+	workList := Heap sortBlock: [ :node1 :node2 | node1 treeHeight < node2 treeHeight ] 
+]
+
 { #category : 'shrinking' }
 UmePersesShrinker >> minimizeOne: tree upperBound: bound [
 
@@ -25,11 +32,24 @@ UmePersesShrinker >> minimizeOne: tree upperBound: bound [
 	best := tree.
 	workList add: tree parent. 
 	workList isEmpty whileFalse: [ 
-		| largest |
+		| largest pending |
 		largest := workList removeFirst.
-		" case by case reduction here " ].
+		" case by case reduction here 
+		if Kleene:
+		pending := self reduceKleene
+		else: 
+		pending := self reduceRegular"
+		workList add pending
+	].
 	
 	^ best
+]
+
+{ #category : 'shrinking' }
+UmePersesShrinker >> reduceKleene: tree node: node upperBound: bound [ 
+
+		
+	
 ]
 
 { #category : 'shrinking' }
