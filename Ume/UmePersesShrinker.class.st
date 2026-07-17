@@ -24,7 +24,7 @@ UmePersesShrinker >> initialize [
 
 	super initialize.
 	candidates := Heap sortBlock: [ :node1 :node2 |
-		node1 treeHeight < node2 treeHeight
+		node1 treeHeight > node2 treeHeight
 	]
 ]
 
