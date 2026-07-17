@@ -9,14 +9,54 @@ Class {
 	#tag : 'Shrinking'
 }
 
+{ #category : 'as yet unclassified' }
+UmePersesShrinker >> ddmin: node upperBound: bound minSize: minSize [
+
+	| allChildren granularity currentNode |
+	
+	currentNode := node.
+	allChildren := node children.
+	granularity := 2.
+
+	[allChildren size >= minSize ] whileTrue: [ | start subsetLength someComplementFailing |
+		start := 0.
+		subsetLength := allChildren size // granularity.
+		someComplementFailing := false.
+		[ start < allChildren size ] whileTrue: [ | complement savedChildren |
+			self minimizationDone.
+			complement := self getComplement: allChildren start: start length: subsetLength .
+			savedChildren := node children copy.
+			node children: complement.
+			
+			(self triggerBug: currentNode root upperBound: bound ) ifTrue: [
+				allChildren := complement.
+				granularity := (granularity -1) max: 2.
+				someComplementFailing := true.
+				start := allChildren size.
+			] ifFalse: [
+				node children: savedChildren.
+				self failedMinimization.
+				start := start + subsetLength
+			]
+		].
+		
+		someComplementFailing ifFalse: [ 
+			(granularity = allChildren size) ifTrue:[ ^ allChildren ].
+			granularity := (granularity*2) min: allChildren size
+		 ]
+	]
+]
+
 { #category : 'shrinking' }
 UmePersesShrinker >> getComplement: input start: start length: subsetLength [
 
-	| complement |
-	complement := (input copyFrom: 1 to: start) , 
-                 (input copyFrom: (start + subsetLength + 1 min: input size + 1) to: input size).
+	^ (input copyFrom: 1 to: start), (input copyFrom: (start + subsetLength + 1 min: input size + 1) to: input size)
+]
 
-	^ complement. 
+{ #category : 'shrinking' }
+UmePersesShrinker >> grammar: aGrammar [
+
+	super grammar: (aGrammar asPNF)
 ]
 
 { #category : 'initialization' }
@@ -36,10 +76,10 @@ UmePersesShrinker >> minimizeOne: givenTree upperBound: bound [
 	best := self tree: givenTree asInput.
 	candidates add: best.
 	
-	[ candidates isNotEmpty ] whileTrue: [ | node |
-		node := candidates removeFirst.
-		self reduceNode: node upperBound: bound.
-		node children do: [ :child | candidates add: child ]
+	[ candidates isNotEmpty ] whileTrue: [ | largerNode |
+		largerNode := candidates removeFirst.
+		self reduceNode: largerNode upperBound: bound.
+		largerNode children do: [ :child | candidates add: child ]
 	].
 	
 	^ best
@@ -63,79 +103,13 @@ UmePersesShrinker >> reduceNode: node upperBound: bound [
 { #category : 'as yet unclassified' }
 UmePersesShrinker >> reduceOptional: node upperBound: bound [
 
-	| allChildren granularity currentNode |
-	
-	currentNode := node.
-	allChildren := node children.
-	granularity := 2.  
-
-	[allChildren size > 0 ] whileTrue: [ | start subsetLength someComplementFailing |
-		start:= 0.
-		subsetLength := allChildren size // granularity.
-		someComplementFailing := false.
-		[ start < allChildren size ] whileTrue: [ | complement savedChildren |
-			self minimizationDone.
-			complement := self getComplement: allChildren start: start length: subsetLength .
-			savedChildren := node children copy.
-			node children: complement.
-			
-			(self triggerBug: currentNode root upperBound: bound ) ifTrue: [ "here we want to test it for the entire tree"
-				allChildren := complement.
-				granularity := (granularity -1) max: 2.
-				someComplementFailing := true.
-				start := allChildren size.
-			] ifFalse: [
-				node children: savedChildren.
-				self failedMinimization.
-				start := start + subsetLength
-			]
-		].
-		
-		someComplementFailing ifFalse: [ 
-			(granularity = allChildren size) ifTrue:[
-				^ allChildren ].
-			granularity := (granularity*2) min: allChildren size.
-		 ]
-	]
+	^ self reduceStar: node upperBound: bound
 ]
 
 { #category : 'as yet unclassified' }
 UmePersesShrinker >> reducePlus: node upperBound: bound [
 
-	| allChildren granularity currentNode |
-	
-	currentNode := node.
-	allChildren := node children.
-	granularity := 2.  
-
-	[allChildren size > 1 ] whileTrue: [ | start subsetLength someComplementFailing |
-		start:= 0.
-		subsetLength := allChildren size // granularity.
-		someComplementFailing := false.
-		[ start < allChildren size ] whileTrue: [ | complement savedChildren |
-			self minimizationDone.
-			complement := self getComplement: allChildren start: start length: subsetLength .
-			savedChildren := node children copy.
-			node children: complement.
-			
-			(self triggerBug: currentNode root upperBound: bound ) ifTrue: [ "here we want to test it for the entire tree"
-				allChildren := complement.
-				granularity := (granularity -1) max: 2.
-				someComplementFailing := true.
-				start := allChildren size.
-			] ifFalse: [
-				node children: savedChildren.
-				self failedMinimization.
-				start := start + subsetLength
-			]
-		].
-		
-		someComplementFailing ifFalse: [ 
-			(granularity = allChildren size) ifTrue:[
-				^ allChildren ].
-			granularity := (granularity*2) min: allChildren size.
-		 ]
-	]
+	^ self ddmin: node upperBound: bound minSize: 1
 ]
 
 { #category : 'shrinking' }
@@ -151,44 +125,11 @@ UmePersesShrinker >> reduceRegular: node upperBound: bound [
 { #category : 'as yet unclassified' }
 UmePersesShrinker >> reduceStar: node upperBound: bound [
 
-	| allChildren granularity currentNode |
-	
-	currentNode := node.
-	allChildren := node children.
-	granularity := 2.  
-
-	[allChildren size > 0 ] whileTrue: [ | start subsetLength someComplementFailing |
-		start:= 0.
-		subsetLength := allChildren size // granularity.
-		someComplementFailing := false.
-		[ start < allChildren size ] whileTrue: [ | complement savedChildren |
-			self minimizationDone.
-			complement := self getComplement: allChildren start: start length: subsetLength .
-			savedChildren := node children copy.
-			node children: complement.
-			
-			(self triggerBug: currentNode root upperBound: bound ) ifTrue: [ "here we want to test it for the entire tree"
-				allChildren := complement.
-				granularity := (granularity -1) max: 2.
-				someComplementFailing := true.
-				start := allChildren size.
-			] ifFalse: [
-				node children: savedChildren.
-				self failedMinimization.
-				start := start + subsetLength
-			]
-		].
-		
-		someComplementFailing ifFalse: [ 
-			(granularity = allChildren size) ifTrue:[
-				^ allChildren ].
-			granularity := (granularity*2) min: allChildren size.
-		 ]
-	]
+	^ self ddmin: node upperBound: bound minSize: 0
 ]
 
 { #category : 'shrinking' }
 UmePersesShrinker >> shouldStop: minimized size: size from: currentTree size: currentSize [
 
-	1 halt.
+	^ minimized asInput = currentTree asInput
 ]
