@@ -4,17 +4,23 @@
 # Launches Pharo experiments in parallel, each downloading its own environment.
 
 scripts=(
-    "run-microdown-grammar-derivations.st"
-    "run-microdown-grammar-literals.st"
-    "run-microdown-stochastic-base.st"
-    "run-microdown-weighted-grammar-base.st"
+    "run-graph-grammar-derivations.st"
+    "run-graph-grammar-literals.st"
+    "run-graph-stochastic-base.st"
+    "run-graph-weighted-grammar-base.st"
+    "run-graph-weighted-scheduling.st"
+    "run-graph-random-scheduling.st"
+    "run-graph-mopt-scheduling.st"
 )
 
 folders=(
-    "microdown-grammar-derivations"
-    "microdown-grammar-literals"
-    "microdown-stochastic-base"
-    "microdown-weighted-grammar-base"
+    "graph-grammar-derivations"
+    "graph-grammar-literals"
+    "graph-stochastic-base"
+    "graph-weighted-grammar-base"
+    "graph-weighted-scheduling"
+    "graph-random-scheduling"
+    "graph-mopt-scheduling"
 )
 
 BASE_DIR="$(pwd)"

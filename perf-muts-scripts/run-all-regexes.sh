@@ -8,6 +8,9 @@ scripts=(
     "run-regexes-grammar-literals.st"
     "run-regexes-stochastic-base.st"
     "run-regexes-weighted-grammar-base.st"
+    "run-regexes-weighted-scheduling.st"
+    "run-regexes-random-scheduling.st"
+    "run-regexes-mopt-scheduling.st"
 )
 
 folders=(
@@ -15,6 +18,9 @@ folders=(
     "regexes-grammar-literals"
     "regexes-stochastic-base"
     "regexes-weighted-grammar-base"
+    "regexes-weighted-scheduling"
+    "regexes-random-scheduling"
+    "regexes-mopt-scheduling"
 )
 
 BASE_DIR="$(pwd)"
