@@ -6,6 +6,12 @@ Class {
 	#tag : 'Selector Heuristics'
 }
 
+{ #category : 'accessing' }
+UmeRandomMutatorSelector >> mutatorWeights [ 
+
+	^ corpusGenerator mutators collect: #weight
+]
+
 { #category : 'enumerating' }
 UmeRandomMutatorSelector >> selectMutator: mutators [
 

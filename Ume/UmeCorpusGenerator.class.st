@@ -37,8 +37,6 @@ UmeCorpusGenerator >> feed: feedback [
 	mutators do: [ :mutator | mutator feed: feedback ].
 	mutatorSelector feed: feedback.
 	
-	self updateWeight: feedback.
-	
 	((feedback notNil) and: [ feedback isPositive or: [ corpus isEmpty ] ]) ifTrue: [
 		self addToCorpus: feedback
 	]
@@ -90,6 +88,12 @@ UmeCorpusGenerator >> initialize [
 ]
 
 { #category : 'as yet unclassified' }
+UmeCorpusGenerator >> lastSelectedMutator [
+
+	^ lastSelectedMutator
+]
+
+{ #category : 'as yet unclassified' }
 UmeCorpusGenerator >> minimizeCorpus [
 
 	self feedbacks: (UmeUnweightedMinimizer new minimize: feedbacks).
@@ -115,8 +119,8 @@ UmeCorpusGenerator >> mutate: seed [
 UmeCorpusGenerator >> mutationMetadata [
 
 	^ {
-		'selectedMutatorIndex' -> (mutators indexOf: lastSelectedMutator).
-		'mutatorWeights' -> (mutators collect: #weight)
+		'selectedMutatorIndex' -> (mutatorSelector lastSelectedIndex).
+		'mutatorWeights' -> (mutatorSelector mutatorWeights)
 	} asDictionary
 ]
 
@@ -135,7 +139,14 @@ UmeCorpusGenerator >> mutationsPerIteration: count [
 { #category : 'as yet unclassified' }
 UmeCorpusGenerator >> mutatorSelector: aMutatorSelector [
 
-	mutatorSelector := aMutatorSelector 
+	aMutatorSelector corpusGenerator: self.
+	mutatorSelector := aMutatorSelector
+]
+
+{ #category : 'as yet unclassified' }
+UmeCorpusGenerator >> mutators [
+
+	^ mutators
 ]
 
 { #category : 'as yet unclassified' }
@@ -176,14 +187,4 @@ UmeCorpusGenerator >> seeds: someSeeds [
 UmeCorpusGenerator >> selectMutator [
 
 	^ mutatorSelector selectMutator: mutators
-]
-
-{ #category : 'as yet unclassified' }
-UmeCorpusGenerator >> updateWeight: feedback [
-
-	(lastSelectedMutator isNil or: [ feedback isNil ]) ifTrue: [ ^ nil ].
-
-	feedback isPositive
-		ifTrue: [ lastSelectedMutator increaseWeight ]
-		ifFalse: [ lastSelectedMutator decreaseWeight ]
 ]

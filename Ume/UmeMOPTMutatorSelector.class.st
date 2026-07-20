@@ -54,6 +54,18 @@ UmeMOPTMutatorSelector >> initializeProbabilities: mutators [
 ]
 
 { #category : 'accessing' }
+UmeMOPTMutatorSelector >> lastSelectedIndex [
+
+	^ lastIndex
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> mutatorWeights [
+
+	^ probabilities"selectionCounts"
+]
+
+{ #category : 'accessing' }
 UmeMOPTMutatorSelector >> omega [
 
 	^ omega
