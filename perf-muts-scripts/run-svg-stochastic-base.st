@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #DataFrameExperiment) run: 'combined-grammar-mutators'.
+(Smalltalk at: #SVGExperiment) run: 'stochastic-base'.

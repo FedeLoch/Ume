@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #NeoJSONPerfMetricsExperiment) run
+(Smalltalk at: #SVGExperiment) run: 'grammar-derivations'.

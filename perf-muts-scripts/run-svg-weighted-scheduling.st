@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #DataFramePerfMetricsExperiment) run
+(Smalltalk at: #SVGExperiment) run: 'weighted-scheduling'.

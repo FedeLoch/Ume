@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #MicrodownExperiment) run: 'grammar-derivations'.
+(Smalltalk at: #GraphExperiment) run: 'random-scheduling'.

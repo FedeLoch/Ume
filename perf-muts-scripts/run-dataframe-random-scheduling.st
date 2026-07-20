@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #NeoJSONExperiment) run: 'grammar-derivations'.
+(Smalltalk at: #DataFrameExperiment) run: 'random-scheduling'.

@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #NeoJSONExperiment) run: 'stochastic-base'.
+(Smalltalk at: #DataFrameExperiment) run: 'mopt-scheduling'.

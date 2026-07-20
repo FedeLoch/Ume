@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #RegexPerfMetricsExperiment) run
+(Smalltalk at: #SVGExperiment) run: 'mopt-scheduling'.

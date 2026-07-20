@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #NeoJSONExperiment) run: 'combined-grammar-mutators'.
+(Smalltalk at: #GraphExperiment) run: 'grammar-derivations'.

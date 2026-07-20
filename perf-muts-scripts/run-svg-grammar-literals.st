@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #NeoJSONExperiment) run: 'grammar-literals'.
+(Smalltalk at: #SVGExperiment) run: 'grammar-literals'.

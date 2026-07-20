@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #NeoJSONExperiment) run: 'weighted-grammar-base'.
+(Smalltalk at: #GraphExperiment) run: 'weighted-grammar-base'.

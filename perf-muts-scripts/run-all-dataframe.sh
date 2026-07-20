@@ -8,6 +8,9 @@ scripts=(
     "run-dataframe-grammar-literals.st"
     "run-dataframe-stochastic-base.st"
     "run-dataframe-weighted-grammar-base.st"
+    "run-dataframe-weighted-scheduling.st"
+    "run-dataframe-random-scheduling.st"
+    "run-dataframe-mopt-scheduling.st"
 )
 
 folders=(
@@ -15,6 +18,9 @@ folders=(
     "dataframe-grammar-literals"
     "dataframe-stochastic-base"
     "dataframe-weighted-grammar-base"
+    "dataframe-weighted-scheduling"
+    "dataframe-random-scheduling"
+    "dataframe-mopt-scheduling"
 )
 
 BASE_DIR="$(pwd)"

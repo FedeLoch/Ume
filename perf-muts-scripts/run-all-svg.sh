@@ -4,17 +4,23 @@
 # Launches Pharo experiments in parallel, each downloading its own environment.
 
 scripts=(
-    "run-regexes-combined-mutators.st"
-    "run-json-combined-mutators.st"
-    "run-microdown-combined-mutators.st"
-    "run-dataframe-combined-mutators.st"
+    "run-svg-grammar-derivations.st"
+    "run-svg-grammar-literals.st"
+    "run-svg-stochastic-base.st"
+    "run-svg-weighted-grammar-base.st"
+    "run-svg-weighted-scheduling.st"
+    "run-svg-random-scheduling.st"
+    "run-svg-mopt-scheduling.st"
 )
 
 folders=(
-    "regexes-combined-mutators"
-    "json-combined-mutators"
-    "microdown-combined-mutators"
-    "dataframe-combined-mutators"
+    "svg-grammar-derivations"
+    "svg-grammar-literals"
+    "svg-stochastic-base"
+    "svg-weighted-grammar-base"
+    "svg-weighted-scheduling"
+    "svg-random-scheduling"
+    "svg-mopt-scheduling"
 )
 
 BASE_DIR="$(pwd)"

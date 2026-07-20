@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #MicrodownExperiment) run: 'stochastic-base'.
+(Smalltalk at: #GraphExperiment) run: 'stochastic-base'.

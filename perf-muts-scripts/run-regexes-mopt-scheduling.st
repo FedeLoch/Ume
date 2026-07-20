@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #RegexExperiment) run: 'combined-grammar-mutators'.
+(Smalltalk at: #RegexExperiment) run: 'mopt-scheduling'.

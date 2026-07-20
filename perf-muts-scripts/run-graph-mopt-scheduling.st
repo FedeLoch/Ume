@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #MicrodownPerfMetricsExperiment) run
+(Smalltalk at: #GraphExperiment) run: 'mopt-scheduling'.
