@@ -90,12 +90,11 @@ UmeResult >> exportAsCSV: fileName [
 			writer nextPut: {
 					test time asMicroseconds.
 					test feedback improvement.
-					test feedback receiverMutationMetadata asString.
+					NeoJSONWriter toString: (test feedback receiverMutationMetadata)
 			}, (argumentsSize timesCollect: [ :i |
-				(test feedback argumentsMutationMetadata at: i) asString
+				NeoJSONWriter toString: (test feedback argumentsMutationMetadata at: i)
 			])
 		] ]
-			
 ]
 
 { #category : 'as yet unclassified' }
