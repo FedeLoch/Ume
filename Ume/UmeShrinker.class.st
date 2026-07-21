@@ -152,7 +152,7 @@ UmeShrinker >> profiledShrink: input [
 	^ {
 		'originalInput' -> input.
 		'minimizedInput' -> minimizedInput.
-		'totalTime' -> ((Duration microSeconds: totalTime) "asString").
+		'totalTime' -> (Duration microSeconds: totalTime).
 		'neededReductions' -> reductionsDone asFloat.
 		'failedReductions' -> failedReductionsDone asFloat.
 		'%problemPreservation' -> (self percentageProblemPreservation: upperBound given: minimizedBound).
