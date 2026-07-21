@@ -18,33 +18,26 @@ UmeShrinkingBenchmarkReport >> add: result for: shrinkerClass [
 { #category : 'as yet unclassified' }
 UmeShrinkingBenchmarkReport >> asPlots: section [ 
 
-	| plt p x y |
+	| plt p |
 	plt := RSCompositeChart new.
 	
-	results do: [ :res | 
-		x := 1 to: res size. 
-		y := self collectResult: res for: section.
-		p := RSLinePlot new x: x y: y.
+	results do: [ :data | 
+		p := RSLinePlot new x: ( 1 to: data size ) y: ( self collectResult: data for: section ).
 		plt add: p
 		].
 
-	plt xlabel: 'test number'.
-	plt ylabel: section.
-	plt title: section, ' benchmark'."
-	plt verticalTick integer numberOfTicks: 1."
-	
-	plt build.
+	plt xlabel: 'test number';
+	ylabel: section;
+	title: section, 'Benchmark';
+	build.
+
 	^ plt
 ]
 
 { #category : 'as yet unclassified' }
 UmeShrinkingBenchmarkReport >> collectResult: result for: section [
 
-	| res |
-	res := OrderedCollection new. 
-	result do: [ :r | res add: (r at: section) ].
-	^ res. 
-	
+	^ result collect: [ :r | r at: section ]
 ]
 
 { #category : 'adding' }
