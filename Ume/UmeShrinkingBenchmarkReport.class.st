@@ -18,20 +18,46 @@ UmeShrinkingBenchmarkReport >> add: result for: shrinkerClass [
 { #category : 'as yet unclassified' }
 UmeShrinkingBenchmarkReport >> asPlots: section [ 
 
-	| plt p |
-	plt := RSCompositeChart new.
+	| plt p colors |
+	plt := RSChart new.
+	colors := { Color blue . Color red . Color green . Color orange . Color purple . Color cyan }.
 	
-	results do: [ :data | 
+	results doWithIndex: [ :data :index | 
 		p := RSLinePlot new x: ( 1 to: data size ) y: ( self collectResult: data for: section ).
+		p color: (colors atWrap: index).
+		p marker: (RSEllipse new size: 4; color: (colors atWrap: index)).
 		plt add: p
-		].
+	].
 
 	plt xlabel: 'test number';
 	ylabel: section;
-	title: section, 'Benchmark';
+	title: section, ' benchmark';
 	build.
 
-	^ plt
+	self buildLegend: plt with: section palette: colors. 
+
+	^ plt canvas 
+]
+
+{ #category : 'as yet unclassified' }
+UmeShrinkingBenchmarkReport >> buildLegend: plot with: section palette: colors [
+	
+	| legend |
+	
+	legend := RSLegend new.
+	legend container: plot canvas;
+	title: 'Legend'.
+	
+	results doWithIndex: [ :data :index |
+		| name |
+		name := (results keyAtValue: data) asString.
+		legend text: name withBoxColor: (colors atWrap: index)
+	].
+	
+   legend legendDo: [ :l | 
+        l withBorder; padding: 10 ].
+    legend location right; middle; offset: 10@0.
+    legend build.
 ]
 
 { #category : 'as yet unclassified' }
