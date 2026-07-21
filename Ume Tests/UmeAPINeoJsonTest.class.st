@@ -17,7 +17,7 @@ UmeAPINeoJsonTest >> setUp [
 	| mutator generator|
 	super setUp.
 	
-	mutator := UmeGrammarDerivationMutator  from: JSONGrammar new.
+	mutator := UmeGrammarDerivationMutator from: JSONGrammar new.
 	mutator maxInputSize: 30.
 
 	"Corpus-based generator starts with a seed and evolves it."

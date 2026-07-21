@@ -83,7 +83,7 @@ UmeCorpusGenerator >> initialize [
 	corpus := OrderedCollection new.
 	feedbacks := OrderedCollection new.
 	seeds := OrderedCollection new.
-	mutatorSelector := UmeWeightedMutatorSelector new.
+	mutatorSelector := UmeWeightedMutatorSelector new corpusGenerator: self.
 	iteration := 0
 ]
 
