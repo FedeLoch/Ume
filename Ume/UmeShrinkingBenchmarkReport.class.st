@@ -63,6 +63,9 @@ UmeShrinkingBenchmarkReport >> buildLegend: plot with: section palette: colors [
 { #category : 'as yet unclassified' }
 UmeShrinkingBenchmarkReport >> collectResult: result for: section [
 
+	( section = 'totalTime' ) ifTrue: [ 
+		^ result collect: [ :r | (r at: section) asMicroseconds ]  ].
+	
 	^ result collect: [ :r | r at: section ]
 ]
 
@@ -100,7 +103,7 @@ UmeShrinkingBenchmarkReport >> plotProblemPreservation [
 { #category : 'as yet unclassified' }
 UmeShrinkingBenchmarkReport >> plotTotalTime [
 
-	^ (self asPlots: 'totalTime') open
+	^ (self asPlots: 'totalTime' ) open
 ]
 
 { #category : 'as yet unclassified' }
