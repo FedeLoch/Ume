@@ -18,21 +18,34 @@ UmeShrinkingBenchmarkReport >> add: result for: shrinkerClass [
 { #category : 'as yet unclassified' }
 UmeShrinkingBenchmarkReport >> asPlots: section [ 
 
-	| plt p colors |
+	| plt p colors count |
 	plt := RSChart new.
 	colors := { Color blue . Color red . Color green . Color orange . Color purple . Color cyan }.
 	
-	results doWithIndex: [ :data :index | 
-		p := RSLinePlot new x: ( 1 to: data size ) y: ( self collectResult: data for: section ).
-		p color: (colors atWrap: index).
+	count := results size.
+	colors := (1 to: count) collect: [ :i | 
+        Color 
+            h: ((i - 1) * 360 / (count max: 1))
+            s: 0.75
+            v: 0.85
+    ].
+	
+	results doWithIndex: [ :data :index |
+		p := RSLinePlot new x: ( 1 to: data size ) y: (self collectResult: data for: section).
+		p color: (colors at: index).
 		p marker: (RSEllipse new size: 4; color: (colors atWrap: index)).
 		plt add: p
 	].
 
 	plt xlabel: 'test number';
-	ylabel: section;
-	title: section, ' benchmark';
-	build.
+	yLog; 
+	ylabel: section, ' (log)';
+	title: section, ' benchmark'.
+	
+	plt horizontalTick numberOfTicks: ((results anyOne size) min: 10).
+	plt horizontalTick labelConversion: [ :val | val rounded ].
+
+	plt build.
 
 	self buildLegend: plt with: section palette: colors. 
 
@@ -51,11 +64,11 @@ UmeShrinkingBenchmarkReport >> buildLegend: plot with: section palette: colors [
 	results doWithIndex: [ :data :index |
 		| name |
 		name := (results keyAtValue: data) asString.
-		legend text: name withBoxColor: (colors atWrap: index)
+		legend text: name withBoxColor: (colors at: index)
 	].
 	
-   legend legendDo: [ :l | 
-        l withBorder; padding: 10 ].
+   legend legendDo: [ :legendName | 
+        legendName withBorder; padding: 10 ].
     legend location right; middle; offset: 10@0.
     legend build.
 ]
@@ -64,9 +77,9 @@ UmeShrinkingBenchmarkReport >> buildLegend: plot with: section palette: colors [
 UmeShrinkingBenchmarkReport >> collectResult: result for: section [
 
 	( section = 'totalTime' ) ifTrue: [ 
-		^ result collect: [ :r | (r at: section) asMicroseconds ]  ].
+		^ result collect: [ :aResultAssociation | (aResultAssociation at: section) asMicroseconds ]  ].
 	
-	^ result collect: [ :r | r at: section ]
+	^ result collect: [ :aResultAssociation | aResultAssociation at: section ]
 ]
 
 { #category : 'adding' }
