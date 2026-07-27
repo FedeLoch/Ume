@@ -1,7 +1,13 @@
-Object subclass: #UmePNFConverter
-	#instanceVariableNames: 'grammarMap startName ntCounter'
-	#category : 'Ume-PNF'
-	#package : 'Ume'
+Class {
+	#name : 'UmePNFConverter',
+	#superclass : 'Object',
+	#instVars : [
+		'grammarMap',
+		'startName',
+		'ntCounter'
+	],
+	#category : 'Ume-PNF',
+	#package : 'Ume',
 	#tag : 'PNF'
 }
 
