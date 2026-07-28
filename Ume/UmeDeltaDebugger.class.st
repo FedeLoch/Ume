@@ -22,7 +22,7 @@ UmeDeltaDebugger >> getComplement: input start: start length: subsetLength [
 	complement := (input copyFrom: 1 to: start) , 
                  (input copyFrom: (start + subsetLength + 1 min: input size + 1) to: input size).
 
-	^ complement. 
+	^ complement 
 ]
 
 { #category : 'testing' }
@@ -84,7 +84,7 @@ UmeDeltaDebugger >> sizeOf: string [
 { #category : 'shrinking' }
 UmeDeltaDebugger >> tree: aString [
 
-	^ aString. 
+	^ aString
 ]
 
 { #category : 'shrinking' }

@@ -17,39 +17,18 @@ UmeHDDShrinker >> getComplement: input start: start length: subsetLength [
 	complement := (input copyFrom: 1 to: start) , 
                  (input copyFrom: (start + subsetLength + 1 min: input size + 1) to: input size).
 
-	^ complement. 
+	^ complement 
 ]
 
 { #category : 'shrinking' }
-UmeHDDShrinker >> hddmin: tree upperBound: bound level: level [
-	
-		| candidates |
-
-		candidates := tree allNodesAtLevel: level.
-		(candidates size <= 1) ifTrue: [ ^ nil ].
-		
-		1 to: (candidates size) do: [ :k |
-			candidates combinations: k atATimeDo: [ :toMinimize |
-				(seen includes: toMinimize) ifFalse: [ 
-					seen add: toMinimize.
-					self minimizationDone.
-					(self hddmin: tree withSubset: toMinimize bound: bound) ifTrue: [ ^ nil ] ifFalse: [
-						self failedMinimization.
-					]
-				]
-			]
-		]
-]
-
-{ #category : 'shrinking' }
-UmeHDDShrinker >> hddmin: tree withSubset: toMinimize bound: bound [
+UmeHDDShrinker >> hddmin: tree removeNodes: nodesToRemove bound: bound [
 
 	| reduced parents |
 	
 	reduced := false.
 	parents := Dictionary new.
 
-	toMinimize do: [ :node | | parent |
+	nodesToRemove do: [ :node | | parent |
 		parent := node parent.
 		parent ifNotNil: [
 			"saving parents with original children to revert later"
@@ -71,6 +50,42 @@ UmeHDDShrinker >> hddmin: tree withSubset: toMinimize bound: bound [
 	].
 	
 	^ reduced
+]
+
+{ #category : 'shrinking' }
+UmeHDDShrinker >> hddmin: tree upperBound: bound level: level [
+	
+		| candidates granularity |
+
+		candidates := tree allNodesAtLevel: level.
+		(candidates size <= 1) ifTrue: [ ^ nil ].
+		granularity := 2.
+		
+		[ granularity <= candidates size ] whileTrue: [ 
+			| start subsetLength someComplementFailing |
+			start := 0.
+			subsetLength := (candidates size // granularity) max: 1.
+			someComplementFailing := false.
+			[ start < candidates size ] whileTrue: [ | complement nodesToRemove |
+				self minimizationDone.
+				complement := self getComplement: candidates start: start length: subsetLength .
+				nodesToRemove := candidates reject: [ :node | complement includes: node ].
+				(self hddmin: tree removeNodes: nodesToRemove bound: bound) ifTrue: [ 
+					candidates := complement.
+					granularity := (granularity -1) max: 2.
+					someComplementFailing := true.
+					start := candidates size.
+				] ifFalse: [
+					self failedMinimization.
+					start := start + subsetLength.
+				]
+			].
+			someComplementFailing ifFalse: [
+				granularity = candidates size ifTrue: [ ^ nil ].
+				granularity := (granularity * 2) min: candidates size 
+			].
+		].
+
 ]
 
 { #category : 'shrinking' }
