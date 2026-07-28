@@ -11,10 +11,20 @@ Class {
 }
 
 { #category : 'shrinking' }
+UmeHDDShrinker >> getComplement: input start: start length: subsetLength [
+
+	| complement |
+	complement := (input copyFrom: 1 to: start) , 
+                 (input copyFrom: (start + subsetLength + 1 min: input size + 1) to: input size).
+
+	^ complement. 
+]
+
+{ #category : 'shrinking' }
 UmeHDDShrinker >> hddmin: tree upperBound: bound level: level [
 	
 		| candidates |
-		
+
 		candidates := tree allNodesAtLevel: level.
 		(candidates size <= 1) ifTrue: [ ^ nil ].
 		
@@ -77,10 +87,11 @@ UmeHDDShrinker >> minimizeOne: originalTree upperBound: bound [
 
 	tree := self tree: originalTree asInput.
 
-	currentLevel := tree treeHeight - 1.
-   [ currentLevel >= 1 ] whileTrue: [ 
+	currentLevel := 1.
+	
+   [ currentLevel <= tree treeHeight ] whileTrue: [ 
 		self hddmin: tree upperBound: bound level: currentLevel.		
-		currentLevel := currentLevel - 1.
+		currentLevel := currentLevel + 1.
 	].
 
 	^ tree
