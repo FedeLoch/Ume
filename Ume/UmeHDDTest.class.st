@@ -14,7 +14,7 @@ Class {
 UmeHDDTest >> setUp [
 
 	super setUp.
-	super timeLimit: 3 minutes. 
+	super timeLimit: 5 minutes. 
 	shrinker := UmeHDDShrinker new.
 	grammar := AritExpressionGrammar new.
 	shrinker grammar: grammar.

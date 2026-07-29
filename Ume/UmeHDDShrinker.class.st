@@ -14,12 +14,10 @@ Class {
 { #category : 'shrinking' }
 UmeHDDShrinker >> currentChildrenAssociations: tree atLevel: level [
 
-	^ (tree allNodesAtLevel: level)
-		inject: Dictionary new
-		into: [ :dict :child |
-				child parent ifNotNil: [
-					dict at: child parent ifAbsentPut: child parent children copy ].
-				dict ]
+	^ (tree allNodesAtLevel: level) inject: Dictionary new into: [ :dict :child |
+			child parent ifNotNil: [ dict at: child parent ifAbsentPut: child parent children copy ].
+			dict
+		]
 ]
 
 { #category : 'shrinking' }
