@@ -22,8 +22,23 @@ UmeVulcanShrinker >> mainReducer: aReducer [
 ]
 
 { #category : 'shrinking' }
-UmeVulcanShrinker >> minimizeOne: tree upperBound: bound [
+UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 
+	| minTree index attemps prevByMain |
+	
+	minTree := originalTree.
+	index := 0.
+	attemps := 0.
+	
+	prevByMain := minTree.
+	minTree := self reduce: minTree.
+	[ minTree treeSize < prevByMain treeSize ] ifTrue: [
+		attemps := 0.
+		prevByMain := minTree 
+	 ].
+	[ (minTree = prevByMain) and: index < self auxiliaryReducers size ] whileTrue: [ 
+		minTree := self reduce: minTree at: index. 
+		 ]
 ]
 
 { #category : 'accessing' }
