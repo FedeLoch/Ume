@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeDeltaDebugger',
+	#name : 'UmeDDShrinker',
 	#superclass : 'UmeShrinker',
 	#instVars : [
 		'splittingValue'
@@ -10,13 +10,13 @@ Class {
 }
 
 { #category : 'shrinking' }
-UmeDeltaDebugger >> asInput: aString [
+UmeDDShrinker >> asInput: aString [
 
 	^ aString
 ]
 
 { #category : 'testing' }
-UmeDeltaDebugger >> getComplement: input start: start length: subsetLength [
+UmeDDShrinker >> getComplement: input start: start length: subsetLength [
 
 	| complement |
 	complement := (input copyFrom: 1 to: start) , 
@@ -26,13 +26,13 @@ UmeDeltaDebugger >> getComplement: input start: start length: subsetLength [
 ]
 
 { #category : 'testing' }
-UmeDeltaDebugger >> initialize [ 
+UmeDDShrinker >> initialize [ 
 	
 	super initialize.
 ]
 
 { #category : 'shrinking' }
-UmeDeltaDebugger >> minimizeOne: aInput upperBound: bound [
+UmeDDShrinker >> minimizeOne: aInput upperBound: bound [
 
 	| currentInput granularity start subsetLength someComplementFailing |
 
@@ -69,26 +69,26 @@ UmeDeltaDebugger >> minimizeOne: aInput upperBound: bound [
 ]
 
 { #category : 'shrinking' }
-UmeDeltaDebugger >> shouldStop: minimized size: size from: current size: currentSize [
+UmeDDShrinker >> shouldStop: minimized size: size from: current size: currentSize [
 
 	^ minimized = current
 ]
 
 { #category : 'shrinking' }
-UmeDeltaDebugger >> sizeOf: string [
+UmeDDShrinker >> sizeOf: string [
 
 	^ string size
 
 ]
 
 { #category : 'shrinking' }
-UmeDeltaDebugger >> tree: aString [
+UmeDDShrinker >> tree: aString [
 
 	^ aString. 
 ]
 
 { #category : 'shrinking' }
-UmeDeltaDebugger >> triggerBug: tree upperBound: originalScore [
+UmeDDShrinker >> triggerBug: tree upperBound: originalScore [
 
 	|input|
 	

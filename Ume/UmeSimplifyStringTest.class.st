@@ -14,7 +14,7 @@ Class {
 UmeSimplifyStringTest >> setUp [
 
 	super setUp.
-	shrinker := UmeDeltaDebugger new.	
+	shrinker := UmeDDShrinker new.	
 	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $e) ]).
 
 ]
