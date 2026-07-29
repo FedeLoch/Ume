@@ -95,14 +95,13 @@ UmeHDDTest >> testHDDReducer08 [
 { #category : 'tests' }
 UmeHDDTest >> testHDDReducer09 [
 
-	| oracle res input |
+	| oracle input |
 	oracle := PerformanceOracle new evalBlock: [ :path | SVGRunner run: path ].
 	
 	shrinker oracle: oracle.
 	shrinker grammar: SvgPathGrammar new.
 	
 	input := 'm-.99,-.4,7-933.,03-.8 -319.9-.62449 -1742 -269 -747 -5 16.-132 21.04-55.9'.
-	res := shrinker shrink: input.
 	
-	self assert:  (shrinker shrink: input) size < (input size)
+	self assert: (shrinker shrink: input) size < (input size)
 ]

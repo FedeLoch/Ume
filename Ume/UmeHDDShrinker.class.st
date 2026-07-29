@@ -61,6 +61,7 @@ UmeHDDShrinker >> hddmin: tree upperBound: bound level: level [
 			trigger
 		]).
 		
+		"DDMIN classic"
 		minimized := self ddmin: candidates upperBound: bound.
 
 		(candidates difference: minimized) do: [ :childToDelete | | parent |

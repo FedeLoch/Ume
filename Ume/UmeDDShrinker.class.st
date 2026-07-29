@@ -16,13 +16,14 @@ UmeDDShrinker >> asInput: aString [
 ]
 
 { #category : 'testing' }
-UmeDDShrinker >> getComplement: input start: start length: subsetLength [
+UmeDDShrinker >> getComplement: array start: start length: length [
 
-	| complement |
-	complement := (input copyFrom: 1 to: start) , 
-                 (input copyFrom: (start + subsetLength + 1 min: input size + 1) to: input size).
+	| firstSlice secondSlice |
 
-	^ complement. 
+	firstSlice := 1 to: start.
+	secondSlice := (start + length) to: array size.
+
+	^ (firstSlice collect: [ :i | array at: i ]), (secondSlice collect: [ :i | array at: i ]) 
 ]
 
 { #category : 'testing' }
@@ -43,14 +44,15 @@ UmeDDShrinker >> minimizeOne: aInput upperBound: bound [
 		start:= 0.
 		subsetLength := currentInput size // granularity.
 		someComplementFailing := false.
+		
 		[ start < currentInput size ] whileTrue: [ | complement |
 			self minimizationDone.
+
 			complement := self getComplement: currentInput start: start length: subsetLength .
-			(self triggerBug: complement upperBound: bound ) ifTrue: [ 
+			(self triggerBug: complement upperBound: bound ) ifTrue: [
 				currentInput := complement.
-				granularity := (granularity -1) max: 2.
+				granularity := (granularity - 1) max: 2.
 				someComplementFailing := true.
-				start := currentInput size.
 			] ifFalse: [
 				self failedMinimization.
 				start := start + subsetLength
@@ -58,9 +60,8 @@ UmeDDShrinker >> minimizeOne: aInput upperBound: bound [
 		].
 		
 		someComplementFailing ifFalse: [ 
-			(granularity = currentInput size) ifTrue:[
-				^ currentInput ].
-			granularity := (granularity*2) min: currentInput size.
+			(granularity = currentInput size) ifTrue:[ ^ currentInput ].
+			granularity := (granularity * 2) min: currentInput size.
 		 ]
 	].
 
