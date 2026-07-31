@@ -22,7 +22,7 @@ UmeMutatorSelector >> feed: feedback [
 
 	feedback isPositive
 		ifTrue: [ corpusGenerator lastSelectedMutator increaseWeight ]
-		ifFalse: [ corpusGenerator lastSelectedMutator decreaseWeight ]
+		ifFalse: [ "corpusGenerator lastSelectedMutator decreaseWeight" ] "We should not reduce the weight in negative case."
 ]
 
 { #category : 'accessing' }

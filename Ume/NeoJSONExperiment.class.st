@@ -4,9 +4,9 @@ DEPRECATED: DON'T CALL ME, IT'S NOT YOU, ITS ME.
 Class {
 	#name : 'NeoJSONExperiment',
 	#superclass : 'GrammarBasePathologicalBugMutatorPaperExperiment',
-	#category : 'Ume-Paper Experimentation',
+	#category : 'Ume-PerfUme Experimentation',
 	#package : 'Ume',
-	#tag : 'Paper Experimentation'
+	#tag : 'PerfUme Experimentation'
 }
 
 { #category : 'running' }

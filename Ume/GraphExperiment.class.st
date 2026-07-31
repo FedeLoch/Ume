@@ -1,9 +1,9 @@
 Class {
 	#name : 'GraphExperiment',
 	#superclass : 'GrammarBasePathologicalBugMutatorPaperExperiment',
-	#category : 'Ume-Paper Experimentation',
+	#category : 'Ume-PerfUme Experimentation',
 	#package : 'Ume',
-	#tag : 'Paper Experimentation'
+	#tag : 'PerfUme Experimentation'
 }
 
 { #category : 'running' }

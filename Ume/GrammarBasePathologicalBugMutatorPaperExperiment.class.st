@@ -6,9 +6,9 @@ Class {
 		'times',
 		'schemas'
 	],
-	#category : 'Ume-Paper Experimentation',
+	#category : 'Ume-PerfUme Experimentation',
 	#package : 'Ume',
-	#tag : 'Paper Experimentation'
+	#tag : 'PerfUme Experimentation'
 }
 
 { #category : 'as yet unclassified' }
@@ -98,7 +98,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralsSchema [
 GrammarBasePathologicalBugMutatorPaperExperiment >> initialize [ 
 
 	super initialize.
-	experimentTime := 1 hour.
+	experimentTime := 2 hour.
 	times := 20.
 	schemas := {
 		'weighted-grammar-base' -> self weightedGrammarSchema.
