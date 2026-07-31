@@ -14,6 +14,7 @@ Class {
 UmeHDDTest >> setUp [
 
 	super setUp.
+	super timeLimit: 5 minutes. 
 	shrinker := UmeHDDShrinker new.
 	grammar := AritExpressionGrammar new.
 	shrinker grammar: grammar.
@@ -89,4 +90,18 @@ UmeHDDTest >> testHDDReducer08 [
 	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $3) and: [(string includes: $1)] ]).
 	
 	self assert:  ( shrinker shrink: '1+(2*3)' ) equals: '13'
+]
+
+{ #category : 'tests' }
+UmeHDDTest >> testHDDReducer09 [
+
+	| oracle input |
+	oracle := PerformanceOracle new evalBlock: [ :path | SVGRunner run: path ].
+	
+	shrinker oracle: oracle.
+	shrinker grammar: SvgPathGrammar new.
+	
+	input := 'm-.99,-.4,7-933.,03-.8 -319.9-.62449 -1742 -269 -747 -5 16.-132 21.04-55.9'.
+	
+	self assert: (shrinker shrink: input) size < (input size)
 ]

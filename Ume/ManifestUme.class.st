@@ -36,3 +36,10 @@ ManifestUme class >> ruleUnoptimizedToDoRuleV1FalsePositive [
 	<ignoreForCoverage>
 	^ #(#(#(#RGMethodDefinition #(#UmeMOPTMutatorSelector #updateProbabilities #false)) #'2026-07-01T15:17:13.69196+02:00') #(#(#RGClassDefinition #(#UmeMOPTMutatorSelector)) #'2026-07-01T15:17:21.313483+02:00') )
 ]
+
+{ #category : 'code-critics' }
+ManifestUme class >> ruleWhileTrueRuleV1FalsePositive [
+
+	<ignoreForCoverage>
+	^ #(#(#(#RGMethodDefinition #(#UmeHDDShrinker #minimizeOne:upperBound: #false)) #'2026-07-29T11:28:29.575968+02:00') )
+]

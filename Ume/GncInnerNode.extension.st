@@ -78,8 +78,8 @@ GncInnerNode >> objectClass [
 { #category : '*Ume' }
 GncInnerNode >> removeChild: child [
 
-	children remove: child ifAbsent: [  Error signal: 'Trying to remove a wrong child' ] 
-
+	children remove: child ifAbsent: [  Error signal: 'Trying to remove a wrong child' ].
+	child parent: nil
 ]
 
 { #category : '*Ume' }
