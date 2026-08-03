@@ -51,7 +51,7 @@ UmeDDTest >> testString05 [
 
 	self
 		assert: (shrinker shrink: 'kjdsfhkjqsdhfehdkjsqfhkjsa')
-		equals: 'ae'
+		equals: 'ea'
 ]
 
 { #category : 'running' }

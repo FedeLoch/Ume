@@ -2,8 +2,7 @@ Class {
 	#name : 'UmeDDShrinker',
 	#superclass : 'UmeShrinker',
 	#instVars : [
-		'splittingValue',
-		'seen'
+		'splittingValue'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -18,73 +17,80 @@ UmeDDShrinker >> asInput: aString [
 
 { #category : 'shrinking' }
 UmeDDShrinker >> candidateOf: cFail minus: cPass partition: n at: i [
+
 	| delta elements from to j |
-
 	delta := cFail difference: cPass.
-	elements := delta asArray.
 	
-	j := (i - 1) max: 0.
+	elements := delta asArray.
 
-	from := ((j * elements size) // n) + 1.
-	to := (i * elements size) // n.
+	j := i - 1 max: 0.
 
-	^ elements copyFrom: from to: to
+	from := j * elements size // n + 1.
+	to := i * elements size // n.
+
+	^ (elements copyFrom: from to: to) asSet
 ]
 
 { #category : 'shrinking' }
 UmeDDShrinker >> ddmin2: cFail safe: cPass upperBound: bound granularity: n [
 	"Paper: https://www.cs.purdue.edu/homes/xyzhang/fall07/Papers/delta-debugging.pdf"
-	
-	| range deltaSize key |
-	
-	range := (0 to: n).
-	key := { cPass . n }.
-	
-	(seen includes: key) ifTrue: [ ^ { cPass . cFail } ].
-	(cFail size = 1) ifTrue: [ ^ { cPass . cFail } ].
-	
-	seen add: key.
-	
-	"reduce to subset"
-	range do: [ :i | | currentDelta |
-		currentDelta := cPass, (self candidateOf: cFail minus: cPass partition: n at: i). "TODO: do not repeat"
-		(self triggerBug: currentDelta upperBound: bound) ifTrue: [
-			^ self ddmin2: currentDelta safe: cPass upperBound: bound granularity: 2
-		]
-	].
 
-	"increase to complement"
-	range do: [ :i | | currentDelta |
-		currentDelta := cFail difference: (self candidateOf: cFail minus: cPass partition: n at: i).
-		(self triggerBug: currentDelta upperBound: bound) ifFalse: [ "Note the ifFalse"
-			^ self ddmin2: cFail safe: currentDelta upperBound: bound granularity: 2
-		]
-	].
+    | delta deltaSize partition range |
 
-	"increase to subset"
-	range do: [ :i | | currentDelta |
-		currentDelta := cPass, (self candidateOf: cFail minus: cPass partition: n at: i).
-		(self triggerBug: currentDelta upperBound: bound) ifFalse: [ "Note the ifFalse"
-			^ self ddmin2: cFail safe: currentDelta upperBound: bound granularity: ((n - 1) max: 2)
-		]
-	].
+    delta := cFail difference: cPass.
+    deltaSize := delta size.
 
-	"reduce to complement"
-	range do: [ :i | | currentDelta |
-		currentDelta := cFail difference: (self candidateOf: cFail minus: cPass partition: n at: i).
-		(self triggerBug: currentDelta upperBound: bound) ifTrue: [
-			^ self ddmin2: currentDelta safe: cPass upperBound: bound granularity: ((n - 1) max: 2)
-		]
-	].
+    deltaSize <= 1 ifTrue: [ ^ { cPass . cFail } ].
 
-	"increase granularity"
-	deltaSize := (cFail difference: cPass) size.
-	(n < deltaSize) ifTrue: [
-		^ self ddmin2: cFail safe: cPass upperBound: bound granularity: ((2 * n) min: deltaSize)
-	].
+    partition := (n max: 2) min: deltaSize.
+    range := 1 to: partition.
 
-	"done!"
-	^ { cPass . cFail }
+    "Reduce to subset"
+    range do: [ :i | | deltaI current |
+        deltaI := self candidateOf: cFail minus: cPass partition: partition at: i.
+        current := cPass union: deltaI.
+
+        (self triggerBug: current upperBound: bound) ifTrue: [
+            ^ self ddmin2: current safe: cPass upperBound: bound granularity: 2
+        ]
+    ].
+
+    "Increase to complement"
+    range do: [ :i | | deltaI current |
+        deltaI := self candidateOf: cFail minus: cPass partition: partition at: i.
+        current := cFail difference: deltaI.
+
+        (self triggerBug: current upperBound: bound) ifFalse: [
+            ^ self ddmin2: cFail safe: current upperBound: bound granularity: 2
+        ]
+    ].
+
+    "Increase to subset"
+    range do: [ :i | | deltaI current |
+        deltaI := self candidateOf: cFail minus: cPass partition: partition at: i.
+        current := cPass union: deltaI.
+
+        (self triggerBug: current upperBound: bound) ifFalse: [
+            ^ self ddmin2: cFail safe: current upperBound: bound granularity: ((partition - 1) max: 2)
+        ]
+    ].
+
+    "Reduce to complement"
+    range do: [ :i | | deltaI current |
+        deltaI := self candidateOf: cFail minus: cPass partition: partition at: i.
+        current := cFail difference: deltaI.
+
+        (self triggerBug: current upperBound: bound) ifTrue: [
+            ^ self ddmin2: current safe: cPass upperBound: bound granularity: ((partition - 1) max: 2)
+        ]
+    ].
+
+    "Increase granularity"
+    partition < deltaSize ifTrue: [
+        ^ self ddmin2: cFail safe: cPass upperBound: bound granularity: ((2 * partition) min: deltaSize)
+    ].
+
+    ^ { cPass . cFail }
 ]
 
 { #category : 'testing' }
@@ -92,13 +98,6 @@ UmeDDShrinker >> getComplement: array start: start length: length [
 	
 	^ (array copyFrom: 1 to: start), 
      (array copyFrom: (start + 1 + length min: array size + 1) to: array size)
-]
-
-{ #category : 'testing' }
-UmeDDShrinker >> initialize [ 
-	
-	super initialize.
-	seen := Set new.
 ]
 
 { #category : 'shrinking' }
@@ -152,8 +151,6 @@ UmeDDShrinker >> minimizeOneOld: aInput upperBound: bound [
 UmeDDShrinker >> minimizeOnePaper: cFail upperBound: bound [
 	
 	| resultPair |
-	
-	seen := Set new.
 	
 	"First is the safe array subset"
 	"Second is the minimum array subset taht triggers the bug"
