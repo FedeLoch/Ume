@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'mainReducer',
 		'auxiliaryReducers',
-		'windowSize'
+		'windowSize',
+		'limit'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -37,19 +38,29 @@ UmeVulcanShrinker >> generateProperSubsetsOf: nodeSet [
 ]
 
 { #category : 'accessing' }
+UmeVulcanShrinker >> identifierRemplacement: aTree bound: bound [
+
+	| shrinker |
+	
+	shrinker := UmeGRABRShrinker new.
+	shrinker grammar: grammar; oracle: oracle; reductionStrategy: UmeSimplifyGrammarAlternateReduction.
+	
+	^ shrinker minimizeOne: aTree upperBound: bound 
+]
+
+{ #category : 'accessing' }
 UmeVulcanShrinker >> initialize [
 
 	super initialize.
-	auxiliaryReducers add: UmeSimplifyGrammarSubtreeReducer new. 
-	auxiliaryReducers add: UmeSimplifyGrammarSubtreeReducer new. 
-	
-	windowSize := 4. 
+	windowSize := 4.
+	limit := 5.  
 ]
 
 { #category : 'accessing' }
 UmeVulcanShrinker >> mainReducer: aReducer [
 
-	mainReducer := aReducer 
+	mainReducer := aReducer.
+	mainReducer grammar: grammar. 
 ]
 
 { #category : 'shrinking' }
@@ -58,43 +69,65 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 	| minTree index attemps prevByMain |
 	
 	minTree := originalTree.
-	index := 0.
+	index := 1.
 	attemps := 0.
-	
 	prevByMain := minTree.
-	minTree := self reduce: minTree.
-	
-	[ minTree treeSize < prevByMain treeSize ] ifTrue: [
+	minTree := self reduce: minTree bound: bound.
+	( minTree treeSize < prevByMain treeSize ) ifTrue: [
 		attemps := 0.
 		prevByMain := minTree 
 	 ].
-
-	[ (minTree = prevByMain) and: index < self auxiliaryReducers size ] whileTrue: [ 
-		minTree := self reduce: minTree at: index. 
-		 ].
 	
-	[ minTree treeSize < prevByMain treeSize ] ifTrue: [ 
+	[ (minTree = prevByMain) and: [ index <= 3] ] whileTrue: [ 
+		minTree := self reduce: minTree at: index with: bound.
+		attemps := attemps + 1.
+		( minTree treeSize = prevByMain treeSize ) ifTrue: [ 
+		index := index + 1.
 		attemps := 0.
-	] ifFalse: [ 
+		] 
+	].
+	
+	( minTree treeSize < prevByMain treeSize ) ifTrue: [ 
+		attemps := 0.
+	]. 
+
+	( attemps > limit ) ifTrue: [ 
 		index := index + 1.
 		attemps := 0.
 	].
-
-	[ index >= auxiliaryReducers size ] ifTrue: [ ^ minTree ]
+    
+    ^ minTree
 ]
 
 { #category : 'accessing' }
-UmeVulcanShrinker >> reduce: aTree [
+UmeVulcanShrinker >> oracle: aOracle [
 
+	super oracle: aOracle.
+	mainReducer oracle: aOracle
 ]
 
 { #category : 'accessing' }
-UmeVulcanShrinker >> reduce: aTree at: index [ 
+UmeVulcanShrinker >> reduce: aTree at: index with: bound [
 
+	( index = 1 ) ifTrue: [ ^ self subtreeReplacement: aTree bound: bound ].
+	( index = 2 ) ifTrue: [ ^ self identifierRemplacement: aTree bound: bound ].
+	( index = 3 ) ifTrue: [ ^ self treeBasedLEE: aTree bound: bound ]
+]
+
+{ #category : 'accessing' }
+UmeVulcanShrinker >> reduce: aTree bound: bound [
+
+	^ mainReducer minimizeOne: aTree upperBound: bound 
 ]
 
 { #category : 'accessing' }
 UmeVulcanShrinker >> removeNodes: subsetToRemove fromTree: aTree [
+
+	subsetToRemove do: [ :node |
+		node parent ifNotNil: [ :p | p removeChild: node ].
+	].
+
+	^ aTree
 ]
 
 { #category : 'accessing' }
@@ -108,6 +141,17 @@ UmeVulcanShrinker >> shouldStop: minimized size: size from: current size: curren
 
 	^ minimized = current
 	
+]
+
+{ #category : 'accessing' }
+UmeVulcanShrinker >> subtreeReplacement: aTree bound: bound [
+
+	| shrinker |
+	
+	shrinker := UmeGRABRShrinker new.
+	shrinker grammar: grammar; oracle: oracle; reductionStrategy: UmeSimplifyGrammarSubtreeReducer.
+	
+	^ shrinker minimizeOne: aTree upperBound: bound 
 ]
 
 { #category : 'accessing' }
@@ -128,15 +172,29 @@ UmeVulcanShrinker >> treeBasedLEE: aTree bound: bound [
 
 	1 to: (nodeSequence size - windowSize +1 ) do: [ :windowPosition | 
 		| nodeSet properSubsets |
-		nodeSet := nodeSequence copyFrom: windowPosition to: (windowPosition + windowPosition - 1).
+		nodeSet := nodeSequence copyFrom: windowPosition to: (windowPosition + windowSize - 1).
 		properSubsets := self generateProperSubsetsOf: nodeSet.
 		properSubsets do: [ :subsetToRemove |
-			| candidateTree |
-			candidateTree := self removeNodes: subsetToRemove fromTree: t.
-			(self triggerBug: candidateTree upperBound: bound ) ifTrue: [ 
-				^ candidateTree
-			] 
-		]
+			| backup  |
+			backup := Dictionary new. 
+			subsetToRemove do: [ :node |
+				node parent ifNotNil: [ :p |
+					backup at: p ifAbsentPut: [ p children copy ].
+				] 
+			].
+			subsetToRemove do: [ :node |
+				node parent ifNotNil: [ :p | p removeChild: node ]. 
+			].
+			(self triggerBug: t upperBound: bound ) ifTrue: [ 
+				^ t
+			].
+			backup associationsDo: [ :parentAndchildren |
+				| parent children |
+				parent := parentAndchildren key.
+				children := parentAndchildren value
+				parent children: children.
+			]
+		].
 	].
 
 	^ t
