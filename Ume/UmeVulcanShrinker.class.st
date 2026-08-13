@@ -54,13 +54,13 @@ UmeVulcanShrinker >> identifierRemplacement: aTree bound: bound [
 UmeVulcanShrinker >> initialize [
 
 	super initialize.
+	
 	mainReducer := UmeHDDShrinker new. 
 	windowSize := 4.
-	limit := 5.  
+	limit := 100.  
 	
 	subtreeShrinker := UmeGRABRShrinker new.
 	subtreeShrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer.
-	
 	identidierShrinker := UmeGRABRShrinker new.
 	identidierShrinker reductionStrategy: UmeSimplifyGrammarAlternateReduction .
 ]
@@ -81,38 +81,29 @@ UmeVulcanShrinker >> mainReducer: aReducer [
 { #category : 'shrinking' }
 UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 
-	| minimum index attempts prevByMain |
-	
+	| minimum index prevByMain originalSize |
 	minimum := originalTree.
-	index := 1.
-	attempts := 0.
 	prevByMain := nil.
+	index := 1.
 	
 	[ true ] whileTrue: [ 
+		originalSize := minimum treeSize. 
 		prevByMain := minimum.
 		minimum := self reduce: minimum bound: bound.
 		( minimum treeSize < prevByMain treeSize ) ifTrue: [
-		attempts := 0.
-		prevByMain := minimum 
+			index := 1.
+			prevByMain := minimum 
 	 	].
 		[ (minimum treeSize = prevByMain treeSize ) and: [ index <= 3] ] whileTrue: [ 
 			minimum := self reduce: minimum at: index with: bound.
-			attempts := attempts + 1.
 			( minimum treeSize = prevByMain treeSize ) ifTrue: [ 
 				index := index + 1.
-				attempts := 0.
+			] ifFalse: [ 
+				index := 1.
 			]
 		].
-		( minimum treeSize < prevByMain treeSize ) ifTrue: [ 
-			attempts := 0.
-		] ifFalse: [
-			(attempts > limit) ifTrue: [
-				index := index +1.
-				attempts := 0
-			].
-		].
 
-		(index > 3 ) ifTrue: [ ^ minimum ].
+		(originalSize = minimum treeSize ) ifTrue: [ ^ minimum ].
 	].
 	
 ]
