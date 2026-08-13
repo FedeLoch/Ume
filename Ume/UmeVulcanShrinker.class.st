@@ -5,7 +5,9 @@ Class {
 		'mainReducer',
 		'auxiliaryReducers',
 		'windowSize',
-		'limit'
+		'limit',
+		'subtreeShrinker',
+		'identidierShrinker'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -16,12 +18,6 @@ Class {
 UmeVulcanShrinker >> asInput: tree [
 
 	^ tree asInput
-]
-
-{ #category : 'accessing' }
-UmeVulcanShrinker >> auxiliaryReducers [
-
-	^ auxiliaryReducers 
 ]
 
 { #category : 'accessing' }
@@ -38,22 +34,39 @@ UmeVulcanShrinker >> generateProperSubsetsOf: nodeSet [
 ]
 
 { #category : 'accessing' }
+UmeVulcanShrinker >> grammar: aGrammar [
+
+	grammar := aGrammar.
+	mainReducer grammar: aGrammar.
+	subtreeShrinker grammar: aGrammar.
+	identidierShrinker grammar: aGrammar
+]
+
+{ #category : 'accessing' }
 UmeVulcanShrinker >> identifierRemplacement: aTree bound: bound [
 
-	| shrinker |
-	
-	shrinker := UmeGRABRShrinker new.
-	shrinker grammar: grammar; oracle: oracle; reductionStrategy: UmeSimplifyGrammarAlternateReduction.
-	
-	^ shrinker minimizeOne: aTree upperBound: bound 
+	^ identidierShrinker minimizeOne: aTree upperBound: bound 
 ]
 
 { #category : 'accessing' }
 UmeVulcanShrinker >> initialize [
 
 	super initialize.
+	mainReducer := UmeHDDShrinker new. 
 	windowSize := 4.
 	limit := 5.  
+	
+	subtreeShrinker := UmeGRABRShrinker new.
+	subtreeShrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer.
+	
+	identidierShrinker := UmeGRABRShrinker new.
+	identidierShrinker reductionStrategy: UmeSimplifyGrammarAlternateReduction .
+]
+
+{ #category : 'accessing' }
+UmeVulcanShrinker >> limit: aNumber [
+
+	limit := aNumber 
 ]
 
 { #category : 'accessing' }
@@ -102,8 +115,10 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 { #category : 'accessing' }
 UmeVulcanShrinker >> oracle: aOracle [
 
-	super oracle: aOracle.
-	mainReducer oracle: aOracle
+	oracle := aOracle.
+	mainReducer oracle: aOracle.
+	subtreeShrinker oracle: aOracle.
+	identidierShrinker oracle: aOracle
 ]
 
 { #category : 'accessing' }
@@ -146,12 +161,8 @@ UmeVulcanShrinker >> shouldStop: minimized size: size from: current size: curren
 { #category : 'accessing' }
 UmeVulcanShrinker >> subtreeReplacement: aTree bound: bound [
 
-	| shrinker |
-	
-	shrinker := UmeGRABRShrinker new.
-	shrinker grammar: grammar; oracle: oracle; reductionStrategy: UmeSimplifyGrammarSubtreeReducer.
-	
-	^ shrinker minimizeOne: aTree upperBound: bound 
+	^ subtreeShrinker minimizeOne: aTree upperBound: bound 
+
 ]
 
 { #category : 'accessing' }
