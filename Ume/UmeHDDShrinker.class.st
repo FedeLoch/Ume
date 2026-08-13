@@ -3,7 +3,8 @@ Class {
 	#superclass : 'UmeGrammarShrinker',
 	#instVars : [
 		'ddMin',
-		'seen'
+		'seen',
+		'ddmin'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -11,56 +12,62 @@ Class {
 }
 
 { #category : 'shrinking' }
-UmeHDDShrinker >> hddmin: tree upperBound: bound level: level [
-	
-		| candidates |
-		
-		candidates := tree allNodesAtLevel: level.
-		(candidates size <= 1) ifTrue: [ ^ nil ].
-		
-		1 to: (candidates size) do: [ :k |
-			candidates combinations: k atATimeDo: [ :toMinimize |
-				(seen includes: toMinimize) ifFalse: [ 
-					seen add: toMinimize.
-					self minimizationDone.
-					(self hddmin: tree withSubset: toMinimize bound: bound) ifTrue: [ ^ nil ] ifFalse: [
-						self failedMinimization.
-					]
-				]
-			]
+UmeHDDShrinker >> currentChildrenAssociations: tree atLevel: level [
+
+	^ (tree allNodesAtLevel: level) inject: Dictionary new into: [ :dict :child |
+			child parent ifNotNil: [ dict at: child parent ifAbsentPut: child parent children copy ].
+			dict
 		]
 ]
 
 { #category : 'shrinking' }
-UmeHDDShrinker >> hddmin: tree withSubset: toMinimize bound: bound [
+UmeHDDShrinker >> ddmin: candidates upperBound: bound [
 
-	| reduced parents |
+	^ ddmin minimizeOne: candidates upperBound: bound
+]
+
+{ #category : 'testing' }
+UmeHDDShrinker >> grammar: aGrammar [
+
+	super grammar: aGrammar.
+	ddmin grammar: aGrammar
+]
+
+{ #category : 'shrinking' }
+UmeHDDShrinker >> hddmin: tree upperBound: bound level: level [
 	
-	reduced := false.
-	parents := Dictionary new.
-
-	toMinimize do: [ :node | | parent |
-		parent := node parent.
-		parent ifNotNil: [
-			"saving parents with original children to revert later"
-			parents at: parent ifAbsentPut: [ parent children copy ].
-			parent removeChild: node
-		]
-	].
-
-	reduced := self triggerBug: tree upperBound: bound.
+		| candidates minimized currentChildren |
+		
+		candidates := tree allNodesAtLevel: level.
+		(candidates size <= 1) ifTrue: [ ^ nil ].
+		
+		currentChildren := self currentChildrenAssociations: tree atLevel: level.
 	
-	reduced ifFalse: [
-		parents associationsDo: [ :parentAndchildren | | parent children |
-			parent := parentAndchildren key.
-			children := parentAndchildren value. 
-			parent children: children.
+		ddmin oracle: (UmeBooleanInputOracle from: [ :possibleNewChilds | | toDelete trigger |
+			toDelete := candidates difference: possibleNewChilds.
+			toDelete do: [ :childToDelete | | parent |
+				parent := childToDelete parent.
+				parent ifNotNil: [ parent removeChild: childToDelete ]
+			].
+			
+			trigger := self triggerBug: tree upperBound: bound.
+			trigger ifFalse: [
+				currentChildren keysDo: [ :parent |
+					parent children: (OrderedCollection withAll: (currentChildren at: parent))
+				]
+			] ifTrue: [
+				currentChildren := self currentChildrenAssociations: tree atLevel: level.
+			].
+			trigger
+		]).
+		
+		"DDMIN classic"
+		minimized := self ddmin: candidates upperBound: bound.
+
+		(candidates difference: minimized) do: [ :childToDelete | | parent |
+			parent := childToDelete parent.
+			parent ifNotNil: [ parent removeChild: childToDelete ]
 		].
-	]"ifTrue: [
-		tree children: (self copyTree: tree) children
-	].".
-	
-	^ reduced
 ]
 
 { #category : 'shrinking' }
@@ -68,6 +75,7 @@ UmeHDDShrinker >> initialize [
 
 	super initialize.
 	seen := Set new.
+	ddmin := UmeDDCustomShrinker new caller: self.
 ]
 
 { #category : 'shrinking' }
@@ -84,6 +92,12 @@ UmeHDDShrinker >> minimizeOne: originalTree upperBound: bound [
 	].
 
 	^ tree
+]
+
+{ #category : 'shrinking' }
+UmeHDDShrinker >> oracle: anOracle [
+
+	super oracle: anOracle.
 ]
 
 { #category : 'shrinking' }

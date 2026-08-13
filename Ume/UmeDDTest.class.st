@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeSimplifyStringTest',
+	#name : 'UmeDDTest',
 	#superclass : 'UmeReductionShrinkerTest',
 	#instVars : [
 		'shrinker',
@@ -11,40 +11,40 @@ Class {
 }
 
 { #category : 'running' }
-UmeSimplifyStringTest >> setUp [
+UmeDDTest >> setUp [
 
 	super setUp.
-	shrinker := UmeDeltaDebugger new.	
+	shrinker := UmeDDShrinker new.	
 	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $e) ]).
 
 ]
 
 { #category : 'running' }
-UmeSimplifyStringTest >> testString [ 
+UmeDDTest >> testString [ 
 	
 	self assert: (shrinker shrink: 'asqjjkqsbdvieqvsbdoivbq') equals: 'e'
 ]
 
 { #category : 'running' }
-UmeSimplifyStringTest >> testString02 [
+UmeDDTest >> testString02 [
 
 	self assert: (shrinker shrink: 'e') equals: 'e'
 ]
 
 { #category : 'running' }
-UmeSimplifyStringTest >> testString03 [
+UmeDDTest >> testString03 [
 
 	self assert: (shrinker shrink: 'eq') equals: 'e'
 ]
 
 { #category : 'running' }
-UmeSimplifyStringTest >> testString04 [
+UmeDDTest >> testString04 [
 	
 	self assert: (shrinker shrink: 'eeeeeeeeeeeeeeeeeeeeeeeeee') equals: 'e'
 ]
 
 { #category : 'running' }
-UmeSimplifyStringTest >> testString05 [
+UmeDDTest >> testString05 [
 
 	shrinker oracle: (self oracleByBlock: [ :string |
 			 (string includes: $e) and: (string includes: $a) ]).
@@ -55,7 +55,7 @@ UmeSimplifyStringTest >> testString05 [
 ]
 
 { #category : 'running' }
-UmeSimplifyStringTest >> testString06 [
+UmeDDTest >> testString06 [
 	
 	shrinker oracle: (self oracleByBlock: [ :string | string includes: $3 ]).
 	
