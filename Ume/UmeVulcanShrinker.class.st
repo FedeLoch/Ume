@@ -31,6 +31,8 @@ UmeVulcanShrinker >> generateProperSubsetsOf: nodeSet [
 		newSubset := subsets collect: [  :each | each copyWith: node ].
 		subsets addAll: newSubset.
 	].
+
+	^ subsets
 ]
 
 { #category : 'accessing' }
@@ -79,37 +81,40 @@ UmeVulcanShrinker >> mainReducer: aReducer [
 { #category : 'shrinking' }
 UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 
-	| minTree index attemps prevByMain |
+	| minimum index attempts prevByMain |
 	
-	minTree := originalTree.
+	minimum := originalTree.
 	index := 1.
-	attemps := 0.
-	prevByMain := minTree.
-	minTree := self reduce: minTree bound: bound.
-	( minTree treeSize < prevByMain treeSize ) ifTrue: [
-		attemps := 0.
-		prevByMain := minTree 
-	 ].
+	attempts := 0.
+	prevByMain := nil.
 	
-	[ (minTree = prevByMain) and: [ index <= 3] ] whileTrue: [ 
-		minTree := self reduce: minTree at: index with: bound.
-		attemps := attemps + 1.
-		( minTree treeSize = prevByMain treeSize ) ifTrue: [ 
-		index := index + 1.
-		attemps := 0.
-		] 
-	].
-	
-	( minTree treeSize < prevByMain treeSize ) ifTrue: [ 
-		attemps := 0.
-	]. 
+	[ true ] whileTrue: [ 
+		prevByMain := minimum.
+		minimum := self reduce: minimum bound: bound.
+		( minimum treeSize < prevByMain treeSize ) ifTrue: [
+		attempts := 0.
+		prevByMain := minimum 
+	 	].
+		[ (minimum treeSize = prevByMain treeSize ) and: [ index <= 3] ] whileTrue: [ 
+			minimum := self reduce: minimum at: index with: bound.
+			attempts := attempts + 1.
+			( minimum treeSize = prevByMain treeSize ) ifTrue: [ 
+				index := index + 1.
+				attempts := 0.
+			]
+		].
+		( minimum treeSize < prevByMain treeSize ) ifTrue: [ 
+			attempts := 0.
+		] ifFalse: [
+			(attempts > limit) ifTrue: [
+				index := index +1.
+				attempts := 0
+			].
+		].
 
-	( attemps > limit ) ifTrue: [ 
-		index := index + 1.
-		attemps := 0.
+		(index > 3 ) ifTrue: [ ^ minimum ].
 	].
-    
-    ^ minTree
+	
 ]
 
 { #category : 'accessing' }
@@ -161,15 +166,16 @@ UmeVulcanShrinker >> shouldStop: minimized size: size from: current size: curren
 { #category : 'accessing' }
 UmeVulcanShrinker >> subtreeReplacement: aTree bound: bound [
 
-	^ subtreeShrinker minimizeOne: aTree upperBound: bound 
-
+	self minimizationDone.
+	
+	^ subtreeShrinker minimizeOne: aTree upperBound: bound.
 ]
 
 { #category : 'accessing' }
 UmeVulcanShrinker >> treeBasedLEE: aTree bound: bound [
 
 	| t level nodeSequence |
-
+	
 	t := aTree.
 	level := 0.
 	nodeSequence := { aTree root}. 
@@ -196,14 +202,15 @@ UmeVulcanShrinker >> treeBasedLEE: aTree bound: bound [
 			subsetToRemove do: [ :node |
 				node parent ifNotNil: [ :p | p removeChild: node ]. 
 			].
+			self minimizationDone.
 			(self triggerBug: t upperBound: bound ) ifTrue: [ 
 				^ t
 			].
+			self failedMinimization.
 			backup associationsDo: [ :parentAndchildren |
-				| parent children |
+				| parent |
 				parent := parentAndchildren key.
-				children := parentAndchildren value
-				parent children: children.
+				parent children: ( parentAndchildren value).
 			]
 		].
 	].
