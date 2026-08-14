@@ -6,15 +6,14 @@ Class {
 		'successCounts',
 		'updatePeriod',
 		'selectionCounter',
-		'omega',
-		'phi',
 		'random',
 		'maxProbability',
 		'minProbability',
 		'numberOfSwarms',
 		'swarms',
 		'lastMutatedSelector',
-		'pilotPhaseMax'
+		'pilotPhaseMax',
+		'inertia'
 	],
 	#category : 'Ume-Selector Heuristics',
 	#package : 'Ume',
@@ -41,6 +40,18 @@ UmeMOPTMutatorSelector >> feed: feedback [
 	]
 ]
 
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> inertia [
+
+	^ inertia
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> inertia: aFloat [
+
+	inertia := aFloat
+]
+
 { #category : 'initialization' }
 UmeMOPTMutatorSelector >> initialize [
 
@@ -48,8 +59,7 @@ UmeMOPTMutatorSelector >> initialize [
 	
 	numberOfSwarms := 10.
 	
-	omega := 0.72.
-	phi := 1.5.
+	inertia := 0.72.
 	updatePeriod := 100.
 	selectionCounter := 0.
 	successCounts := {}.
@@ -123,30 +133,6 @@ UmeMOPTMutatorSelector >> mutatorWeights [
 ]
 
 { #category : 'accessing' }
-UmeMOPTMutatorSelector >> omega [
-
-	^ omega
-]
-
-{ #category : 'accessing' }
-UmeMOPTMutatorSelector >> omega: aFloat [
-
-	omega := aFloat
-]
-
-{ #category : 'accessing' }
-UmeMOPTMutatorSelector >> phi [
-
-	^ phi
-]
-
-{ #category : 'accessing' }
-UmeMOPTMutatorSelector >> phi: aFloat [
-
-	phi := aFloat
-]
-
-{ #category : 'accessing' }
 UmeMOPTMutatorSelector >> random [
 
 	^ random
@@ -154,29 +140,24 @@ UmeMOPTMutatorSelector >> random [
 
 { #category : 'enumerating' }
 UmeMOPTMutatorSelector >> selectMutator: mutators [
-	"if the probabilities were not assigned, we initialize them uniformly"
 
 	| swarm isPilotPhase |
-	swarms isNil ifTrue: [ self initializeSwarms: mutators ].
+	swarms ifNil: [ self initializeSwarms: mutators ].
 
 	selectionCounter := selectionCounter + 1.
-	isPilotPhase := selectionCounter < pilotPhaseMax.
+	isPilotPhase := selectionCounter < (pilotPhaseMax * numberOfSwarms).
 	swarm := isPilotPhase
-		         ifTrue: [ "Pilot phase, we take the next swarm in round robin"
-			         swarms at: selectionCounter \\ numberOfSwarms + 1 ]
-		         ifFalse: [ "not in pilot phase anymore, use the best swarm"
-		         self bestSwarm ].
+		         ifTrue: [ "Pilot phase, we take the next swarm in round robin" swarms at: selectionCounter \\ numberOfSwarms + 1 ]
+		         ifFalse: [ "not in pilot phase anymore, use the best swarm" self bestSwarm ].
 
 	lastMutatedSelector := swarm selectMutatorFrom: mutators.
 
-	selectionCounts
-		at: lastMutatedSelector
-		put: (selectionCounts at: lastMutatedSelector) + 1.
+	selectionCounts at: lastMutatedSelector put: (selectionCounts at: lastMutatedSelector) + 1.
 
-	(isPilotPhase or: [selectionCounter \\ updatePeriod = 0]) ifTrue: [
-			swarm
-				updateProbabilitiesWithSuccesses: successCounts
-				onSelections: selectionCounts.
+	(selectionCounter \\ updatePeriod = 0) ifTrue: [
+		swarm updateProbabilitiesWithSuccesses: successCounts onSelections: selectionCounts ].
+
+	selectionCounter \\ updatePeriod = 0 ifTrue: [
 			1 to: mutators size do: [ :i |
 					selectionCounts at: i put: 0.
 					successCounts at: i put: 0 ] ].

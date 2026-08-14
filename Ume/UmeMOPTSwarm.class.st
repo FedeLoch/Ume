@@ -69,9 +69,9 @@ UmeMOPTSwarm >> probabilities [
 
 { #category : 'as yet unclassified' }
 UmeMOPTSwarm >> selectMutatorFrom: mutatorList [
-	"get the total probability sum"
 
 	| total roll cumulative |
+	"get the total probability sum"
 	total := probabilities sum.
 	"throw a coin"
 	roll := total * mopt random next.
@@ -95,23 +95,22 @@ UmeMOPTSwarm >> updateProbabilitiesWithSuccesses: localSuccesses onSelections: l
 
 	1 to: probabilities size do: [ :i |
 			| localSuccess localSelection localEfficiency |
-			
-			"Cumulate the total number of selections and successes of this swarm"
-			swarmSucccesses at: i put: (swarmSucccesses at: i) + (localSuccesses at: i).
-			swarmSelections at: i put: (swarmSelections at: i) + (localSelections at: i).		
-			
 			localSuccess := localSuccesses at: i.
 			localSelection := localSelections at: i.
+
+			"Cumulate the total number of selections and successes of this swarm"
+			swarmSucccesses at: i put: (swarmSucccesses at: i) + localSuccess.
+			swarmSelections at: i put: (swarmSelections at: i) + localSelection.		
+			
 			localEfficiency := localSelection = 0
 				                   ifTrue: [ 0 ]
 				                   ifFalse: [ localSuccess / localSelection ].
-			localEfficiencies at: i put: localEfficiency + 0.001.
+			localEfficiencies at: i put: localEfficiency.
 			totalLocalEfficiency := totalLocalEfficiency
-			                        + (localEfficiency + 0.001) ].
+			                        + localEfficiency ].
 
-	"Normalize efficiencies"
-	localEfficiencies := localEfficiencies collect: [ :p |
-		                     p / totalLocalEfficiency ].
+	"Normalize efficiencies if totalLocalEfficiency is not 0"
+	totalLocalEfficiency = 0 ifFalse: [ localEfficiencies :=  localEfficiencies collect: [ :p | p / totalLocalEfficiency ] ].
 
 	"Update the local best efficiencies and positions
 	We are going to use it to update the new velocicies"
@@ -126,8 +125,7 @@ UmeMOPTSwarm >> updateProbabilitiesWithSuccesses: localSuccesses onSelections: l
 			"update the velocity of each one"
 			localBestProbability := localBestProbabilities at: i.
 			velocity := velocities at: i.
-			velocity := mopt omega * velocity + (mopt phi * mopt random next
-			             * (localBestProbability - (probabilities at: i))).
+			velocity := mopt inertia * velocity + (mopt random next * (localBestProbability - (probabilities at: i))).
 			velocities at: i put: velocity.
 
 			"re compute the probability of each one"
