@@ -54,7 +54,7 @@ UmeVulcanShrinker >> cutTree: nodeSequence position: windowPosition bound: bound
 { #category : 'accessing' }
 UmeVulcanShrinker >> generateProperSubsetsOf: nodeSet [
 
-	" all possibilities "
+	^ nodeSet combinations: windowSize
 ]
 
 { #category : 'accessing' }
