@@ -45,7 +45,7 @@ UmeVulcanShrinker >> grammar: aGrammar [
 ]
 
 { #category : 'accessing' }
-UmeVulcanShrinker >> identifierRemplacement: aTree bound: bound [
+UmeVulcanShrinker >> identifierReplacement: aTree bound: bound [
 
 	^ identidierShrinker minimizeOne: aTree upperBound: bound 
 ]
@@ -83,13 +83,12 @@ UmeVulcanShrinker >> mainReducer: aReducer [
 UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 
 	| minimum index prevByMain originalSize |
-	minimum := originalTree.
+	minimum := self copyTree: originalTree.
 	prevByMain := nil.
 	index := 1.
-	
 	[ true ] whileTrue: [ 
 		originalSize := minimum treeSize. 
-		prevByMain := minimum.
+		prevByMain := self copyTree: minimum.
 		minimum := self reduce: minimum bound: bound.
 		( minimum treeSize < prevByMain treeSize ) ifTrue: [
 			index := 1.
@@ -99,11 +98,8 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 			minimum := self reduce: minimum at: index with: bound.
 			( minimum treeSize = prevByMain treeSize ) ifTrue: [ 
 				index := index + 1.
-			] ifFalse: [ 
-				index := 1.
 			]
 		].
-
 		(originalSize = minimum treeSize ) ifTrue: [ ^ minimum ].
 	].
 	
@@ -122,7 +118,7 @@ UmeVulcanShrinker >> oracle: aOracle [
 UmeVulcanShrinker >> reduce: aTree at: index with: bound [
 
 	( index = 1 ) ifTrue: [ ^ self subtreeReplacement: aTree bound: bound ].
-	( index = 2 ) ifTrue: [ ^ self identifierRemplacement: aTree bound: bound ].
+	( index = 2 ) ifTrue: [ ^ self identifierReplacement: aTree bound: bound ].
 	( index = 3 ) ifTrue: [ ^ self treeBasedLEE: aTree bound: bound ]
 ]
 
