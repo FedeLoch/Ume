@@ -47,7 +47,21 @@ UmeVulcanShrinker >> grammar: aGrammar [
 { #category : 'accessing' }
 UmeVulcanShrinker >> identifierReplacement: aTree bound: bound [
 
-	^ identidierShrinker minimizeOne: aTree upperBound: bound 
+	| allLeaf |
+	1 halt. 
+	allLeaf := OrderedCollection new.
+	aTree allNodes do: [ :node | (node isLeaf) ifTrue: [ allLeaf add: node ] ].
+	
+	allLeaf do: [ :leaf |
+		allLeaf do: [ :leafToReplace | 
+			aTree replaceChild: leafToReplace by: leaf.
+			(self triggerBug: aTree upperBound: bound) ifTrue: [
+				leaf parent: leafToReplace parent. 
+				^ aTree.
+			].
+			aTree replaceChild: leaf by: leafToReplace.
+		] 
+	]
 ]
 
 { #category : 'accessing' }

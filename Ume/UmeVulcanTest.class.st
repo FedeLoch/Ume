@@ -28,6 +28,15 @@ UmeVulcanTest >> testGrammarReducer00 [
 ]
 
 { #category : 'tests' }
+UmeVulcanTest >> testGrammarReducer01 [ 
+ 
+	shrinker grammar: AritExpressionGrammar new.
+	shrinker oracle: (self oracleByBlock: [ :string | string includesSubstring: '3' ]).
+		
+	self assert:  (shrinker shrink: '1+2*(2+3)' ) equals: '3'
+]
+
+{ #category : 'tests' }
 UmeVulcanTest >> testGrammarReducer02 [
 
 	| res |
@@ -55,4 +64,13 @@ UmeVulcanTest >> testGrammarReducer03 [
 	res := shrinker shrink: input.
 
 	self assert:  res size < (input size)
+]
+
+{ #category : 'tests' }
+UmeVulcanTest >> testGrammarReducer04 [
+ 
+	shrinker grammar: AritExpressionGrammar new.
+	shrinker oracle: (self oracleByBlock: [ :string | string includesSubstring: '2' ]).
+		
+	self assert:  (shrinker shrink: '1+2*(2+3)' ) equals: '2'
 ]

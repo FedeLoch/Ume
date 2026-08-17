@@ -203,10 +203,13 @@ UmeShrinker >> tree: input [
 { #category : 'testing' }
 UmeShrinker >> triggerBug: tree upperBound: originalScore [
 
-	|input|
+	| input |
 	
-	input := (self asInput: tree).
-	(self checkGrammar: input) ifFalse: [ ^ false ].
+	input := self asInput: tree.
 
-	^ oracle accepts: input from: originalScore
+	^ [
+		  (oracle accepts: input from: originalScore) and: [
+			  self checkGrammar: input ] ]
+		  on: Error
+		  do: [ :error | false ]
 ]
