@@ -121,11 +121,15 @@ UmeMOPTSwarm >> updateProbabilitiesWithSuccesses: localSuccesses onSelections: l
 
 	sum := 0.0.
 	1 to: probabilities size do: [ :i |
-			| localBestProbability velocity newProb |
+			| localBestProbability globalBestProbability velocity newProb randomValue currentProbability |
 			"update the velocity of each one"
 			localBestProbability := localBestProbabilities at: i.
+			globalBestProbability := mopt globalBestProbabilities at: i.
 			velocity := velocities at: i.
-			velocity := mopt inertia * velocity + (mopt random next * (localBestProbability - (probabilities at: i))).
+			randomValue := mopt random next.
+			currentProbability := (probabilities at: i).
+			velocity := mopt inertia * velocity + (randomValue * (localBestProbability - currentProbability))
+														+ (randomValue * (globalBestProbability - currentProbability)) .
 			velocities at: i put: velocity.
 
 			"re compute the probability of each one"
