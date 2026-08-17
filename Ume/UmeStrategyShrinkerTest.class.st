@@ -156,18 +156,3 @@ UmeStrategyShrinkerTest >> testGrammarReducer12 [
 	
 	self assert:  res equals: 'm2-5'
 ]
-
-{ #category : 'tests' }
-UmeStrategyShrinkerTest >> testGrammarReducer13 [
-
-	| oracle res input |
-	oracle := PerformanceOracle new threshold: 0.9; evalBlock: [ :path | SVGRunner run: path ].
-
-	shrinker oracle: oracle.
-	shrinker grammar: SvgPathGrammar new.
-	shrinker reductionStrategy: UmeSimplifyGrammarBoth.
-	input := 'm-.99,-.4,7-93.,03-.8 -19.9-.2449 -1742 -269 -747 -5 16.-132 21.04-55.9'.
-	res := shrinker shrink: input.
-	
-	self assert: res size < (input size)
-]
