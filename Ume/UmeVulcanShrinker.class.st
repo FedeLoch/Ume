@@ -20,6 +20,37 @@ UmeVulcanShrinker >> asInput: tree [
 	^ tree asInput
 ]
 
+{ #category : 'shrinking' }
+UmeVulcanShrinker >> cutTree: nodeSequence position: windowPosition bound: bound tree: tree [
+
+	| nodeSet properSubsets |
+				
+	nodeSet := nodeSequence copyFrom: windowPosition to: (windowPosition + windowSize - 1).
+	properSubsets := self generateProperSubsetsOf: nodeSet.
+	properSubsets do: [ :nodesToRemove |
+		| backup  |
+		backup := Dictionary new. 
+		nodesToRemove do: [ :node |
+			node parent ifNotNil: [ :p |
+				backup at: p ifAbsentPut: [ p children copy ].
+			] 
+		].
+	nodesToRemove do: [ :node |
+		node parent ifNotNil: [ :p | p removeChild: node ]. 
+	].
+	self minimizationDone.
+	(self triggerBug: tree upperBound: bound ) ifTrue: [ 
+		nodeSequence removeAll: nodesToRemove.  
+	].
+	self failedMinimization.
+	backup associationsDo: [ :parentAndchildren |
+		| parent |
+		parent := parentAndchildren key.
+		parent children: ( parentAndchildren value).
+	]	
+]
+]
+
 { #category : 'accessing' }
 UmeVulcanShrinker >> generateProperSubsetsOf: nodeSet [
 
@@ -187,11 +218,12 @@ UmeVulcanShrinker >> subtreeReplacement: aTree bound: bound [
 { #category : 'accessing' }
 UmeVulcanShrinker >> treeBasedLEE: aTree bound: bound [
 
-	| t level nodeSequence |
+	| t level nodeSequence maxReduction |
 	
 	t := aTree.
 	level := 0.
 	nodeSequence := { aTree root}. 
+	maxReduction := false. 
 	
 	[ nodeSequence size < windowSize and: [ nodeSequence isNotEmpty ] ] whileTrue: [
 		level := level + 1. 
@@ -200,37 +232,12 @@ UmeVulcanShrinker >> treeBasedLEE: aTree bound: bound [
 
 	nodeSequence size < windowSize ifTrue: [ ^ t ].
 
-	[true] whileTrue: [ | windowPosition |
-		windowPosition := 0.
-		( windowPosition + windowSize < nodeSequence size ) whileTrue: [ 
-			| nodeSet properSubsets |
-				nodeSet := nodeSequence copyFrom: windowPosition to: (windowPosition + windowSize - 1).
-				properSubsets := self generateProperSubsetsOf: nodeSet.
-				properSubsets do: [ :subsetToRemove |
-					| backup  |
-					backup := Dictionary new. 
-					subsetToRemove do: [ :node |
-						node parent ifNotNil: [ :p |
-						backup at: p ifAbsentPut: [ p children copy ].
-					] 
-				].
-				subsetToRemove do: [ :node |
-					node parent ifNotNil: [ :p | p removeChild: node ]. 
-				].
-				self minimizationDone.
-				(self triggerBug: t upperBound: bound ) ifTrue: [ 
-					^ t
-				].
-				self failedMinimization.
-				backup associationsDo: [ :parentAndchildren |
-					| parent |
-					parent := parentAndchildren key.
-					parent children: ( parentAndchildren value).
-				]	
-
-			 ]
+	[maxReduction] whileFalse: [ | windowPosition |
+		windowPosition := 1.
+		[ windowPosition + windowSize < nodeSequence size ] whileTrue: [ 
+			self cutTree: nodeSequence position: windowPosition bound: bound tree: t 
 		].
-		(nodeSequence allSatisfy: [ :node | node isLeaf ] ) ifTrue: [ ^ t ].
+		(nodeSequence allSatisfy: [ :node | node isLeaf ] ) ifTrue: [ maxReduction := true ].
 		level := level +1.
 		nodeSequence := t allNodesAtLevel: level
 	].
