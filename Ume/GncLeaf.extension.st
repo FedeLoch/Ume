@@ -37,6 +37,12 @@ GncLeaf >> isTypeVariable [
 ]
 
 { #category : '*Ume' }
+GncLeaf >> token [
+
+	^ token
+]
+
+{ #category : '*Ume' }
 GncLeaf >> varName [
 
 	^ token allButLast

@@ -67,10 +67,57 @@ UmeVulcanTest >> testGrammarReducer03 [
 ]
 
 { #category : 'tests' }
-UmeVulcanTest >> testGrammarReducer04 [
- 
+UmeVulcanTest >> testIdentifierReplacement04 [
+
+	| input bound tree | 
+
 	shrinker grammar: AritExpressionGrammar new.
 	shrinker oracle: (self oracleByBlock: [ :string | string includesSubstring: '2' ]).
-		
-	self assert:  (shrinker shrink: '1+2*(2+3)' ) equals: '2'
+	input := '1+2'.
+	tree := shrinker tree: input.
+	bound := shrinker evalInput: input.
+
+	self assert:  (shrinker identifierReplacement: tree bound: bound ) asInput equals: '2+2'
+]
+
+{ #category : 'tests' }
+UmeVulcanTest >> testIdentifierReplacement05 [
+
+	| input bound tree | 
+
+	shrinker grammar: AritExpressionGrammar new.
+	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $+) and: (string includes: $2) ]).
+	input := '1+2*3'.
+	tree := shrinker tree: input.
+	bound := shrinker evalInput: input.
+
+	self assert:  (shrinker identifierReplacement: tree bound: bound ) asInput equals: '2+2+2'
+]
+
+{ #category : 'tests' }
+UmeVulcanTest >> testIdentifierReplacement06 [
+
+	| input bound tree | 
+
+	shrinker grammar: SvgPathGrammar new.
+	shrinker oracle: (self oracleByBlock: [ :string | string includes: $5 ]).
+	input := 'm-.59,-.4,7-93.,03-.8'.
+	tree := shrinker tree: input.
+	bound := shrinker evalInput: input.
+
+	self assert:  (shrinker identifierReplacement: tree bound: bound ) asInput equals: 'm-.55,-.5,5-55.,55-.5'
+]
+
+{ #category : 'tests' }
+UmeVulcanTest >> testTreeBasedLEE07 [
+
+	| input bound tree | 
+
+	shrinker grammar: SvgPathGrammar new.
+	shrinker oracle: (self oracleByBlock: [ :string | string includes: $5 ]).
+	input := 'm-.59,-.4,7-93.,03-.8'.
+	tree := shrinker tree: input.
+	bound := shrinker evalInput: input.
+
+	self assert:  (shrinker treeBasedLEE: tree bound: bound ) asInput equals: 'm-.55,-.5'
 ]

@@ -41,27 +41,29 @@ UmeVulcanShrinker >> grammar: aGrammar [
 	grammar := aGrammar.
 	mainReducer grammar: aGrammar.
 	subtreeShrinker grammar: aGrammar.
-	identidierShrinker grammar: aGrammar
 ]
 
 { #category : 'accessing' }
 UmeVulcanShrinker >> identifierReplacement: aTree bound: bound [
 
 	| allLeaf |
-	1 halt. 
 	allLeaf := OrderedCollection new.
 	aTree allNodes do: [ :node | (node isLeaf) ifTrue: [ allLeaf add: node ] ].
 	
 	allLeaf do: [ :leaf |
 		allLeaf do: [ :leafToReplace | 
-			aTree replaceChild: leafToReplace by: leaf.
-			(self triggerBug: aTree upperBound: bound) ifTrue: [
-				leaf parent: leafToReplace parent. 
-				^ aTree.
-			].
-			aTree replaceChild: leaf by: leafToReplace.
-		] 
-	]
+			(leafToReplace parent tag == leaf parent tag) ifTrue: [ | previousToken |
+				previousToken := leafToReplace token.
+				leafToReplace token: leaf token.
+				( self triggerBug: aTree upperBound: bound ) ifFalse: [
+					leafToReplace token: previousToken.
+				]
+			]
+		]
+	].
+				
+				
+	^ aTree 
 ]
 
 { #category : 'accessing' }
@@ -70,14 +72,12 @@ UmeVulcanShrinker >> initialize [
 	super initialize.
 	
 	maxIterations := 1. 
-	mainReducer := UmeHDDShrinker new. 
 	windowSize := 4.
 	limit := 100.  
 	
+	mainReducer := UmeHDDShrinker new. 
 	subtreeShrinker := UmeGRABRShrinker new.
 	subtreeShrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer.
-	identidierShrinker := UmeGRABRShrinker new.
-	identidierShrinker reductionStrategy: UmeSimplifyGrammarAlternateReduction .
 ]
 
 { #category : 'accessing' }
@@ -96,16 +96,16 @@ UmeVulcanShrinker >> mainReducer: aReducer [
 { #category : 'shrinking' }
 UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 
-	| minimum index prevByMain originalSize |
+	| minimum index prevByMain |
+	
 	minimum := self copyTree: originalTree.
 	prevByMain := nil.
 	index := 1.
-	[ true ] whileTrue: [ 
-		originalSize := minimum treeSize. 
+	
+	[ true ] whileTrue: [
 		prevByMain := self copyTree: minimum.
 		minimum := self reduce: minimum bound: bound.
 		( minimum treeSize < prevByMain treeSize ) ifTrue: [
-			index := 1.
 			prevByMain := minimum 
 	 	].
 		[ (minimum treeSize = prevByMain treeSize ) and: [ index <= 3] ] whileTrue: [ 
@@ -114,7 +114,7 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 				index := index + 1.
 			]
 		].
-		(originalSize = minimum treeSize ) ifTrue: [ ^ minimum ].
+		(index >= 3 ) ifTrue: [ ^ minimum ].
 	].
 	
 ]
@@ -125,7 +125,6 @@ UmeVulcanShrinker >> oracle: aOracle [
 	oracle := aOracle.
 	mainReducer oracle: aOracle.
 	subtreeShrinker oracle: aOracle.
-	identidierShrinker oracle: aOracle
 ]
 
 { #category : 'accessing' }
