@@ -54,16 +54,7 @@ UmeVulcanShrinker >> cutTree: nodeSequence position: windowPosition bound: bound
 { #category : 'accessing' }
 UmeVulcanShrinker >> generateProperSubsetsOf: nodeSet [
 
-	| subsets |
-	
-	subsets := OrderedCollection new. 
-	nodeSet do: [  :node |
-		| newSubset |
-		newSubset := subsets collect: [  :each | each copyWith: node ].
-		subsets addAll: newSubset.
-	].
-
-	^ subsets
+	" all possibilities "
 ]
 
 { #category : 'accessing' }
@@ -182,16 +173,6 @@ UmeVulcanShrinker >> reduce: aTree at: index with: bound [
 UmeVulcanShrinker >> reduce: aTree bound: bound [
 
 	^ mainReducer minimizeOne: aTree upperBound: bound 
-]
-
-{ #category : 'accessing' }
-UmeVulcanShrinker >> removeNodes: subsetToRemove fromTree: aTree [
-
-	subsetToRemove do: [ :node |
-		node parent ifNotNil: [ :p | p removeChild: node ].
-	].
-
-	^ aTree
 ]
 
 { #category : 'accessing' }
