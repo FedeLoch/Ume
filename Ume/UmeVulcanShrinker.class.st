@@ -40,13 +40,16 @@ UmeVulcanShrinker >> cutTree: nodeSequence position: windowPosition bound: bound
 	].
 	self minimizationDone.
 	(self triggerBug: tree upperBound: bound ) ifTrue: [ 
-		nodeSequence removeAll: nodesToRemove.  
-	].
-	self failedMinimization.
-	backup associationsDo: [ :parentAndchildren |
-		| parent |
-		parent := parentAndchildren key.
-		parent children: ( parentAndchildren value).
+		nodeSequence removeAll: nodesToRemove. 
+		^ nodeSequence.
+	] ifFalse: [ 
+		self failedMinimization.
+		backup associationsDo: [ :parentAndchildren |
+			| parent |
+			parent := parentAndchildren key.
+			parent children: ( parentAndchildren value).
+			^ nodeSequence.  
+		]
 	]	
 ]
 ]
@@ -215,10 +218,12 @@ UmeVulcanShrinker >> treeBasedLEE: aTree bound: bound [
 
 	[maxReduction] whileFalse: [ | windowPosition |
 		windowPosition := 1.
-		[ windowPosition + windowSize < nodeSequence size ] whileTrue: [ 
-			self cutTree: nodeSequence position: windowPosition bound: bound tree: t 
+		[ windowPosition + windowSize < nodeSequence size ] whileTrue: [ | initialSeqSize |
+			initialSeqSize := nodeSequence size.
+			nodeSequence:= self cutTree: nodeSequence position: windowPosition bound: bound tree: t.
+			(initialSeqSize == nodeSequence size) ifTrue: [ windowPosition := windowPosition + 1 ]
 		].
-		(nodeSequence allSatisfy: [ :node | node isLeaf ] ) ifTrue: [ maxReduction := true ].
+		(nodeSequence allSatisfy: [ :node | node isLeaf ] ) ifTrue: [ ^ t ].
 		level := level +1.
 		nodeSequence := t allNodesAtLevel: level
 	].
