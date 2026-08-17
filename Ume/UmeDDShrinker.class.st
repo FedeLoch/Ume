@@ -110,19 +110,20 @@ UmeDDShrinker >> initialize [
 { #category : 'shrinking' }
 UmeDDShrinker >> minimizeOne: aInput upperBound: bound [
 
+	"^ self minimizeOneFuzzingBook: aInput upperBound: bound"
 	^ self minimizeOnePaper: aInput upperBound: bound
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> minimizeOneOld: aInput upperBound: bound [
+UmeDDShrinker >> minimizeOneFuzzingBook: aInput upperBound: bound [
 
-	"TODO: Deprecated!!!!"
+	"TODO: Fuzzing book implementation"
 	
 	| currentInput granularity start subsetLength someComplementFailing |
 
 	currentInput := aInput .
 	granularity := 2.
-	1 halt.
+	
 	[ currentInput isNotEmpty ] whileTrue: [
 		start:= 0.
 		subsetLength := currentInput size // granularity.
