@@ -23,34 +23,35 @@ UmeVulcanShrinker >> asInput: tree [
 { #category : 'shrinking' }
 UmeVulcanShrinker >> cutTree: nodeSequence position: windowPosition bound: bound tree: tree [
 
-	| nodeSet properSubsets |
+	| nodeSet properSubsets newNodeSequence |
 				
-	nodeSet := nodeSequence copyFrom: windowPosition to: (windowPosition + windowSize - 1).
+	newNodeSequence := nodeSequence copy.
+	nodeSet := newNodeSequence copyFrom: windowPosition to: (windowPosition + windowSize - 1).
 	properSubsets := self generateProperSubsetsOf: nodeSet.
-	properSubsets do: [ :nodesToRemove |
-		| backup  |
+	properSubsets do: [ :nodesToRemove | | backup  |
 		backup := Dictionary new. 
 		nodesToRemove do: [ :node |
 			node parent ifNotNil: [ :p |
 				backup at: p ifAbsentPut: [ p children copy ].
 			] 
 		].
+
 	nodesToRemove do: [ :node |
 		node parent ifNotNil: [ :p | p removeChild: node ]. 
 	].
+
 	self minimizationDone.
-	(self triggerBug: tree upperBound: bound ) ifTrue: [ 
-		nodeSequence removeAll: nodesToRemove. 
-		^ nodeSequence.
+	(self triggerBug: tree upperBound: bound) ifTrue: [ 
+		newNodeSequence removeAll: nodesToRemove. 
 	] ifFalse: [ 
 		self failedMinimization.
-		backup associationsDo: [ :parentAndchildren |
-			| parent |
+		backup associationsDo: [ :parentAndchildren | | parent |
 			parent := parentAndchildren key.
-			parent children: ( parentAndchildren value).
-			^ nodeSequence.  
+			parent children: (parentAndchildren value).
 		]
-	]	
+	].
+	
+	^ newNodeSequence
 ]
 ]
 
