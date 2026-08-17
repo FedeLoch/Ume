@@ -60,6 +60,12 @@ UmeShrinker >> initialize [
 ]
 
 { #category : 'shrinking' }
+UmeShrinker >> maxIterations: nbIterations [
+
+	maxIterations := nbIterations
+]
+
+{ #category : 'shrinking' }
 UmeShrinker >> minimizationDone [
 
 	reductionsDone := reductionsDone + 1

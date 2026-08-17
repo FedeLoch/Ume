@@ -55,6 +55,7 @@ UmeVulcanShrinker >> initialize [
 
 	super initialize.
 	
+	maxIterations := 1. 
 	mainReducer := UmeHDDShrinker new. 
 	windowSize := 4.
 	limit := 100.  
