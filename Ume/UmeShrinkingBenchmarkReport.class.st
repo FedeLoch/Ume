@@ -53,7 +53,7 @@ UmeShrinkingBenchmarkReport >> asPlots: section [
 	plt horizontalTick numberOfTicks: ((results anyOne size) min: 10).
 	plt horizontalTick labelConversion: [ :val | val rounded ].
 	
-	( section = '%inputReduction' ) ifTrue: [ 
+	( section = '%inputReduction'  or: section = '%problemPreservation' ) ifTrue: [ 
 		plt minChartValueY: 0;
 		maxChartValueY: 100  ]. 
 	
