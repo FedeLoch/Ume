@@ -53,6 +53,13 @@ UmeSimplifyGrammarSubtreeReducer class >> isSuitable: node symbol: aSymbol [
 ]
 
 { #category : 'enumerating' }
+UmeSimplifyGrammarSubtreeReducer class >> reduce: subtree using: grammar matching: symbol [
+
+	^ self findSubtree: subtree mathchingWith: symbol
+
+]
+
+{ #category : 'enumerating' }
 UmeSimplifyGrammarSubtreeReducer class >> reduce: subtree using: grammar matching: symbol depth: depth [
 
 	^ self findSubtree: subtree mathchingWith: symbol depth: depth 

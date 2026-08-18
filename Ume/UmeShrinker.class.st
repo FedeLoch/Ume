@@ -60,6 +60,12 @@ UmeShrinker >> initialize [
 ]
 
 { #category : 'shrinking' }
+UmeShrinker >> maxIterations: nbIterations [
+
+	maxIterations := nbIterations
+]
+
+{ #category : 'shrinking' }
 UmeShrinker >> minimizationDone [
 
 	reductionsDone := reductionsDone + 1
@@ -197,10 +203,13 @@ UmeShrinker >> tree: input [
 { #category : 'testing' }
 UmeShrinker >> triggerBug: tree upperBound: originalScore [
 
-	|input|
+	| input |
 	
-	input := (self asInput: tree).
-	(self checkGrammar: input) ifFalse: [ ^ false ].
+	input := self asInput: tree.
 
-	^ oracle accepts: input from: originalScore
+	^ [
+		  (oracle accepts: input from: originalScore) and: [
+			  self checkGrammar: input ] ]
+		  on: Error
+		  do: [ :error | false ]
 ]
