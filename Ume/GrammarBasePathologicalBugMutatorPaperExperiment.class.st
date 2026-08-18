@@ -235,6 +235,18 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> targetMethod [
 	self subclassResponsibility 
 ]
 
+{ #category : 'accessing' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> times [
+
+	^ times
+]
+
+{ #category : 'accessing' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> times: anObject [
+
+	times := anObject
+]
+
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> weightSelectionSchedulerSchema [
 
