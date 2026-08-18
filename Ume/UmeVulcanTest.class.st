@@ -52,7 +52,7 @@ UmeVulcanTest >> testGrammarReducer02 [
 UmeVulcanTest >> testGrammarReducer03 [
 
 	| oracle input res |
-	oracle := PerformanceOracle new threshold: 0.9; evalBlock: [ :path | SVGRunner run: path ].
+	oracle := UmeExecutionTimeOracle new threshold: 0.9; evalBlock: [ :path | SVGRunner run: path ].
 	
 	shrinker grammar: SvgPathGrammar new.
 	

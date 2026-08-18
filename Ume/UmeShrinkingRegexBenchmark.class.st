@@ -12,7 +12,7 @@ UmeShrinkingRegexBenchmark >> initialize [
 	| oracle |
 	super initialize.
 	grammar := GncRegexGrammar new.
-	oracle := PerformanceOracle new threshold: 0.95; evalBlock: [ :regex |
+	oracle := UmeExecutionTimeOracle new threshold: 0.95; evalBlock: [ :regex |
 		regex asRegex matches: regex minimalStringMatching
 	].
 

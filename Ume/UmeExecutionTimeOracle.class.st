@@ -1,5 +1,5 @@
 Class {
-	#name : 'PerformanceOracle',
+	#name : 'UmeExecutionTimeOracle',
 	#superclass : 'UmeInputOracle',
 	#instVars : [
 		'threshold',
@@ -11,25 +11,25 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-PerformanceOracle >> accepts: input from: baseline [
+UmeExecutionTimeOracle >> accepts: input from: baseline [
 
 	^ [ (self evalInput: input) >= (baseline * threshold) ] on: Error do: [ :e | ^ false ]
 ]
 
 { #category : 'as yet unclassified' }
-PerformanceOracle >> evalBlock [
+UmeExecutionTimeOracle >> evalBlock [
 
 	^ evalBlock 
 ]
 
 { #category : 'as yet unclassified' }
-PerformanceOracle >> evalBlock: aBlock [
+UmeExecutionTimeOracle >> evalBlock: aBlock [
 
 	evalBlock := aBlock 
 ]
 
 { #category : 'as yet unclassified' }
-PerformanceOracle >> evalInput: regex [
+UmeExecutionTimeOracle >> evalInput: regex [
 
 	^ (1 timesCollect: [
 		[ evalBlock value: regex ] microsecondsToRun
@@ -37,25 +37,25 @@ PerformanceOracle >> evalInput: regex [
 ]
 
 { #category : 'initialization' }
-PerformanceOracle >> initialize [ 
+UmeExecutionTimeOracle >> initialize [ 
 
 	threshold := 0.95
 ]
 
 { #category : 'initialization' }
-PerformanceOracle >> threshold [
+UmeExecutionTimeOracle >> threshold [
 
 	^ threshold 
 ]
 
 { #category : 'initialization' }
-PerformanceOracle >> threshold: aThreshold [
+UmeExecutionTimeOracle >> threshold: aThreshold [
 
 	threshold := aThreshold 
 ]
 
 { #category : 'initialization' }
-PerformanceOracle >> valueBound: bound [
+UmeExecutionTimeOracle >> valueBound: bound [
 
 	^ bound
 ]
