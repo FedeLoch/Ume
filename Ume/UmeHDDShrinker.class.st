@@ -39,6 +39,7 @@ UmeHDDShrinker >> hddmin: tree upperBound: bound level: level [
 		| candidates minimized currentChildren |
 		
 		candidates := tree allNodesAtLevel: level.
+
 		(candidates size <= 1) ifTrue: [ ^ nil ].
 		
 		currentChildren := self currentChildrenAssociations: tree atLevel: level.
@@ -86,7 +87,7 @@ UmeHDDShrinker >> minimizeOne: originalTree upperBound: bound [
 	tree := self tree: originalTree asInput.
 	
 	currentLevel := 1.
-   [ currentLevel <= tree treeHeight ] whileTrue: [ 
+   [ currentLevel <= tree treeHeight ] whileTrue: [
 		self hddmin: tree upperBound: bound level: currentLevel.		
 		currentLevel := currentLevel + 1.
 	].
