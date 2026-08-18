@@ -56,6 +56,24 @@ UmeVulcanShrinker >> cutTree: nodeSequence position: windowPosition bound: bound
 ]
 
 { #category : 'accessing' }
+UmeVulcanShrinker >> findFirstNodeLevel: currentTree [
+
+	| nodeSequence currentTreeLevel |
+	
+	currentTreeLevel := 0.
+	nodeSequence := {currentTree root}.
+	[nodeSequence size < windowSize and: [ nodeSequence isNotEmpty ] ]whileTrue: [
+		currentTreeLevel := currentTreeLevel + 1. 
+		nodeSequence := currentTree allNodesAtLevel: currentTreeLevel.
+	].
+
+	( nodeSequence size < windowSize ) ifTrue: [ currentTreeLevel := nil ]. 
+
+	^ currentTreeLevel. 
+
+]
+
+{ #category : 'accessing' }
 UmeVulcanShrinker >> generateProperSubsetsOf: nodeSet [
 
 	^ nodeSet combinations: windowSize
@@ -64,7 +82,7 @@ UmeVulcanShrinker >> generateProperSubsetsOf: nodeSet [
 { #category : 'accessing' }
 UmeVulcanShrinker >> grammar: aGrammar [
 
-	grammar := aGrammar.
+	super grammar: aGrammar. 
 	mainReducer grammar: aGrammar.
 	subtreeShrinker grammar: aGrammar.
 ]
@@ -122,29 +140,33 @@ UmeVulcanShrinker >> mainReducer: aReducer [
 { #category : 'shrinking' }
 UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 
-	| minimum index prevByMain attempts |
+	| minimumInput index prevInputByMain attempts |
 	
-	minimum := self copyTree: originalTree.
+	minimumInput := self copyTree: originalTree.
 	index := 1.
 	attempts := 0.
 	
 	[ true ] whileTrue: [
-		prevByMain := self copyTree: minimum.
-		minimum := self reduceMain: minimum bound: bound.
-		( minimum treeSize < prevByMain treeSize ) ifTrue: [
+	
+		"Main reducer"
+		prevInputByMain := self copyTree: minimumInput.	
+		minimumInput := self reduceMain: minimumInput bound: bound.
+		( minimumInput treeSize < prevInputByMain treeSize ) ifTrue: [
 			attempts := 0.
-			prevByMain := minimum 
+			prevInputByMain := minimumInput 
 	 	].
-		[ (minimum treeSize = prevByMain treeSize ) and: [ index <= 3] ] whileTrue: [ 
-			minimum := self reduceAuxiliar: minimum at: index bound: bound.
+	
+		"Auxiliary reducer"	
+		[ (minimumInput treeSize = prevInputByMain treeSize ) and: [ index <= 3] ] whileTrue: [ 
+			minimumInput := self reduceAuxiliar: minimumInput at: index bound: bound.
 			attempts := attempts + 1.
-			( minimum treeSize = prevByMain treeSize ) ifTrue: [ 
+			( minimumInput treeSize = prevInputByMain treeSize ) ifTrue: [ 
 				index := index + 1.
 				attempts := 0.
 			]
 		].
 	
-		( minimum treeSize < prevByMain treeSize) ifTrue: [ 
+		( minimumInput treeSize < prevInputByMain treeSize) ifTrue: [ 
 			attempts := 0
 		] ifFalse: [ (attempts > limit ) ifTrue: [ 
 			index := index + 1. 
@@ -152,14 +174,14 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 			]
 		].
 	
-		(index >= 3 ) ifTrue: [ ^ minimum ].
+		(index >= 3 ) ifTrue: [ ^ minimumInput ].
 	].
 ]
 
 { #category : 'accessing' }
 UmeVulcanShrinker >> oracle: aOracle [
 
-	oracle := aOracle.
+	super oracle: aOracle. 
 	mainReducer oracle: aOracle.
 	subtreeShrinker oracle: aOracle.
 ]
@@ -202,30 +224,26 @@ UmeVulcanShrinker >> subtreeReplacement: aTree bound: bound [
 { #category : 'accessing' }
 UmeVulcanShrinker >> treeBasedLEE: aTree bound: bound [
 
-	| t level nodeSequence |
+	| currentTree currentTreeLevel nodeSequence |
 	
-	t := aTree.
-	level := 0.
-	nodeSequence := { aTree root}.
+	currentTree := aTree.
+	currentTreeLevel := 0.
 	
-	[ nodeSequence size < windowSize and: [ nodeSequence isNotEmpty ] ] whileTrue: [
-		level := level + 1. 
-		nodeSequence := t allNodesAtLevel: level.
-	].
-
-	nodeSequence size < windowSize ifTrue: [ ^ t ].
+	currentTreeLevel := self findFirstNodeLevel: currentTree.
+	nodeSequence := currentTree allNodesAtLevel: currentTreeLevel.
+	currentTreeLevel ifNil: [ ^ currentTree ].
 
 	[ true ] whileTrue: [ | windowPosition |
 		windowPosition := 1.
 		[ windowPosition + windowSize < nodeSequence size ] whileTrue: [ | initialSeqSize |
 			initialSeqSize := nodeSequence size.
-			nodeSequence:= self cutTree: nodeSequence position: windowPosition bound: bound tree: t.
+			nodeSequence:= self cutTree: nodeSequence position: windowPosition bound: bound tree: currentTree.
 			(initialSeqSize == nodeSequence size) ifTrue: [ windowPosition := windowPosition + 1 ]
 		].
-		(nodeSequence allSatisfy: [ :node | node isLeaf ] ) ifTrue: [ ^ t ].
-		level := level +1.
-		nodeSequence := t allNodesAtLevel: level
+		(nodeSequence allSatisfy: [ :node | node isLeaf ] ) ifTrue: [ ^ currentTree ].
+		currentTreeLevel := currentTreeLevel +1.
+		nodeSequence := currentTree allNodesAtLevel: currentTreeLevel
 	].
 
-	^ t
+	^ currentTree
 ]
