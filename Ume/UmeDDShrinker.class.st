@@ -31,7 +31,7 @@ UmeDDShrinker >> candidates: cFail minus: cPass partition: n at: i [
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> ddmin2: cFail safe: cPass upperBound: bound granularity: n [
+UmeDDShrinker >> dd2: cFail safe: cPass upperBound: bound granularity: n [
 	"Paper: https://www.cs.purdue.edu/homes/xyzhang/fall07/Papers/delta-debugging.pdf"
 
     | delta deltaSize range key |
@@ -52,7 +52,7 @@ UmeDDShrinker >> ddmin2: cFail safe: cPass upperBound: bound granularity: n [
 		  current := cPass union: deltaI.
 
         	(self triggerBug: current upperBound: bound) ifTrue: [
-            	^ self ddmin2: current safe: cPass upperBound: bound granularity: 2
+            	^ self dd2: current safe: cPass upperBound: bound granularity: 2
         	]   
     ].
 
@@ -61,7 +61,7 @@ UmeDDShrinker >> ddmin2: cFail safe: cPass upperBound: bound granularity: n [
         deltaI := self candidates: cFail minus: cPass partition: n at: i.
 		  	current := cFail difference: deltaI.
         	(self triggerBug: current upperBound: bound) ifFalse: [
-            	^ self ddmin2: cFail safe: current upperBound: bound granularity: 2
+            	^ self dd2: cFail safe: current upperBound: bound granularity: 2
         	]
     ].
 
@@ -81,16 +81,79 @@ UmeDDShrinker >> ddmin2: cFail safe: cPass upperBound: bound granularity: n [
 			current := cFail difference: deltaI.
 
         	(self triggerBug: current upperBound: bound) ifTrue: [
-            	^ self ddmin2: current safe: cPass upperBound: bound granularity: ((n - 1) max: 2)
+            	^ self dd2: current safe: cPass upperBound: bound granularity: ((n - 1) max: 2)
        	]
     ].
 
     "Increase granularity"
     n < deltaSize ifTrue: [
+        ^ self dd2: cFail safe: cPass upperBound: bound granularity: ((2 * n) min: deltaSize)
+    ].
+
+    ^ { cPass . cFail }
+]
+
+{ #category : 'shrinking' }
+UmeDDShrinker >> ddmin2: cFail upperBound: bound granularity: n [
+	"Paper: https://www.cs.purdue.edu/homes/xyzhang/fall07/Papers/delta-debugging.pdf"
+
+    | delta deltaSize range key |
+
+    "delta := cFail difference: cPass.
+    deltaSize := delta size.
+
+	 key := { cFail . cPass . n }.
+	
+    (seen includes: key) ifTrue: [ ^ cFail ].	
+    seen add: key.
+
+    range := 1 to: n.
+
+    ""Reduce to subset""
+    range do: [ :i | | deltaI current |
+		  deltaI := self candidates: cFail minus: cPass partition: n at: i.
+		  current := cPass union: deltaI.
+
+        	(self triggerBug: current upperBound: bound) ifTrue: [
+            	^ self ddmin2: current safe: cPass upperBound: bound granularity: 2
+        	]   
+    ].
+
+    ""Increase to complement""
+    range do: [ :i | | deltaI current |
+        deltaI := self candidates: cFail minus: cPass partition: n at: i.
+		  	current := cFail difference: deltaI.
+        	(self triggerBug: current upperBound: bound) ifFalse: [
+            	^ self ddmin2: cFail safe: current upperBound: bound granularity: 2
+        	]
+    ].
+
+    ""Increase to subset""
+    range do: [ :i | | deltaI current |
+        deltaI := self candidates: cFail minus: cPass partition: n at: i.
+		  	current := cPass union: deltaI.
+
+        	(self triggerBug: current upperBound: bound) ifFalse: [
+            	^ self ddmin2: cFail safe: current upperBound: bound granularity: ((n - 1) max: 2)
+        	]
+    ].
+
+    ""Reduce to complement""
+    range do: [ :i | | deltaI current |
+        deltaI := self candidates: cFail minus: cPass partition: n at: i.
+			current := cFail difference: deltaI.
+
+        	(self triggerBug: current upperBound: bound) ifTrue: [
+            	^ self ddmin2: current safe: cPass upperBound: bound granularity: ((n - 1) max: 2)
+       	]
+    ].
+
+    ""Increase granularity""
+    n < deltaSize ifTrue: [
         ^ self ddmin2: cFail safe: cPass upperBound: bound granularity: ((2 * n) min: deltaSize)
     ].
 	1 halt.
-    ^ { cPass . cFail }
+    ^ cFail"
 ]
 
 { #category : 'testing' }
@@ -164,7 +227,7 @@ UmeDDShrinker >> minimizeOnePaper: cFail upperBound: bound [
 	
 	"First is the safe array subset"
 	"Second is the minimum array subset taht triggers the bug"
-	resultPair := self ddmin2: cFail safe: {} upperBound: bound granularity: 2.
+	resultPair := self dd2: cFail safe: {} upperBound: bound granularity: 2.
 	
 	^ cFail class withAll: resultPair second
 ]
