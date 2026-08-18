@@ -2,8 +2,6 @@ Class {
 	#name : 'UmeMOPTMutatorSelector',
 	#superclass : 'UmeMutatorSelector',
 	#instVars : [
-		'selectionCounts',
-		'successCounts',
 		'updatePeriod',
 		'selectionCounter',
 		'random',
@@ -14,7 +12,10 @@ Class {
 		'lastMutatedSelector',
 		'pilotPhaseMax',
 		'inertia',
-		'globalBestProbabilities'
+		'globalBestProbabilities',
+		'iterationSuccessCounts',
+		'iterationSelectionCounts',
+		'globalSuccessCounts'
 	],
 	#category : 'Ume-Selector Heuristics',
 	#package : 'Ume',
@@ -36,9 +37,9 @@ UmeMOPTMutatorSelector >> bestSwarm [
 { #category : 'feedback' }
 UmeMOPTMutatorSelector >> feed: feedback [
 
-	(((feedback isNotNil) and: [ feedback isPositive ]) and: [ lastMutatedSelector isNotNil ]) ifTrue: [ 
-			successCounts at: lastMutatedSelector put: (successCounts at: lastMutatedSelector) + 1
-	]
+	((feedback isNotNil and: [ feedback isPositive ]) and: [ lastMutatedSelector isNotNil ]) ifTrue: [
+			iterationSuccessCounts at: lastMutatedSelector put: (iterationSuccessCounts at: lastMutatedSelector) + 1.
+			globalSuccessCounts at: lastMutatedSelector put: (globalSuccessCounts at: lastMutatedSelector) + 1 ]
 ]
 
 { #category : 'accessing' }
@@ -98,8 +99,9 @@ UmeMOPTMutatorSelector >> initializeSwarms: mutators [
 	minProbability := 0.001.
 	maxProbability := 0.998.
 
-	selectionCounts := Array new: count withAll: 0.
-	successCounts := Array new: count withAll: 0.
+	globalSuccessCounts := Array new: count withAll: 0.
+	iterationSelectionCounts := Array new: count withAll: 0.
+	iterationSuccessCounts := Array new: count withAll: 0.
 	lastMutatedSelector := 1.
 	selectionCounter := 0
 ]
@@ -162,16 +164,14 @@ UmeMOPTMutatorSelector >> selectMutator: mutators [
 
 	lastMutatedSelector := swarm selectMutatorFrom: mutators.
 
-	selectionCounts at: lastMutatedSelector put: (selectionCounts at: lastMutatedSelector) + 1.
-
-	(selectionCounter \\ updatePeriod = 0) ifTrue: [
-		self updateGlobalBestProbabilitiesWithSuccesses: successCounts.
-		swarm updateProbabilitiesWithSuccesses: successCounts onSelections: selectionCounts ].
+	iterationSelectionCounts at: lastMutatedSelector put: (iterationSelectionCounts at: lastMutatedSelector) + 1.
 
 	selectionCounter \\ updatePeriod = 0 ifTrue: [
+			self updateGlobalBestProbabilitiesWithSuccesses: globalSuccessCounts.
+			swarm updateProbabilitiesWithSuccesses: iterationSuccessCounts onSelections: iterationSelectionCounts.
 			1 to: mutators size do: [ :i |
-					selectionCounts at: i put: 0.
-					successCounts at: i put: 0 ] ].
+					iterationSelectionCounts at: i put: 0.
+					iterationSuccessCounts at: i put: 0 ] ].
 
 	^ mutators at: lastMutatedSelector
 ]
@@ -185,13 +185,13 @@ UmeMOPTMutatorSelector >> selectionCounter [
 { #category : 'accessing' }
 UmeMOPTMutatorSelector >> selectionCounts [
 
-	^ selectionCounts
+	^ iterationSelectionCounts
 ]
 
 { #category : 'accessing' }
 UmeMOPTMutatorSelector >> successCounts [
 
-	^ successCounts
+	^ iterationSuccessCounts
 ]
 
 { #category : 'as yet unclassified' }
