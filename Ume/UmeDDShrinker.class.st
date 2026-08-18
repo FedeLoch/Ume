@@ -39,7 +39,7 @@ UmeDDShrinker >> ddmin2: cFail safe: cPass upperBound: bound granularity: n [
     delta := cFail difference: cPass.
     deltaSize := delta size.
 
-	 key := { cFail }.
+	 key := { cFail . cPass . n }.
 	
     (seen includes: key) ifTrue: [ ^ { cPass . cFail } ].	
     seen add: key.
@@ -49,7 +49,7 @@ UmeDDShrinker >> ddmin2: cFail safe: cPass upperBound: bound granularity: n [
     "Reduce to subset"
     range do: [ :i | | deltaI current |
 		  deltaI := self candidates: cFail minus: cPass partition: n at: i.
-		  	current := cPass union: deltaI.
+		  current := cPass union: deltaI.
 
         	(self triggerBug: current upperBound: bound) ifTrue: [
             	^ self ddmin2: current safe: cPass upperBound: bound granularity: 2
@@ -89,7 +89,7 @@ UmeDDShrinker >> ddmin2: cFail safe: cPass upperBound: bound granularity: n [
     n < deltaSize ifTrue: [
         ^ self ddmin2: cFail safe: cPass upperBound: bound granularity: ((2 * n) min: deltaSize)
     ].
-
+	1 halt.
     ^ { cPass . cFail }
 ]
 
