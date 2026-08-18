@@ -18,10 +18,13 @@ UmeShrinkingBenchmarkReport >> add: result for: shrinkerClass [
 { #category : 'as yet unclassified' }
 UmeShrinkingBenchmarkReport >> asPlots: section [ 
 
-	| plt p colors count |
+	| plt p colors count popup |
 	plt := RSChart new.
 	colors := { Color blue . Color red . Color green . Color orange . Color purple . Color cyan }.
 	
+	popup := RSPopupDecoration new.
+   plt addDecoration: popup.
+
 	count := results size.
 	colors := (1 to: count) collect: [ :i | 
         Color 
@@ -30,11 +33,16 @@ UmeShrinkingBenchmarkReport >> asPlots: section [
             v: 0.85
     ].
 	
-	results doWithIndex: [ :data :index |
-		p := RSLinePlot new x: ( 1 to: data size ) y: (self collectResult: data for: section).
+	results doWithIndex: [ :data :index | | shape y |
+		y := (self collectResult: data for: section).
+		p := RSLinePlot new x: ( 1 to: data size ) y: y.
 		p color: (colors at: index).
-		p marker: (RSEllipse new size: 4; color: (colors atWrap: index)).
-		plt add: p
+		shape := RSEllipse new size: 8; color: (colors atWrap: index).
+		p marker: shape.
+		plt add: p.
+		popup chartPopupBuilder 
+            for: p 
+            color: (colors at: index).
 	].
 
 	plt xlabel: 'test number';
@@ -50,7 +58,7 @@ UmeShrinkingBenchmarkReport >> asPlots: section [
 		maxChartValueY: 100  ]. 
 	
 	plt build.
-
+	
 	self buildLegend: plt with: section palette: colors. 
 
 	^ plt canvas 
