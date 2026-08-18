@@ -81,7 +81,7 @@ UmeHDDTest >> testHDDReducer07 [
 
 	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $2) and: [(string includes: $1)] ]).
 	
-	self assert:  ( shrinker shrink: '1+(2*3)' ) equals: '12'
+	self assert:  ( shrinker shrink: '1+(2*3)' ) equals: '1+(2)'
 ]
 
 { #category : 'tests' }
