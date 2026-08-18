@@ -125,19 +125,18 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 	| minimum index prevByMain attempts |
 	
 	minimum := self copyTree: originalTree.
-	prevByMain := nil.
 	index := 1.
 	attempts := 0.
 	
 	[ true ] whileTrue: [
 		prevByMain := self copyTree: minimum.
-		minimum := self reduce: minimum bound: bound.
+		minimum := self reduceMain: minimum bound: bound.
 		( minimum treeSize < prevByMain treeSize ) ifTrue: [
 			attempts := 0.
 			prevByMain := minimum 
 	 	].
 		[ (minimum treeSize = prevByMain treeSize ) and: [ index <= 3] ] whileTrue: [ 
-			minimum := self reduce: minimum at: index with: bound.
+			minimum := self reduceAuxiliar: minimum at: index bound: bound.
 			attempts := attempts + 1.
 			( minimum treeSize = prevByMain treeSize ) ifTrue: [ 
 				index := index + 1.
@@ -166,7 +165,7 @@ UmeVulcanShrinker >> oracle: aOracle [
 ]
 
 { #category : 'accessing' }
-UmeVulcanShrinker >> reduce: aTree at: index with: bound [
+UmeVulcanShrinker >> reduceAuxiliar: aTree at: index bound: bound [
 
 	( index = 1 ) ifTrue: [ ^ self subtreeReplacement: aTree bound: bound ].
 	( index = 2 ) ifTrue: [ ^ self identifierReplacement: aTree bound: bound ].
@@ -174,7 +173,7 @@ UmeVulcanShrinker >> reduce: aTree at: index with: bound [
 ]
 
 { #category : 'accessing' }
-UmeVulcanShrinker >> reduce: aTree bound: bound [
+UmeVulcanShrinker >> reduceMain: aTree bound: bound [
 
 	^ mainReducer minimizeOne: aTree upperBound: bound 
 ]
@@ -203,12 +202,11 @@ UmeVulcanShrinker >> subtreeReplacement: aTree bound: bound [
 { #category : 'accessing' }
 UmeVulcanShrinker >> treeBasedLEE: aTree bound: bound [
 
-	| t level nodeSequence maxReduction |
+	| t level nodeSequence |
 	
 	t := aTree.
 	level := 0.
-	nodeSequence := { aTree root}. 
-	maxReduction := false. 
+	nodeSequence := { aTree root}.
 	
 	[ nodeSequence size < windowSize and: [ nodeSequence isNotEmpty ] ] whileTrue: [
 		level := level + 1. 
@@ -217,7 +215,7 @@ UmeVulcanShrinker >> treeBasedLEE: aTree bound: bound [
 
 	nodeSequence size < windowSize ifTrue: [ ^ t ].
 
-	[maxReduction] whileFalse: [ | windowPosition |
+	[ true ] whileTrue: [ | windowPosition |
 		windowPosition := 1.
 		[ windowPosition + windowSize < nodeSequence size ] whileTrue: [ | initialSeqSize |
 			initialSeqSize := nodeSequence size.
