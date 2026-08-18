@@ -21,8 +21,24 @@ UmeDDShrinker >> candidates: cFail minus: cPass partition: n at: i [
 
 	| delta elements from to |
 	
+	"used by general delta debugging"
+	
 	delta := cFail difference: cPass.
 	elements := delta asArray.
+	
+	from := i - 1 * elements size // n + 1.
+	to := i * elements size // n.
+
+	^ elements copyFrom: from to: to
+]
+
+{ #category : 'shrinking' }
+UmeDDShrinker >> candidates: cFail partition: n at: i [
+
+	| elements from to |
+	
+	"used by minimizing delta debugging"
+	elements := cFail asArray.
 	
 	from := i - 1 * elements size // n + 1.
 	to := i * elements size // n.
@@ -94,66 +110,71 @@ UmeDDShrinker >> dd2: cFail safe: cPass upperBound: bound granularity: n [
 ]
 
 { #category : 'shrinking' }
+UmeDDShrinker >> dd: cFail upperBound: bound [
+
+	| resultPair |
+	
+	seen := Set new.
+	
+	"First is the safe array subset"
+	"Second is the minimum array subset taht triggers the bug"
+	
+	"General delta debugging algorithm"
+	resultPair := self dd2: cFail safe: {} upperBound: bound granularity: 2.
+	
+	^ cFail class withAll: resultPair second
+]
+
+{ #category : 'shrinking' }
 UmeDDShrinker >> ddmin2: cFail upperBound: bound granularity: n [
 	"Paper: https://www.cs.purdue.edu/homes/xyzhang/fall07/Papers/delta-debugging.pdf"
 
-    | delta deltaSize range key |
+    | range key |
 
-    "delta := cFail difference: cPass.
-    deltaSize := delta size.
-
-	 key := { cFail . cPass . n }.
+	 key := { cFail . n }.
 	
     (seen includes: key) ifTrue: [ ^ cFail ].	
     seen add: key.
 
     range := 1 to: n.
 
-    ""Reduce to subset""
-    range do: [ :i | | deltaI current |
-		  deltaI := self candidates: cFail minus: cPass partition: n at: i.
-		  current := cPass union: deltaI.
+    "Reduce to subset"
+    range do: [ :i | | deltaI |
+		  deltaI := self candidates: cFail partition: n at: i.
 
-        	(self triggerBug: current upperBound: bound) ifTrue: [
-            	^ self ddmin2: current safe: cPass upperBound: bound granularity: 2
+        	(self triggerBug: deltaI upperBound: bound) ifTrue: [
+            	^ self ddmin2: deltaI upperBound: bound granularity: 2
         	]   
     ].
 
-    ""Increase to complement""
+    "Reduce to complement"
     range do: [ :i | | deltaI current |
-        deltaI := self candidates: cFail minus: cPass partition: n at: i.
-		  	current := cFail difference: deltaI.
-        	(self triggerBug: current upperBound: bound) ifFalse: [
-            	^ self ddmin2: cFail safe: current upperBound: bound granularity: 2
-        	]
-    ].
-
-    ""Increase to subset""
-    range do: [ :i | | deltaI current |
-        deltaI := self candidates: cFail minus: cPass partition: n at: i.
-		  	current := cPass union: deltaI.
-
-        	(self triggerBug: current upperBound: bound) ifFalse: [
-            	^ self ddmin2: cFail safe: current upperBound: bound granularity: ((n - 1) max: 2)
-        	]
-    ].
-
-    ""Reduce to complement""
-    range do: [ :i | | deltaI current |
-        deltaI := self candidates: cFail minus: cPass partition: n at: i.
+        deltaI := self candidates: cFail partition: n at: i.
 			current := cFail difference: deltaI.
 
         	(self triggerBug: current upperBound: bound) ifTrue: [
-            	^ self ddmin2: current safe: cPass upperBound: bound granularity: ((n - 1) max: 2)
+            	^ self ddmin2: current upperBound: bound granularity: ((n - 1) max: 2)
        	]
     ].
 
-    ""Increase granularity""
-    n < deltaSize ifTrue: [
-        ^ self ddmin2: cFail safe: cPass upperBound: bound granularity: ((2 * n) min: deltaSize)
+    "Increase granularity"
+    n < (cFail size) ifTrue: [
+        ^ self ddmin2: cFail upperBound: bound granularity: ((2 * n) min: (cFail size))
     ].
-	1 halt.
-    ^ cFail"
+
+    ^ cFail
+]
+
+{ #category : 'shrinking' }
+UmeDDShrinker >> ddmin: cFail upperBound: bound [
+
+	| minimized |
+
+	seen := Set new.
+	
+	minimized := self ddmin2: cFail upperBound: bound granularity: 2.
+	
+	^ cFail class withAll: minimized
 ]
 
 { #category : 'testing' }
@@ -220,16 +241,12 @@ UmeDDShrinker >> minimizeOneFuzzingBook: aInput upperBound: bound [
 
 { #category : 'shrinking' }
 UmeDDShrinker >> minimizeOnePaper: cFail upperBound: bound [
+
+	"General algorithm"
+	"^ self dd: cFail upperBound: bound."
 	
-	| resultPair |
-	
-	seen := Set new.
-	
-	"First is the safe array subset"
-	"Second is the minimum array subset taht triggers the bug"
-	resultPair := self dd2: cFail safe: {} upperBound: bound granularity: 2.
-	
-	^ cFail class withAll: resultPair second
+	"Ddmin classic"
+	^ self ddmin: cFail upperBound: bound
 ]
 
 { #category : 'shrinking' }
