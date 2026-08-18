@@ -37,7 +37,7 @@ UmeShrinkingBenchmarkReport >> asPlots: section [
 		y := (self collectResult: data for: section).
 		p := RSLinePlot new x: ( 1 to: data size ) y: y.
 		p color: (colors at: index).
-		shape := RSEllipse new size: 8; color: (colors atWrap: index).
+		shape := RSEllipse new size: 4; color: (colors atWrap: index).
 		p marker: shape.
 		plt add: p.
 		popup chartPopupBuilder 
