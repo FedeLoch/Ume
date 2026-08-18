@@ -87,7 +87,7 @@ UmeDDShrinker >> dd2: cFail safe: cPass upperBound: bound granularity: n [
 		  	current := cPass union: deltaI.
 
         	(self triggerBug: current upperBound: bound) ifFalse: [
-            	^ self ddmin2: cFail safe: current upperBound: bound granularity: ((n - 1) max: 2)
+            	^ self dd2: cFail safe: current upperBound: bound granularity: ((n - 1) max: 2)
         	]
     ].
 
