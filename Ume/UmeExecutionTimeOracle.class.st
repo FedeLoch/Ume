@@ -1,20 +1,13 @@
 Class {
 	#name : 'UmeExecutionTimeOracle',
-	#superclass : 'UmeInputOracle',
+	#superclass : 'UmeThresholdOracle',
 	#instVars : [
-		'threshold',
 		'evalBlock'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
 	#tag : 'Shrinking'
 }
-
-{ #category : 'as yet unclassified' }
-UmeExecutionTimeOracle >> accepts: input from: baseline [
-
-	^ [ (self evalInput: input) >= (baseline * threshold) ] on: Error do: [ :e | ^ false ]
-]
 
 { #category : 'as yet unclassified' }
 UmeExecutionTimeOracle >> evalBlock [
@@ -29,33 +22,9 @@ UmeExecutionTimeOracle >> evalBlock: aBlock [
 ]
 
 { #category : 'as yet unclassified' }
-UmeExecutionTimeOracle >> evalInput: regex [
+UmeExecutionTimeOracle >> evalInput: input [
 
 	^ (1 timesCollect: [
-		[ evalBlock value: regex ] microsecondsToRun
+		[ evalBlock value: input ] microsecondsToRun
 	]) average
-]
-
-{ #category : 'initialization' }
-UmeExecutionTimeOracle >> initialize [ 
-
-	threshold := 0.95
-]
-
-{ #category : 'initialization' }
-UmeExecutionTimeOracle >> threshold [
-
-	^ threshold 
-]
-
-{ #category : 'initialization' }
-UmeExecutionTimeOracle >> threshold: aThreshold [
-
-	threshold := aThreshold 
-]
-
-{ #category : 'initialization' }
-UmeExecutionTimeOracle >> valueBound: bound [
-
-	^ bound
 ]
