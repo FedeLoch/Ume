@@ -52,6 +52,13 @@ GncInnerNode >> backPropagateToChildren: reward level: level [
 ]
 
 { #category : '*Ume' }
+GncInnerNode >> decreaseTreeSizeBy: aSize [
+
+    treeSize := treeSize - aSize.
+    parent ifNotNil: [ :p | p decreaseTreeSizeBy: aSize ].
+]
+
+{ #category : '*Ume' }
 GncInnerNode >> indexOf: aNode [
 
 	^ children indexOf: aNode
@@ -83,19 +90,17 @@ GncInnerNode >> removeChild: child [
 	childSize := child treeSize.
 	children remove: child ifAbsent: [  Error signal: 'Trying to remove a wrong child' ].
 	child parent: nil. 
-	self updateTreeSize: (self treeSize - childSize ).
+	self decreaseTreeSizeBy: childSize.
 ]
 
 { #category : '*Ume' }
 GncInnerNode >> removeChildAt: index [ 
 
-	| child childSize |
+	| childSize |
 	
-	child := children at: index.
-	childSize := child treeSize. 
-
+	childSize := (children at: index) treeSize. 
 	children removeAt: index.
-	treeSize := (treeSize - childSize)  
+	self decreaseTreeSizeBy: childSize.
 ]
 
 { #category : '*Ume' }

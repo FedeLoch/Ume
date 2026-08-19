@@ -94,11 +94,10 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 		"Main reducer"
 		prevInputByMain := self copyTree: minimumInput.	
 		minimumInput := self reduceMain: minimumInput bound: bound.
-
+		self minimizationDone.
 		( minimumInput treeSize < prevInputByMain treeSize ) ifTrue: [
-			self minimizationDone.
 			attempts := 0.
-			prevInputByMain := self copyTree: minimumInput. 1 halt.
+			prevInputByMain := self copyTree: minimumInput.
 	 	] ifFalse: [ self failedMinimization ].
 	
 		"Auxiliary reducer"	
@@ -106,14 +105,13 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 			| reducer | 
 			reducer := auxiliaryReducers at: index. 
 			minimumInput := reducer reduce: minimumInput bound: bound.
-
-			"self minimizationDone."
+			self minimizationDone.
 			attempts := attempts + 1.
 			( minimumInput treeSize = prevInputByMain treeSize ) ifTrue: [ 
 				self failedMinimization.
 				index := index + 1.
 				attempts := 0.
-			] ifFalse: [ self minimizationDone ]
+			]
 		].
 	
 		( minimumInput treeSize < prevInputByMain treeSize) ifTrue: [ 
