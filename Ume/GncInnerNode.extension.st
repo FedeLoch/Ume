@@ -78,14 +78,24 @@ GncInnerNode >> objectClass [
 { #category : '*Ume' }
 GncInnerNode >> removeChild: child [
 
+	| childSize|
+
+	childSize := child treeSize.
 	children remove: child ifAbsent: [  Error signal: 'Trying to remove a wrong child' ].
-	child parent: nil
+	child parent: nil. 
+	self updateTreeSize: (self treeSize - childSize ).
 ]
 
 { #category : '*Ume' }
 GncInnerNode >> removeChildAt: index [ 
 
+	| child childSize |
+	
+	child := children at: index.
+	childSize := child treeSize. 
+
 	children removeAt: index.
+	treeSize := (treeSize - childSize)  
 ]
 
 { #category : '*Ume' }
@@ -102,4 +112,10 @@ GncInnerNode >> replaceChildAt: index with: newNode [
 
 	children at: index put: newNode.
 	newNode parent: self.
+]
+
+{ #category : '*Ume' }
+GncInnerNode >> treeSize: size [
+
+	treeSize := size 
 ]
