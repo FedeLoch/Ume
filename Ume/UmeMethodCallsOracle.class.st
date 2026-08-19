@@ -11,6 +11,20 @@ Class {
 	#tag : 'Shrinking'
 }
 
+{ #category : 'as yet unclassified' }
+UmeMethodCallsOracle >> caseFor: input [
+
+	| case |
+	
+	case := PBAProgram
+		        from: [ evalBlock value: input ]
+		        forClasses: {  }.
+
+	case methodsToInstrument: methodsToInstrument.
+	
+	^ case
+]
+
 { #category : 'accessing' }
 UmeMethodCallsOracle >> evalBlock [
 
@@ -25,16 +39,9 @@ UmeMethodCallsOracle >> evalBlock: aBlock [
 
 { #category : 'as yet unclassified' }
 UmeMethodCallsOracle >> evalInput: input [
-
-	| case |
-	case := PBAProgram
-		        from: [ evalBlock value: input ]
-		        forClasses: {  }.
-
-	case methodsToInstrument: methodsToInstrument.
 	
 	" return the number of methods called "
-	^ (analyzer analyze: case) methodsCalled values sum
+	^ (analyzer analyze: (self caseFor: input)) methodsCalled values sum
 ]
 
 { #category : 'initialization' }
