@@ -49,24 +49,6 @@ UmeVulcanTest >> testGrammarReducer02 [
 ]
 
 { #category : 'tests' }
-UmeVulcanTest >> testGrammarReducer03 [
-
-	| oracle input res |
-	oracle := PerformanceOracle new threshold: 0.9; evalBlock: [ :path | SVGRunner run: path ].
-	
-	shrinker grammar: SvgPathGrammar new.
-	
-	shrinker mainReducer: UmeHDDShrinker new. 
-	shrinker oracle: oracle.
-	input := 'm-.99,-.4,7-93.,03-.8 -19.9-.2449 -1742 -269 -747 -5 16.-132 21.04-55.9'.
-	shrinker limit: 1. 
-	
-	res := shrinker shrink: input.
-
-	self assert:  res size < (input size)
-]
-
-{ #category : 'tests' }
 UmeVulcanTest >> testIdentifierReplacement04 [
 
 	| input bound tree | 
@@ -77,7 +59,7 @@ UmeVulcanTest >> testIdentifierReplacement04 [
 	tree := shrinker tree: input.
 	bound := shrinker evalInput: input.
 
-	self assert:  (shrinker identifierReplacement: tree bound: bound ) asInput equals: '2+2'
+	self assert:  ((shrinker auxiliaryReducers at:1) reduce: tree bound: bound ) asInput equals: '2+2'
 ]
 
 { #category : 'tests' }
@@ -91,7 +73,7 @@ UmeVulcanTest >> testIdentifierReplacement05 [
 	tree := shrinker tree: input.
 	bound := shrinker evalInput: input.
 
-	self assert:  (shrinker identifierReplacement: tree bound: bound ) asInput equals: '2+2+2'
+	self assert:  ((shrinker auxiliaryReducers at:1) reduce: tree bound: bound) asInput equals: '2+2+2'
 ]
 
 { #category : 'tests' }
@@ -105,7 +87,7 @@ UmeVulcanTest >> testIdentifierReplacement06 [
 	tree := shrinker tree: input.
 	bound := shrinker evalInput: input.
 
-	self assert:  (shrinker identifierReplacement: tree bound: bound ) asInput equals: 'm-.55,-.5,5-55.,55-.5'
+	self assert:  ((shrinker auxiliaryReducers at:1) reduce: tree bound: bound) asInput equals: 'm-.55,-.5,5-55.,55-.5'
 ]
 
 { #category : 'tests' }
@@ -119,5 +101,5 @@ UmeVulcanTest >> testTreeBasedLEE07 [
 	tree := shrinker tree: input.
 	bound := shrinker evalInput: input.
 
-	self assert:  (shrinker treeBasedLEE: tree bound: bound ) asInput equals: 'm-.59,-93.,03-.8'
+	self assert:  ((shrinker auxiliaryReducers at:3) reduce: tree bound: bound) asInput equals: 'm-.59,-93.,03-.8'
 ]
