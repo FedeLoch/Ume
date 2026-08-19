@@ -25,7 +25,7 @@ UmeShrinkingRegexBenchmark >> initialize [
 					'b*(c|a*|||)(b|.+|b*b*)b+' 'b*(a((c?b.*))*.?|a*|||)(b|b?|b*b*)c+'
 	            'b*(ac+a*.()c|.*|||)(b+|b?|b*b*)c+'
 	            'b*(ac+a*.a?b*|.*|||)(|b*.|c+a+.*)b+'
-	            "'b*(acca+a*..()c|.*|||)(b+|b?|b*b*)c+'
+	            'b*(acca+a*..()c|.*|||)(b+|b?|b*b*)c+'
 	            'b.*(acca+a*..(.)c|.*|||)(b+|b?|cb*b*)c+'
 	            'b.*(acca+a*..(.)c|.*||)(b+|cb?|ccb*b*)c+'
 	            'b.*(acca+a*..(.)c|.*|||)(c.||c.*)()'
@@ -50,6 +50,6 @@ UmeShrinkingRegexBenchmark >> initialize [
 	            'a.*(cc.a.a*..cbc|.*|.|)(b|.()(.+|.)*.*)c'
 	            'a.*(cc.a.a*..cbc|.|.|)(b|.*)(.+|.)*.*cc'
 	            'a.*(cc.a.a*c.cbc|.|.|)(c|.*)(.+|.)*a.*cc'
-	            'a.*(cc.a.a*c..cbc...|)(c|.*)(.+|.)*a.*cc'"
+	            'a.*(cc.a.a*c..cbc...|)(c|.*)(.+|.)*a.*cc'
 				) collect: [ :regex | ShrinkerTest input: regex oracle: oracle ]
 ]
