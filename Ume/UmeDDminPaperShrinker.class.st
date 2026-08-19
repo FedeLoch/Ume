@@ -141,20 +141,20 @@ UmeDDminPaperShrinker >> ddmin2: cFail upperBound: bound granularity: n [
     "Reduce to subset"
     range do: [ :i | | deltaI |
 		  deltaI := self candidates: cFail partition: n at: i.
-
+			self minimizationDone.
         	(self triggerBug: deltaI upperBound: bound) ifTrue: [
             	^ self ddmin2: deltaI upperBound: bound granularity: 2
-        	]   
+        	] ifFalse: [ self failedMinimization ]
     ].
 
     "Reduce to complement"
     range do: [ :i | | deltaI current |
         deltaI := self candidates: cFail partition: n at: i.
 			current := cFail difference: deltaI.
-
+			self minimizationDone.
         	(self triggerBug: current upperBound: bound) ifTrue: [
             	^ self ddmin2: current upperBound: bound granularity: ((n - 1) max: 2)
-       	]
+       	] ifFalse: [ self failedMinimization ]
     ].
 
     "Increase granularity"
