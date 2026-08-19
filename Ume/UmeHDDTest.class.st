@@ -100,7 +100,7 @@ UmeHDDTest >> testHDDReducer08 [
 UmeHDDTest >> testHDDReducer09 [
 
 	| oracle input |
-	oracle := PerformanceOracle new evalBlock: [ :path | SVGRunner run: path ].
+	oracle := UmeExecutionTimeOracle new evalBlock: [ :path | SVGRunner run: path ].
 	
 	shrinker oracle: oracle.
 	shrinker grammar: SvgPathGrammar new.

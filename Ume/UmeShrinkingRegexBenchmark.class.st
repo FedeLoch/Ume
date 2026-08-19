@@ -1,9 +1,9 @@
 Class {
 	#name : 'UmeShrinkingRegexBenchmark',
 	#superclass : 'UmeShrinkingBenchmark',
-	#category : 'Ume-Shrinking',
+	#category : 'Ume-Shrinking Benchmarks',
 	#package : 'Ume',
-	#tag : 'Shrinking'
+	#tag : 'Shrinking Benchmarks'
 }
 
 { #category : 'initialization' }
@@ -12,9 +12,10 @@ UmeShrinkingRegexBenchmark >> initialize [
 	| oracle |
 	super initialize.
 	grammar := GncRegexGrammar new.
-	oracle := PerformanceOracle new threshold: 0.95; evalBlock: [ :regex |
-		regex asRegex matches: regex minimalStringMatching
-	].
+	oracle := UmeMethodCallsOracle new
+		threshold: 0.95;
+		methodsToInstrument: RxMatcher package methods;
+		evalBlock: [ :regex | regex asRegex matches: regex minimalStringMatching ].
 
 	tests := #(
 					'b*c?c+' 'b*c?b+' 'b*bbc?b+' 'b*bbc|bc?b+' '(a)*.*.'

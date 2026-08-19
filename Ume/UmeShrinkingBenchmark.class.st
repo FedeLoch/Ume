@@ -6,9 +6,9 @@ Class {
 		'tests',
 		'grammar'
 	],
-	#category : 'Ume-Shrinking',
+	#category : 'Ume-Shrinking Benchmarks',
 	#package : 'Ume',
-	#tag : 'Shrinking'
+	#tag : 'Shrinking Benchmarks'
 }
 
 { #category : 'instance creation' }
