@@ -82,7 +82,9 @@ UmeResult >> exportAsCSV: fileName [
 	fileName asFileReference writeStreamDo: [ :stream |
 		writer := (NeoCSVWriter on: stream)
 			writeHeader: #( 'time-microseconds' 'improvement' 'receiverMutationMetadata' ),
-				(argumentsSize timesCollect: [ :i | 'argumentMutationMetadata_', i asString ]);
+				(argumentsSize timesCollect: [ :i | 'argumentMutationMetadata_', i asString ]),
+				#( 'receiver' ),
+				(argumentsSize timesCollect: [ :i | 'argument_', i asString ]);
 			fieldWriter: #raw;
 			yourself.
 
@@ -93,6 +95,11 @@ UmeResult >> exportAsCSV: fileName [
 					NeoJSONWriter toString: (test feedback receiverMutationMetadata)
 			}, (argumentsSize timesCollect: [ :i |
 				NeoJSONWriter toString: (test feedback argumentsMutationMetadata at: i)
+			]), {
+				NeoJSONWriter toString: test receiver asStringInput
+			},
+			(argumentsSize timesCollect: [ :i |
+				NeoJSONWriter toString: (test arguments at: i) asStringInput
 			])
 		] ]
 ]

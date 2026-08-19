@@ -24,6 +24,12 @@ UmeRegex class >> stonAllInstVarNames [
 	^ super stonAllInstVarNames copyWithout: #regex
 ]
 
+{ #category : 'converting' }
+UmeRegex >> asStringInput [
+	
+	^ regexString 
+]
+
 { #category : 'compiling' }
 UmeRegex >> compileRegex [
 
