@@ -1,6 +1,6 @@
 Class {
-	#name : 'UmeDDCustomShrinker',
-	#superclass : 'UmeDDShrinker',
+	#name : 'UmeDDminPaperCustomShrinker',
+	#superclass : 'UmeDDminPaperShrinker',
 	#instVars : [
 		'caller'
 	],
@@ -10,20 +10,20 @@ Class {
 }
 
 { #category : 'accessing' }
-UmeDDCustomShrinker >> caller: aCaller [
+UmeDDminPaperCustomShrinker >> caller: aCaller [
 
 	caller := aCaller.
 ]
 
 { #category : 'shrinking' }
-UmeDDCustomShrinker >> failedMinimization [
+UmeDDminPaperCustomShrinker >> failedMinimization [
 
 	super failedMinimization.
 	caller failedMinimization
 ]
 
 { #category : 'shrinking' }
-UmeDDCustomShrinker >> minimizationDone [
+UmeDDminPaperCustomShrinker >> minimizationDone [
 
 	super minimizationDone.
 	caller minimizationDone

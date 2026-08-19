@@ -1,9 +1,9 @@
 Class {
 	#name : 'UmeShrinkingAExprBenchmark',
 	#superclass : 'UmeShrinkingBenchmark',
-	#category : 'Ume-Shrinking',
+	#category : 'Ume-Shrinking Benchmarks',
 	#package : 'Ume',
-	#tag : 'Shrinking'
+	#tag : 'Shrinking Benchmarks'
 }
 
 { #category : 'initialization' }

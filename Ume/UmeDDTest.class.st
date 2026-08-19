@@ -14,7 +14,7 @@ Class {
 UmeDDTest >> setUp [
 
 	super setUp.
-	shrinker := UmeDDShrinker new.	
+	shrinker := UmeDDminPaperShrinker new.	
 	shrinker oracle: (self oracleByBlock: [ :string | (string includes: $e) ]).
 
 ]

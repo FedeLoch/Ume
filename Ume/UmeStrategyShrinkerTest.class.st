@@ -117,7 +117,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer10 [
 
 	| grammar2 oracle input |
 	grammar2 := GncRegexGrammar new.
-	oracle := PerformanceOracle new threshold: 0.9; evalBlock: [ :regex |
+	oracle := UmeExecutionTimeOracle new threshold: 0.9; evalBlock: [ :regex |
 		regex asRegex matches: regex minimalStringMatching
 	].
 
@@ -133,7 +133,7 @@ UmeStrategyShrinkerTest >> testGrammarReducer10 [
 UmeStrategyShrinkerTest >> testGrammarReducer11 [
 
 	| oracle input |
-	oracle := PerformanceOracle new threshold: 0.9; evalBlock: [ :path | SVGRunner run: path ].
+	oracle := UmeExecutionTimeOracle new threshold: 0.9; evalBlock: [ :path | SVGRunner run: path ].
 
 	shrinker oracle: oracle.
 	shrinker grammar: SvgPathGrammar new.

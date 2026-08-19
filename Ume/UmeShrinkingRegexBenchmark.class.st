@@ -1,9 +1,9 @@
 Class {
 	#name : 'UmeShrinkingRegexBenchmark',
 	#superclass : 'UmeShrinkingBenchmark',
-	#category : 'Ume-Shrinking',
+	#category : 'Ume-Shrinking Benchmarks',
 	#package : 'Ume',
-	#tag : 'Shrinking'
+	#tag : 'Shrinking Benchmarks'
 }
 
 { #category : 'initialization' }
@@ -12,9 +12,10 @@ UmeShrinkingRegexBenchmark >> initialize [
 	| oracle |
 	super initialize.
 	grammar := GncRegexGrammar new.
-	oracle := PerformanceOracle new threshold: 0.95; evalBlock: [ :regex |
-		regex asRegex matches: regex minimalStringMatching
-	].
+	oracle := UmeMethodCallsOracle new
+		threshold: 0.95;
+		methodsToInstrument: RxMatcher package methods;
+		evalBlock: [ :regex | regex asRegex matches: regex minimalStringMatching ].
 
 	tests := #(
 					'b*c?c+' 'b*c?b+' 'b*bbc?b+' 'b*bbc|bc?b+' '(a)*.*.'
@@ -24,7 +25,7 @@ UmeShrinkingRegexBenchmark >> initialize [
 					'b*(c|a*|||)(b|.+|b*b*)b+' 'b*(a((c?b.*))*.?|a*|||)(b|b?|b*b*)c+'
 	            'b*(ac+a*.()c|.*|||)(b+|b?|b*b*)c+'
 	            'b*(ac+a*.a?b*|.*|||)(|b*.|c+a+.*)b+'
-	            'b*(acca+a*..()c|.*|||)(b+|b?|b*b*)c+'
+	            "'b*(acca+a*..()c|.*|||)(b+|b?|b*b*)c+'
 	            'b.*(acca+a*..(.)c|.*|||)(b+|b?|cb*b*)c+'
 	            'b.*(acca+a*..(.)c|.*||)(b+|cb?|ccb*b*)c+'
 	            'b.*(acca+a*..(.)c|.*|||)(c.||c.*)()'
@@ -49,6 +50,6 @@ UmeShrinkingRegexBenchmark >> initialize [
 	            'a.*(cc.a.a*..cbc|.*|.|)(b|.()(.+|.)*.*)c'
 	            'a.*(cc.a.a*..cbc|.|.|)(b|.*)(.+|.)*.*cc'
 	            'a.*(cc.a.a*c.cbc|.|.|)(c|.*)(.+|.)*a.*cc'
-	            'a.*(cc.a.a*c..cbc...|)(c|.*)(.+|.)*a.*cc'
+	            'a.*(cc.a.a*c..cbc...|)(c|.*)(.+|.)*a.*cc'"
 				) collect: [ :regex | ShrinkerTest input: regex oracle: oracle ]
 ]
