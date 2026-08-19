@@ -76,7 +76,7 @@ UmeHDDShrinker >> initialize [
 
 	super initialize.
 	seen := Set new.
-	ddmin := UmeDDCustomShrinker new caller: self.
+	ddmin := UmeDDminPaperCustomShrinker new caller: self.
 ]
 
 { #category : 'shrinking' }
