@@ -1,9 +1,9 @@
 Class {
 	#name : 'UmeShrinkingSVGBenchmark',
 	#superclass : 'UmeShrinkingBenchmark',
-	#category : 'Ume-Shrinking',
+	#category : 'Ume-Shrinking Benchmarks',
 	#package : 'Ume',
-	#tag : 'Shrinking'
+	#tag : 'Shrinking Benchmarks'
 }
 
 { #category : 'initialization' }
@@ -12,7 +12,7 @@ UmeShrinkingSVGBenchmark >> initialize [
 	| oracle |
 	super initialize.
 	grammar := SvgPathGrammar new.
-	oracle := PerformanceOracle new evalBlock: [ :path | SVGRunner run: path ].
+	oracle := UmeExecutionTimeOracle new evalBlock: [ :path | SVGRunner run: path ].
 
 	tests := #( 'm-.99,-.4,7-93.,03-.8 -19.9-.2449 -1742 -269 -747 -5 16.-132 21.04-55.9'
 	            

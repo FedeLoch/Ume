@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeDDShrinker',
+	#name : 'UmeDDminPaperShrinker',
 	#superclass : 'UmeShrinker',
 	#instVars : [
 		'splittingValue',
@@ -11,13 +11,13 @@ Class {
 }
 
 { #category : 'shrinking' }
-UmeDDShrinker >> asInput: aString [
+UmeDDminPaperShrinker >> asInput: aString [
 
 	^ aString
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> candidates: cFail minus: cPass partition: n at: i [
+UmeDDminPaperShrinker >> candidates: cFail minus: cPass partition: n at: i [
 
 	| delta elements from to |
 	
@@ -33,7 +33,7 @@ UmeDDShrinker >> candidates: cFail minus: cPass partition: n at: i [
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> candidates: cFail partition: n at: i [
+UmeDDminPaperShrinker >> candidates: cFail partition: n at: i [
 
 	| elements from to |
 	
@@ -47,7 +47,7 @@ UmeDDShrinker >> candidates: cFail partition: n at: i [
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> dd2: cFail safe: cPass upperBound: bound granularity: n [
+UmeDDminPaperShrinker >> dd2: cFail safe: cPass upperBound: bound granularity: n [
 	"Paper: https://www.cs.purdue.edu/homes/xyzhang/fall07/Papers/delta-debugging.pdf"
 
     | delta deltaSize range key |
@@ -110,7 +110,7 @@ UmeDDShrinker >> dd2: cFail safe: cPass upperBound: bound granularity: n [
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> dd: cFail upperBound: bound [
+UmeDDminPaperShrinker >> dd: cFail upperBound: bound [
 
 	| resultPair |
 	
@@ -126,7 +126,7 @@ UmeDDShrinker >> dd: cFail upperBound: bound [
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> ddmin2: cFail upperBound: bound granularity: n [
+UmeDDminPaperShrinker >> ddmin2: cFail upperBound: bound granularity: n [
 	"Paper: https://www.cs.purdue.edu/homes/xyzhang/fall07/Papers/delta-debugging.pdf"
 
     | range key |
@@ -166,7 +166,7 @@ UmeDDShrinker >> ddmin2: cFail upperBound: bound granularity: n [
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> ddmin: cFail upperBound: bound [
+UmeDDminPaperShrinker >> ddmin: cFail upperBound: bound [
 
 	| minimized |
 
@@ -177,70 +177,21 @@ UmeDDShrinker >> ddmin: cFail upperBound: bound [
 	^ cFail class withAll: minimized
 ]
 
-{ #category : 'testing' }
-UmeDDShrinker >> getComplement: array start: start length: length [
-	
-	^ (array copyFrom: 1 to: start), 
-     (array copyFrom: (start + 1 + length min: array size + 1) to: array size)
-]
-
 { #category : 'shrinking' }
-UmeDDShrinker >> initialize [ 
+UmeDDminPaperShrinker >> initialize [ 
 
 	super initialize.
 	seen := Set new
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> minimizeOne: aInput upperBound: bound [
+UmeDDminPaperShrinker >> minimizeOne: aInput upperBound: bound [
 
-	"^ self minimizeOneFuzzingBook: aInput upperBound: bound"
 	^ self minimizeOnePaper: aInput upperBound: bound
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> minimizeOneFuzzingBook: aInput upperBound: bound [
-
-	"TODO: Fuzzing book implementation"
-	
-	| currentInput granularity start subsetLength someComplementFailing |
-
-	currentInput := aInput .
-	granularity := 2.
-	
-	[ currentInput isNotEmpty ] whileTrue: [
-		start:= 0.
-		subsetLength := currentInput size // granularity.
-		someComplementFailing := false.
-		
-		[ (start < currentInput size) and: [ someComplementFailing not ] ] whileTrue: [ | complement |
-			self minimizationDone.
-
-			complement := self getComplement: currentInput start: start length: subsetLength.
-			(complement = currentInput) ifTrue: [ ^ currentInput ].
-			
-			(self triggerBug: complement upperBound: bound) ifTrue: [
-				currentInput := complement.
-				granularity := (granularity - 1) max: 2.
-				someComplementFailing := true
-			] ifFalse: [
-				self failedMinimization.
-				start := start + subsetLength
-			]
-		].
-		
-		someComplementFailing ifFalse: [ 
-			(granularity = currentInput size) ifTrue:[ ^ currentInput ].
-			granularity := (granularity * 2) min: currentInput size.
-		 ]
-	].
-
-	^ currentInput
-
-]
-
-{ #category : 'shrinking' }
-UmeDDShrinker >> minimizeOnePaper: cFail upperBound: bound [
+UmeDDminPaperShrinker >> minimizeOnePaper: cFail upperBound: bound [
 
 	"General algorithm"
 	"^ self dd: cFail upperBound: bound."
@@ -250,26 +201,26 @@ UmeDDShrinker >> minimizeOnePaper: cFail upperBound: bound [
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> shouldStop: minimized size: size from: current size: currentSize [
+UmeDDminPaperShrinker >> shouldStop: minimized size: size from: current size: currentSize [
 
 	^ minimized = current
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> sizeOf: string [
+UmeDDminPaperShrinker >> sizeOf: string [
 
 	^ string size
 
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> tree: aString [
+UmeDDminPaperShrinker >> tree: aString [
 
 	^ aString. 
 ]
 
 { #category : 'shrinking' }
-UmeDDShrinker >> triggerBug: tree upperBound: originalScore [
+UmeDDminPaperShrinker >> triggerBug: tree upperBound: originalScore [
 
 	|input|
 	

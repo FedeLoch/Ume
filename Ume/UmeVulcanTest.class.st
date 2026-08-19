@@ -49,6 +49,24 @@ UmeVulcanTest >> testGrammarReducer02 [
 ]
 
 { #category : 'tests' }
+UmeVulcanTest >> testGrammarReducer03 [
+
+	| oracle input res |
+	oracle := UmeExecutionTimeOracle new threshold: 0.9; evalBlock: [ :path | SVGRunner run: path ].
+	
+	shrinker grammar: SvgPathGrammar new.
+	
+	shrinker mainReducer: UmeHDDShrinker new. 
+	shrinker oracle: oracle.
+	input := 'm-.99,-.4,7-93.,03-.8 -19.9-.2449 -1742 -269 -747 -5 16.-132 21.04-55.9'.
+	shrinker limit: 1. 
+	
+	res := shrinker shrink: input.
+
+	self assert:  res size < (input size)
+]
+
+{ #category : 'tests' }
 UmeVulcanTest >> testIdentifierReplacement04 [
 
 	| input bound tree | 
