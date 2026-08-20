@@ -70,16 +70,17 @@ UmeMOPTMutatorSelector >> inertia: aFloat [
 UmeMOPTMutatorSelector >> initialize [
 
 	super initialize.
-	
+
 	numberOfSwarms := 10.
-	
+
 	inertia := 0.72.
 	updatePeriod := 100.
 	selectionCounter := 0.
 	random := Random new.
+	iterationSuccessCounts := {  }.
 	
 	"how many warm up executions should be done to get the swarms up and running"
-	pilotPhaseMax := 100.
+	pilotPhaseMax := 100
 ]
 
 { #category : 'initialization' }
@@ -194,6 +195,18 @@ UmeMOPTMutatorSelector >> successCounts [
 	^ iterationSuccessCounts
 ]
 
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> swarms [
+
+	^ swarms
+]
+
+{ #category : 'accessing' }
+UmeMOPTMutatorSelector >> swarms: anObject [
+
+	swarms := anObject
+]
+
 { #category : 'as yet unclassified' }
 UmeMOPTMutatorSelector >> updateGlobalBestProbabilitiesWithSuccesses: successes [
 
@@ -202,7 +215,9 @@ UmeMOPTMutatorSelector >> updateGlobalBestProbabilitiesWithSuccesses: successes 
 	1 to: globalBestProbabilities size do: [ :i |
 			| particleSuccesses |
 			particleSuccesses := successes at: i.
-			globalBestProbabilities at: i put: particleSuccesses / totalSuccesses ]
+			globalBestProbabilities at: i put: (totalSuccesses = 0
+					 ifTrue: [ 0.5 ]
+					 ifFalse: [ particleSuccesses / totalSuccesses ]) ]
 ]
 
 { #category : 'accessing' }
