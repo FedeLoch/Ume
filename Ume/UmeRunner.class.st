@@ -454,7 +454,6 @@ UmeRunner >> runCampaign: executionJob [
 		progress := self progressFor: tests since: time for: iteration.
 		executionJob updateProgress: progress forTests: tests iteration: iteration.
 		] ].
-
 	^ self genReport: tests since: time withCoverage: incrCoverage with: iteration.
 ]
 

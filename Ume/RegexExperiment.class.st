@@ -44,7 +44,7 @@ RegexExperiment >> regexByProp: props and: feedback [
 		(UmeRegex fromString: maybe) compileRegex.
 		regex := maybe ]
 			on: Error
-			do: [ :e | "1 halt." ] ].
+			do: [ :e | ^ regex ] ].
 
 	^ regex
 ]
@@ -68,8 +68,9 @@ RegexExperiment >> schemaCorpusWith: mutators selector: selector [
 	
 	regexGenerator := UmeGenerator do: [ :props :feedback | | regex |
 		regex := self regexByProp: props and: feedback.
+		regex ifNil: [ nil ] ifNotNil: [ 
 		props at: 'input' put: regex minimalStringMatching.
-		UmeRegex fromString: regex ].
+		UmeRegex fromString: regex  ] ].
 	
 	regexGenerator mutationMetadataBlock: [ (sharedProperties at: 'grammar') mutationMetadata ].
 	
@@ -80,7 +81,7 @@ RegexExperiment >> schemaCorpusWith: mutators selector: selector [
 	argumentConstraints := {
 		(UmeObjectConstraint new objectClass: String;
 			props: sharedProperties;
-			generator: (UmeGenerator do: [ :props :feedback | props at: 'input' ]))
+			generator: (UmeGenerator do: [ :props :feedback | props dict at: 'input' ifAbsent:[ nil ] ]))
 	}.
 
 	assert := [ :regex :input :result | result ].
