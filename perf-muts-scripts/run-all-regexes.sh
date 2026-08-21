@@ -4,20 +4,20 @@
 # Launches Pharo experiments in parallel, each downloading its own environment.
 
 scripts=(
-    "run-regexes-grammar-derivations.st"
-    "run-regexes-grammar-literals.st"
-    "run-regexes-stochastic-base.st"
-    "run-regexes-weighted-grammar-base.st"
+    # "run-regexes-grammar-derivations.st"
+    # "run-regexes-grammar-literals.st"
+    # "run-regexes-stochastic-base.st"
+    # "run-regexes-weighted-grammar-base.st"
     "run-regexes-weighted-scheduling.st"
     "run-regexes-random-scheduling.st"
     "run-regexes-mopt-scheduling.st"
 )
 
 folders=(
-    "regexes-grammar-derivations"
-    "regexes-grammar-literals"
-    "regexes-stochastic-base"
-    "regexes-weighted-grammar-base"
+    # "regexes-grammar-derivations"
+    # "regexes-grammar-literals"
+    # "regexes-stochastic-base"
+    # "regexes-weighted-grammar-base"
     "regexes-weighted-scheduling"
     "regexes-random-scheduling"
     "regexes-mopt-scheduling"
