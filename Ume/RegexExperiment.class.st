@@ -95,7 +95,7 @@ RegexExperiment >> schemaCorpusWith: mutators selector: selector [
 RegexExperiment >> seeds [
 	"Auto Generated but hardcoded to allow repetition"
 
-	^ #( '.?()*' '(|.*b*b+||a*|c*.?|a?|a?|.*)*|c?.?' 'a(.c?b+)|a?a+|a*|b?c*()+|(|a+)?(b*)' '|()*||' 'a(((.+().?)b+.+c*()+.+ba+)+|.b*)b?|c*||'
+"	^ #( '.?()*' '(|.*b*b+||a*|c*.?|a?|a?|.*)*|c?.?' 'a(.c?b+)|a?a+|a*|b?c*()+|(|a+)?(b*)' '|()*||' 'a(((.+().?)b+.+c*()+.+ba+)+|.b*)b?|c*||'
 	     'a+|' 'b(|)*a*b*c+' 'b+||' 'c?|b+c+|' 'a+c?c' '.*|' 'b*|a*a+' '.*a*' '|((|)?((c?)+b|(b?|(|b+)+a?)?))?'
 	     '|((a*a.+))b*c*||' '|bc*a+b+a+' '||(aa*|)+' '|c+|.|b?|b..*|((|)*|)*|a|' '|||a*.+a*' 'b+c?' 'c?aa+|(b?)+ca' 'a*|' '|ba+.*a*'
 	     '|(())+||c?((||aa*(|a+)*)+)*|' '|()a+|a+.+||((c)*)?' '(|)c*.?||' '|b?b?((b)aa+|b?)?' 'b?b*.?.(a*)?||.*|c*|.?'
@@ -107,9 +107,9 @@ RegexExperiment >> seeds [
 	     '.?|.?c+(ba)*c*||' '(|a|.)*a?b?' '|c+|' '(c..*||)+|b?' '(ac.?c+b?a?)?b*||.?' '.*b*|.b?c?(c+b*(a?b+|a*|b+a+b*)+|)?'
 	     'b*.a*' '|||c*||b+.a?|c*' 'a*.+c.+(|)*c?c|||' '||||' 'a*.*c+.+' '|.?(.+.)a+' 'a+a*' '(|)?b?b?b?()*' '(||.*)+.*(|)*c*a+|a*'
 	     '|' '(.|.c(a?|)+||(.?|)|c*.?c?)()*.?' 'ca+' '||a*.+()+' '..c*' 'a*c*|c+' 'b*b?|b+|' 'c*b+(|)?.+c+b+|a(|a+|a*b?b*a+c+||)*a|'
-	     'b+b(b+c+a?)+|' 'b*b?|' )
+	     'b+b(b+c+a?)+|' 'b*b?|' )"
 
-	"	^ { 'a' . 'ac?ab?ab?b?aa.?aaab?c?a(c)?ac?aaab?a?a' }"
+		^ { 'a' . 'ac?ab?ab?b?aa.?aaab?c?a(c)?ac?aaab?a?a' }
 ]
 
 { #category : 'running' }
