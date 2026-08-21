@@ -44,7 +44,7 @@ RegexExperiment >> regexByProp: props and: feedback [
 		(UmeRegex fromString: maybe) compileRegex.
 		regex := maybe ]
 			on: Error
-			do: [ :e | "1 halt." ] ].
+			do: [ :e | ^ regex ] ].
 
 	^ regex
 ]
@@ -68,8 +68,9 @@ RegexExperiment >> schemaCorpusWith: mutators selector: selector [
 	
 	regexGenerator := UmeGenerator do: [ :props :feedback | | regex |
 		regex := self regexByProp: props and: feedback.
+		regex ifNil: [ nil ] ifNotNil: [ 
 		props at: 'input' put: regex minimalStringMatching.
-		UmeRegex fromString: regex ].
+		UmeRegex fromString: regex  ] ].
 	
 	regexGenerator mutationMetadataBlock: [ (sharedProperties at: 'grammar') mutationMetadata ].
 	
@@ -80,7 +81,7 @@ RegexExperiment >> schemaCorpusWith: mutators selector: selector [
 	argumentConstraints := {
 		(UmeObjectConstraint new objectClass: String;
 			props: sharedProperties;
-			generator: (UmeGenerator do: [ :props :feedback | props at: 'input' ]))
+			generator: (UmeGenerator do: [ :props :feedback | props dict at: 'input' ifAbsent:[ nil ] ]))
 	}.
 
 	assert := [ :regex :input :result | result ].
@@ -93,9 +94,9 @@ RegexExperiment >> schemaCorpusWith: mutators selector: selector [
 
 { #category : 'running' }
 RegexExperiment >> seeds [
-	"Auto Generated but hardcoded to allow repetition"
 
-"	^ #( '.?()*' '(|.*b*b+||a*|c*.?|a?|a?|.*)*|c?.?' 'a(.c?b+)|a?a+|a*|b?c*()+|(|a+)?(b*)' '|()*||' 'a(((.+().?)b+.+c*()+.+ba+)+|.b*)b?|c*||'
+	"Auto Generated but hardcoded to allow repetition"
+	^ #( '.?()*' '(|.*b*b+||a*|c*.?|a?|a?|.*)*|c?.?' 'a(.c?b+)|a?a+|a*|b?c*()+|(|a+)?(b*)' '|()*||' 'a(((.+().?)b+.+c*()+.+ba+)+|.b*)b?|c*||'
 	     'a+|' 'b(|)*a*b*c+' 'b+||' 'c?|b+c+|' 'a+c?c' '.*|' 'b*|a*a+' '.*a*' '|((|)?((c?)+b|(b?|(|b+)+a?)?))?'
 	     '|((a*a.+))b*c*||' '|bc*a+b+a+' '||(aa*|)+' '|c+|.|b?|b..*|((|)*|)*|a|' '|||a*.+a*' 'b+c?' 'c?aa+|(b?)+ca' 'a*|' '|ba+.*a*'
 	     '|(())+||c?((||aa*(|a+)*)+)*|' '|()a+|a+.+||((c)*)?' '(|)c*.?||' '|b?b?((b)aa+|b?)?' 'b?b*.?.(a*)?||.*|c*|.?'
@@ -107,9 +108,9 @@ RegexExperiment >> seeds [
 	     '.?|.?c+(ba)*c*||' '(|a|.)*a?b?' '|c+|' '(c..*||)+|b?' '(ac.?c+b?a?)?b*||.?' '.*b*|.b?c?(c+b*(a?b+|a*|b+a+b*)+|)?'
 	     'b*.a*' '|||c*||b+.a?|c*' 'a*.+c.+(|)*c?c|||' '||||' 'a*.*c+.+' '|.?(.+.)a+' 'a+a*' '(|)?b?b?b?()*' '(||.*)+.*(|)*c*a+|a*'
 	     '|' '(.|.c(a?|)+||(.?|)|c*.?c?)()*.?' 'ca+' '||a*.+()+' '..c*' 'a*c*|c+' 'b*b?|b+|' 'c*b+(|)?.+c+b+|a(|a+|a*b?b*a+c+||)*a|'
-	     'b+b(b+c+a?)+|' 'b*b?|' )"
-
-		^ { 'a' . 'ac?ab?ab?b?aa.?aaab?c?a(c)?ac?aaab?a?a' }
+	     'b+b(b+c+a?)+|' 'b*b?|' )
+	
+	"^ { 'a' . 'ac?ab?ab?b?aa.?aaab?c?a(c)?ac?aaab?a?a' }"
 ]
 
 { #category : 'running' }
