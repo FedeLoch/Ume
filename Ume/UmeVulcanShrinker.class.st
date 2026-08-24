@@ -82,28 +82,19 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 	index := 1.
 	
 	[ index <= auxiliaryReducers size ] whileTrue: [
-		| startingSize reduceByAux|
-		"Main reducer"
+		| startingSize result |
 		startingSize := minimumInput treeSize. 
+		
+		"Main reducer"
 		minimumInput := self reduceMain: minimumInput bound: bound.
 		self minimizationDone.
 		
 		"Auxiliary reducer"
-		reduceByAux := false. 
-		[ (index <= auxiliaryReducers size) and: [ reduceByAux not ] ] whileTrue: [
-			| reducer candidate prevSize | 
-			reducer := auxiliaryReducers at: index.
-			prevSize := minimumInput treeSize.
-			candidate := reducer reduce: minimumInput bound: bound.
-			self minimizationDone.
-			( candidate treeSize < prevSize ) ifTrue: [ 
-				minimumInput := candidate.
-				reduceByAux := true
-			] ifFalse: [ 
-				self failedMinimization.
-				index := index + 1
-			]
-		].
+		result := self runAuxiliary: minimumInput startingAt: index  bound: bound.
+		minimumInput := result key.
+		index := result value.  
+		
+		
 		(minimumInput treeSize = startingSize ) ifTrue: [ ^ minimumInput ].
 	].
 	^ minimumInput
@@ -119,9 +110,47 @@ UmeVulcanShrinker >> oracle: aOracle [
 ]
 
 { #category : 'accessing' }
+UmeVulcanShrinker >> reduceAuxiliary: reducer on: aTree bound: bound [
+
+	| candidate prevSize |
+	
+	prevSize := aTree treeSize.
+	candidate := reducer reduce: aTree bound: bound.
+	self minimizationDone.
+	
+	^ (candidate treeSize < prevSize ) ifTrue: [ candidate ] ifFalse: [ self failedMinimization. aTree ]
+]
+
+{ #category : 'accessing' }
 UmeVulcanShrinker >> reduceMain: aTree bound: bound [
 
 	^ mainReducer minimizeOne: aTree upperBound: bound 
+]
+
+{ #category : 'accessing' }
+UmeVulcanShrinker >> runAuxiliary: aTree startingAt: aIndex bound: bound [
+
+	| currentTree index haveReduce|
+	
+	currentTree := aTree.
+	index := aIndex.
+	haveReduce := false.
+	
+	[  (index <= auxiliaryReducers size) and: [ haveReduce not ] ] whileTrue: [ 
+		| reducer candidate prevSize |
+		reducer := auxiliaryReducers at: index. 
+		prevSize := currentTree treeSize.
+		candidate := self reduceAuxiliary: reducer on: currentTree bound: bound.
+		
+		(candidate treeSize < prevSize ) ifTrue: [ 
+			currentTree := candidate.
+			haveReduce := true.
+		] ifFalse: [ 
+			index := index + 1
+		]
+	].
+
+	^ currentTree -> index
 ]
 
 { #category : 'accessing' }

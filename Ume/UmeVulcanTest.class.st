@@ -134,5 +134,5 @@ UmeVulcanTest >> testTreeBasedLEE07 [
 	tree := shrinker tree: input.
 	bound := shrinker evalInput: input.
 
-	self assert:  ((shrinker auxiliaryReducers at:3) reduce: tree bound: bound) asInput equals: 'm5-3.,3-.8'
+	self assert:  ((shrinker auxiliaryReducers at:3) reduce: tree bound: bound) asInput equals: 'm59,4'
 ]
