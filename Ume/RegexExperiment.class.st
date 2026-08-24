@@ -133,8 +133,9 @@ RegexExperiment >> weightedGrammarSchema [
 	
 	regexGenerator := UmeGenerator do: [ :props :feedback | | regex |
 		regex := self regexByProp: props and: feedback.
+		regex ifNil: [ nil ] ifNotNil: [ 
 		props at: 'input' put: regex minimalStringMatching.
-		UmeRegex fromString: regex ].
+		UmeRegex fromString: regex  ] ].
 	
 	receiverConstraint := UmeObjectConstraint new objectClass: RxMatcher;
 		generator: regexGenerator;
