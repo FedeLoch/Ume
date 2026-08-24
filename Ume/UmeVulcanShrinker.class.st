@@ -83,47 +83,39 @@ UmeVulcanShrinker >> mainReducer: aReducer [
 { #category : 'shrinking' }
 UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 
-	| minimumInput index prevInputByMain attempts |
+	| minimumInput index |
 	
 	minimumInput := self copyTree: originalTree.
 	index := 1.
-	attempts := 0.
 	
-	[ true ] whileTrue: [
+	[ index <= auxiliaryReducers size ] whileTrue: [
+		| startingSize reduceByAux|
 
 		"Main reducer"
-		prevInputByMain := self copyTree: minimumInput.	
+		startingSize := minimumInput treeSize. 
 		minimumInput := self reduceMain: minimumInput bound: bound.
 		self minimizationDone.
-		( minimumInput treeSize < prevInputByMain treeSize ) ifTrue: [
-			attempts := 0.
-			prevInputByMain := self copyTree: minimumInput.
-	 	] ifFalse: [ self failedMinimization ].
-	
-		"Auxiliary reducer"	
-		[ (minimumInput treeSize = prevInputByMain treeSize ) and: [ index <= auxiliaryReducers size] ] whileTrue: [
-			| reducer | 
-			reducer := auxiliaryReducers at: index. 
-			minimumInput := reducer reduce: minimumInput bound: bound.
+		
+		"Auxiliary reducer"
+		reduceByAux := false. 
+		
+		[ (index <= auxiliaryReducers size) and: [ reduceByAux not ] ] whileTrue: [
+			| reducer candidate | 
+			reducer := auxiliaryReducers at: index.
+			candidate := reducer reduce: minimumInput bound: bound.
 			self minimizationDone.
-			attempts := attempts + 1.
-			( minimumInput treeSize = prevInputByMain treeSize ) ifTrue: [ 
+			1 halt. 
+			( candidate treeSize < minimumInput treeSize ) ifTrue: [ 
+				minimumInput := candidate.
+				reduceByAux := true
+			] ifFalse: [ 
 				self failedMinimization.
-				index := index + 1.
-				attempts := 0.
+				index := index + 1
 			]
 		].
-	
-		( minimumInput treeSize < prevInputByMain treeSize) ifTrue: [ 
-			attempts := 0
-		] ifFalse: [ (attempts > limit ) ifTrue: [ 
-			index := index + 1. "go to the next one " 
-			attempts:= 0 
-			]
-		].
-	
-		(index >= 3 ) ifTrue: [ ^ minimumInput ].
+		(minimumInput treeSize = startingSize ) ifTrue: [ ^ minimumInput ].
 	].
+	^ minimumInput
 ]
 
 { #category : 'accessing' }
