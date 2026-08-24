@@ -57,7 +57,6 @@ UmeVulcanShrinker >> initialize [
 	super initialize.
 	
 	maxIterations := 1.
-	limit := 100. 
 	windowSize := 4. 
 	
 	mainReducer := UmeHDDShrinker new.
@@ -65,12 +64,6 @@ UmeVulcanShrinker >> initialize [
 		UmeIdentifierReplacement new. 
 		UmeSubTreeReducer new.
 		UmeTreeBasedLEE new }
-]
-
-{ #category : 'accessing' }
-UmeVulcanShrinker >> limit: aNumber [
-
-	limit := aNumber 
 ]
 
 { #category : 'accessing' }
@@ -90,7 +83,6 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 	
 	[ index <= auxiliaryReducers size ] whileTrue: [
 		| startingSize reduceByAux|
-
 		"Main reducer"
 		startingSize := minimumInput treeSize. 
 		minimumInput := self reduceMain: minimumInput bound: bound.
@@ -98,14 +90,13 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 		
 		"Auxiliary reducer"
 		reduceByAux := false. 
-		
 		[ (index <= auxiliaryReducers size) and: [ reduceByAux not ] ] whileTrue: [
-			| reducer candidate | 
+			| reducer candidate prevSize | 
 			reducer := auxiliaryReducers at: index.
+			prevSize := minimumInput treeSize.
 			candidate := reducer reduce: minimumInput bound: bound.
 			self minimizationDone.
-			1 halt. 
-			( candidate treeSize < minimumInput treeSize ) ifTrue: [ 
+			( candidate treeSize < prevSize ) ifTrue: [ 
 				minimumInput := candidate.
 				reduceByAux := true
 			] ifFalse: [ 

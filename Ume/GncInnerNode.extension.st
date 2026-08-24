@@ -59,6 +59,13 @@ GncInnerNode >> decreaseTreeSizeBy: aSize [
 ]
 
 { #category : '*Ume' }
+GncInnerNode >> increaseTreeSizeBy: aSize [
+
+    treeSize := treeSize + aSize.
+    parent ifNotNil: [ :p | p increaseTreeSizeBy: aSize ].
+]
+
+{ #category : '*Ume' }
 GncInnerNode >> indexOf: aNode [
 
 	^ children indexOf: aNode
@@ -115,8 +122,20 @@ GncInnerNode >> replaceChild: child by: newChild [
 { #category : '*Ume' }
 GncInnerNode >> replaceChildAt: index with: newNode [
 
+	| previousNode previousSize newSize delta |
+	
+	previousNode := children at: index. 
+	previousSize := previousNode treeSize.
+	newSize := newNode treeSize.
+
 	children at: index put: newNode.
+	previousNode parent: nil. 
 	newNode parent: self.
+	
+	delta := newSize - previousSize.
+	( delta ~= 0 ) ifTrue: [ 
+		self increaseTreeSizeBy: delta ]
+
 ]
 
 { #category : '*Ume' }

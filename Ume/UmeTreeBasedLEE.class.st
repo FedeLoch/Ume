@@ -14,7 +14,7 @@ UmeTreeBasedLEE >> cutTree: nodeSequence position: windowPosition bound: bound t
 	
 	| nodeSet properSubsets newNodeSequence |
 				
-	newNodeSequence := nodeSequence copy.
+	newNodeSequence := nodeSequence asOrderedCollection.
 	nodeSet := newNodeSequence copyFrom: windowPosition to: (windowPosition + windowSize - 1).
 	properSubsets := self generateProperSubsetsOf: nodeSet.
 	
@@ -26,22 +26,24 @@ UmeTreeBasedLEE >> cutTree: nodeSequence position: windowPosition bound: bound t
 			] 
 		].
 
-	nodesToRemove do: [ :node |
-		node parent ifNotNil: [ :p | p removeChild: node ]. 
-	].
+		nodesToRemove do: [ :node |
+			node parent ifNotNil: [ :p | p removeChild: node ]. 
+		].
 
-	self minimizationDone.
-	(self triggerBug: tree upperBound: bound) ifTrue: [ 
-		newNodeSequence removeAll: nodesToRemove. 
-	] ifFalse: [ 
-		self failedMinimization.
-		backup associationsDo: [ :parentAndchildren | | parent |
-			parent := parentAndchildren key.
-			parent children: (parentAndchildren value).
+		self minimizationDone.
+		(self triggerBug: tree upperBound: bound) ifTrue: [ 
+			newNodeSequence removeAll: nodesToRemove. 
+			^ newNodeSequence. 
+		] ifFalse: [ 
+			self failedMinimization.
+			backup associationsDo: [ :parentAndchildren | | parent |
+				parent := parentAndchildren key.
+				parent children: (parentAndchildren value).
+			]
 		]
 	].
 	
-	^ newNodeSequence]
+	^ newNodeSequence
 ]
 
 { #category : 'as yet unclassified' }
@@ -63,8 +65,13 @@ UmeTreeBasedLEE >> findFirstNodeLevel: currentTree [
 
 { #category : 'as yet unclassified' }
 UmeTreeBasedLEE >> generateProperSubsetsOf: nodeSet [
-
-	^ nodeSet combinations: windowSize
+	
+	| subsets |
+	subsets := OrderedCollection new. 
+	1 to: nodeSet size do: [ :i |
+		subsets addAll: (nodeSet combinations: i) ].
+	
+	^ subsets reversed
 ]
 
 { #category : 'as yet unclassified' }
@@ -83,12 +90,14 @@ UmeTreeBasedLEE >> reduce: aTree bound: bound [
 	currentTreeLevel := 0.
 	
 	currentTreeLevel := self findFirstNodeLevel: currentTree.
+	currentTreeLevel ifNil: [ ^ currentTree ].	
 	nodeSequence := currentTree allNodesAtLevel: currentTreeLevel.
-	currentTreeLevel ifNil: [ ^ currentTree ].
+
 
 	[ true ] whileTrue: [ | windowPosition |
 		windowPosition := 1.
-		[ windowPosition + windowSize < nodeSequence size ] whileTrue: [ | initialSeqSize |
+		
+		[ (windowPosition + windowSize - 1) <= nodeSequence size ] whileTrue: [ | initialSeqSize |
 			initialSeqSize := nodeSequence size.
 			nodeSequence:= self cutTree: nodeSequence position: windowPosition bound: bound tree: currentTree.
 			(initialSeqSize == nodeSequence size) ifTrue: [ windowPosition := windowPosition + 1 ]
