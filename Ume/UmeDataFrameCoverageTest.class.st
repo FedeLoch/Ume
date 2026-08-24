@@ -184,7 +184,7 @@ UmeDataFrameCoverageTest >> testGuidingByCoverage [
 	| result methods |
 	
 	runner guidedByCoverage.
-	methods := Microdown package methods.
+	methods := DataFrame package methods.
 	"runner collectAllCases."
 	runner collectOnlyOutliers.
 	
