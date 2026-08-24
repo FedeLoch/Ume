@@ -25,24 +25,6 @@ UmeVulcanShrinker >> auxiliaryReducers [
 ]
 
 { #category : 'accessing' }
-UmeVulcanShrinker >> findFirstNodeLevel: currentTree [
-
-	| nodeSequence currentTreeLevel |
-	
-	currentTreeLevel := 0.
-	nodeSequence := {currentTree root}.
-	[nodeSequence size < windowSize and: [ nodeSequence isNotEmpty ] ]whileTrue: [
-		currentTreeLevel := currentTreeLevel + 1. 
-		nodeSequence := currentTree allNodesAtLevel: currentTreeLevel.
-	].
-
-	( nodeSequence size < windowSize ) ifTrue: [ currentTreeLevel := nil ]. 
-
-	^ currentTreeLevel. 
-
-]
-
-{ #category : 'accessing' }
 UmeVulcanShrinker >> grammar: aGrammar [
 
 	super grammar: aGrammar. 
@@ -89,12 +71,12 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 		minimumInput := self reduceMain: minimumInput bound: bound.
 		self minimizationDone.
 		
-		"Auxiliary reducer"
+		"Auxiliary reducers"
 		result := self runAuxiliary: minimumInput startingAt: index  bound: bound.
 		minimumInput := result key.
 		index := result value.  
 		
-		
+		"if we don't find smaller input, we stop"
 		(minimumInput treeSize = startingSize ) ifTrue: [ ^ minimumInput ].
 	].
 	^ minimumInput
@@ -150,7 +132,7 @@ UmeVulcanShrinker >> runAuxiliary: aTree startingAt: aIndex bound: bound [
 		]
 	].
 
-	^ currentTree -> index
+	^ currentTree -> index "we return the new tree and the new index"
 ]
 
 { #category : 'accessing' }
