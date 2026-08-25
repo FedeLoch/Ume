@@ -21,13 +21,13 @@ UmeTreeBasedLEE >> cutTree: nodeSequence position: windowPosition bound: bound t
 	properSubsets do: [ :nodesToRemove | | backup  |
 		backup := Dictionary new. 
 		nodesToRemove do: [ :node |
-			node parent ifNotNil: [ :p |
-				backup at: p ifAbsentPut: [ p children copy ].
+			node parent ifNotNil: [ :parent |
+				backup at: parent ifAbsentPut: [ parent children copy ].
 			] 
 		].
 
 		nodesToRemove do: [ :node |
-			node parent ifNotNil: [ :p | p removeChild: node ]. 
+			node parent ifNotNil: [ :parent | parent removeChild: node ]. 
 		].
 
 		self minimizationDone.
@@ -65,20 +65,16 @@ UmeTreeBasedLEE >> findFirstNodeLevel: currentTree [
 
 { #category : 'as yet unclassified' }
 UmeTreeBasedLEE >> generateProperSubsetsOf: nodeSet [
-	
-	| subsets |
-	subsets := OrderedCollection new. 
-	1 to: nodeSet size do: [ :i |
-		subsets addAll: (nodeSet combinations: i) ].
-	
-	^ subsets reversed
+
+	^ ((nodeSet size to: 1 by: -1 ) inject: OrderedCollection new into: [ :subsets :i |
+			subsets addAll: (nodeSet combinations: i). subsets ]) reversed
 ]
 
 { #category : 'as yet unclassified' }
 UmeTreeBasedLEE >> initialize [ 
 
 	super initialize.
-	windowSize := 4. 
+	windowSize := 4. "default value given by the paper"
 ]
 
 { #category : 'as yet unclassified' }
@@ -94,15 +90,15 @@ UmeTreeBasedLEE >> reduce: aTree bound: bound [
 	nodeSequence := currentTree allNodesAtLevel: currentTreeLevel.
 
 
-	[ true ] whileTrue: [ | windowPosition |
+	[ nodeSequence anySatisfy: #isLeaf ] whileTrue: [ | windowPosition |
 		windowPosition := 1.
 		
 		[ (windowPosition + windowSize - 1) <= nodeSequence size ] whileTrue: [ | initialSeqSize |
 			initialSeqSize := nodeSequence size.
 			nodeSequence:= self cutTree: nodeSequence position: windowPosition bound: bound tree: currentTree.
-			(initialSeqSize == nodeSequence size) ifTrue: [ windowPosition := windowPosition + 1 ]
+			(initialSeqSize = nodeSequence size) ifTrue: [ windowPosition := windowPosition + 1 ]
 		].
-		(nodeSequence allSatisfy: [ :node | node isLeaf ] ) ifTrue: [ ^ currentTree ].
+	
 		currentTreeLevel := currentTreeLevel +1.
 		nodeSequence := currentTree allNodesAtLevel: currentTreeLevel
 	].
