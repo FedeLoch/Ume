@@ -79,6 +79,8 @@ UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 		"if we don't find smaller input, we stop"
 		(minimumInput treeSize = startingSize ) ifTrue: [ ^ minimumInput ].
 	].
+
+	auxiliaryReducers do: [ :auxiliar | self minimizationDone: (auxiliar getMinimizationDone). self failedMinimization: (auxiliar getFailedMinimization) ].
 	^ minimumInput
 ]
 

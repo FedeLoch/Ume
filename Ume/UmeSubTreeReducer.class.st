@@ -20,5 +20,11 @@ UmeSubTreeReducer >> initialize [
 { #category : 'as yet unclassified' }
 UmeSubTreeReducer >> reduce: aTree bound: bound [
 
-	^ subtreeShrinker minimizeOne: aTree upperBound: bound.
+	| minimizedTree |
+	
+	minimizedTree := subtreeShrinker minimizeOne: aTree upperBound: bound.
+	self minimizationDone: (subtreeShrinker getMinimizationDone).
+	self failedMinimization: (subtreeShrinker getFailedMinimization).
+	
+	^ minimizedTree
 ]

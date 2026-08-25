@@ -18,8 +18,10 @@ UmeIdentifierReplacement >> reduce: aTree bound: bound [
 			(leafToReplace parent tag == leaf parent tag) ifTrue: [ | previousToken |
 				previousToken := leafToReplace token.
 				leafToReplace token: leaf token.
+				self minimizationDone.
 				( self triggerBug: aTree upperBound: bound ) ifFalse: [
 					leafToReplace token: previousToken.
+					self failedMinimization.
 				]
 			]
 		]
