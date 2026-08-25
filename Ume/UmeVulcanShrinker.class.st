@@ -34,6 +34,12 @@ UmeVulcanShrinker >> grammar: aGrammar [
 ]
 
 { #category : 'accessing' }
+UmeVulcanShrinker >> identifierReplacer [ 
+	
+	^ self auxiliaryReducers at: 1
+]
+
+{ #category : 'accessing' }
 UmeVulcanShrinker >> initialize [
 
 	super initialize.
@@ -149,4 +155,16 @@ UmeVulcanShrinker >> shouldStop: minimized size: size from: current size: curren
 
 	^ minimized = current
 	
+]
+
+{ #category : 'accessing' }
+UmeVulcanShrinker >> subtreeReducer [ 
+	
+	^ self auxiliaryReducers at: 2
+]
+
+{ #category : 'accessing' }
+UmeVulcanShrinker >> treeBasedLee [ 
+	
+	^ self auxiliaryReducers at: 3
 ]

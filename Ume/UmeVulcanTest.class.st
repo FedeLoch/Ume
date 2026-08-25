@@ -75,7 +75,7 @@ UmeVulcanTest >> testIdentifierReplacement04 [
 	tree := shrinker tree: input.
 	bound := shrinker evalInput: input.
 
-	self assert:  ((shrinker auxiliaryReducers at:1) reduce: tree bound: bound ) asInput equals: '2+2'
+	self assert:  (shrinker identifierReplacer reduce: tree bound: bound ) asInput equals: '2+2'
 ]
 
 { #category : 'tests' }
@@ -89,7 +89,7 @@ UmeVulcanTest >> testIdentifierReplacement05 [
 	tree := shrinker tree: input.
 	bound := shrinker evalInput: input.
 
-	self assert:  ((shrinker auxiliaryReducers at:1) reduce: tree bound: bound) asInput equals: '2+2+2'
+	self assert:  (shrinker identifierReplacer reduce: tree bound: bound) asInput equals: '2+2+2'
 ]
 
 { #category : 'tests' }
@@ -103,7 +103,7 @@ UmeVulcanTest >> testIdentifierReplacement06 [
 	tree := shrinker tree: input.
 	bound := shrinker evalInput: input.
 
-	self assert:  ((shrinker auxiliaryReducers at:1) reduce: tree bound: bound) asInput equals: 'm-.55,-.5,5-55.,55-.5'
+	self assert:  (shrinker identifierReplacer reduce: tree bound: bound) asInput equals: 'm-.55,-.5,5-55.,55-.5'
 ]
 
 { #category : 'tests' }
@@ -117,5 +117,5 @@ UmeVulcanTest >> testTreeBasedLEE07 [
 	tree := shrinker tree: input.
 	bound := shrinker evalInput: input.
 
-	self assert:  ((shrinker auxiliaryReducers at:3) reduce: tree bound: bound) asInput equals: 'm59,4'
+	self assert:  (shrinker treeBasedLee reduce: tree bound: bound) asInput equals: 'm59,4'
 ]
