@@ -26,7 +26,7 @@ UmeSVGTest >> setUp [
 					 method: SVGRunner class >> #run:.
 
 
-	runner := UmeRunner test: schema for: 20 minutes.
+	runner := UmeRunner test: schema for: 1 hour.
 ]
 
 { #category : 'as yet unclassified' }
@@ -44,6 +44,22 @@ UmeSVGTest >> svgGenerator [
 			(UmeGrammarDerivationMutator from: SvgPathGrammar new) maxInputSize: 1000
 		  };
 		  heuristic: UmePickBestElementDifferenceHeuristic new
+]
+
+{ #category : 'tests' }
+UmeSVGTest >> testGuidingByCoverage [
+
+	| result methods |
+	
+	runner guidedByCoverage.
+	methods := RSSVGPath package methods.
+	"runner collectAllCases."
+	runner collectOnlyOutliers.
+	
+	runner methodsToInstrument: methods.
+	result := runner run.
+
+	1 halt.
 ]
 
 { #category : 'tests' }
