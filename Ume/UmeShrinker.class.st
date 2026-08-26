@@ -129,14 +129,7 @@ UmeShrinker >> percentageInputReduced: tree given: minimizedTree [
 { #category : 'shrinking' }
 UmeShrinker >> percentageProblemPreservation: upperBound given: currentBound [
 
-	| baseline current |
-	
-	baseline := oracle valueBound: upperBound.
-	current := oracle valueBound: currentBound.
-	
-	(baseline = 0) ifTrue: [ ^ 0 ].
-	
-	^ ((current * 100) / baseline) asFloat
+	^ self oracle percentageProblemPreservation: upperBound given: currentBound
 ]
 
 { #category : 'shrinking' }
