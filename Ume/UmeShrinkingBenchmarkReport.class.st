@@ -114,7 +114,7 @@ UmeShrinkingBenchmarkReport >> plotInputReduction [
 ]
 
 { #category : 'as yet unclassified' }
-UmeShrinkingBenchmarkReport >> plotNeededIterations [
+UmeShrinkingBenchmarkReport >> plotNeededReductions [
 
 	^ (self asPlots: 'neededReductions') open
 ]

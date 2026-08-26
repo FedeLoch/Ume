@@ -52,6 +52,20 @@ GncInnerNode >> backPropagateToChildren: reward level: level [
 ]
 
 { #category : '*Ume' }
+GncInnerNode >> decreaseTreeSizeBy: aSize [
+
+    treeSize := treeSize - aSize.
+    parent ifNotNil: [ :p | p decreaseTreeSizeBy: aSize ].
+]
+
+{ #category : '*Ume' }
+GncInnerNode >> increaseTreeSizeBy: aSize [
+
+    treeSize := treeSize + aSize.
+    parent ifNotNil: [ :p | p increaseTreeSizeBy: aSize ].
+]
+
+{ #category : '*Ume' }
 GncInnerNode >> indexOf: aNode [
 
 	^ children indexOf: aNode
@@ -78,14 +92,22 @@ GncInnerNode >> objectClass [
 { #category : '*Ume' }
 GncInnerNode >> removeChild: child [
 
+	| childSize|
+
+	childSize := child treeSize.
 	children remove: child ifAbsent: [  Error signal: 'Trying to remove a wrong child' ].
-	child parent: nil
+	child parent: nil. 
+	self decreaseTreeSizeBy: childSize.
 ]
 
 { #category : '*Ume' }
 GncInnerNode >> removeChildAt: index [ 
 
+	| childSize |
+	
+	childSize := (children at: index) treeSize. 
 	children removeAt: index.
+	self decreaseTreeSizeBy: childSize.
 ]
 
 { #category : '*Ume' }
@@ -100,6 +122,24 @@ GncInnerNode >> replaceChild: child by: newChild [
 { #category : '*Ume' }
 GncInnerNode >> replaceChildAt: index with: newNode [
 
+	| previousNode previousSize newSize delta |
+	
+	previousNode := children at: index. 
+	previousSize := previousNode treeSize.
+	newSize := newNode treeSize.
+
 	children at: index put: newNode.
+	previousNode parent: nil. 
 	newNode parent: self.
+	
+	delta := newSize - previousSize.
+	( delta ~= 0 ) ifTrue: [ 
+		self increaseTreeSizeBy: delta ]
+
+]
+
+{ #category : '*Ume' }
+GncInnerNode >> treeSize: size [
+
+	treeSize := size 
 ]

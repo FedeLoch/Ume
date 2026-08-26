@@ -4,10 +4,8 @@ Class {
 	#instVars : [
 		'mainReducer',
 		'auxiliaryReducers',
-		'windowSize',
 		'limit',
-		'subtreeShrinker',
-		'identidierShrinker'
+		'windowSize'
 	],
 	#category : 'Ume-Shrinking',
 	#package : 'Ume',
@@ -20,76 +18,25 @@ UmeVulcanShrinker >> asInput: tree [
 	^ tree asInput
 ]
 
-{ #category : 'shrinking' }
-UmeVulcanShrinker >> cutTree: nodeSequence position: windowPosition bound: bound tree: tree [
-
-	| nodeSet properSubsets newNodeSequence |
-				
-	newNodeSequence := nodeSequence copy.
-	nodeSet := newNodeSequence copyFrom: windowPosition to: (windowPosition + windowSize - 1).
-	properSubsets := self generateProperSubsetsOf: nodeSet.
-	properSubsets do: [ :nodesToRemove | | backup  |
-		backup := Dictionary new. 
-		nodesToRemove do: [ :node |
-			node parent ifNotNil: [ :p |
-				backup at: p ifAbsentPut: [ p children copy ].
-			] 
-		].
-
-	nodesToRemove do: [ :node |
-		node parent ifNotNil: [ :p | p removeChild: node ]. 
-	].
-
-	self minimizationDone.
-	(self triggerBug: tree upperBound: bound) ifTrue: [ 
-		newNodeSequence removeAll: nodesToRemove. 
-	] ifFalse: [ 
-		self failedMinimization.
-		backup associationsDo: [ :parentAndchildren | | parent |
-			parent := parentAndchildren key.
-			parent children: (parentAndchildren value).
-		]
-	].
-	
-	^ newNodeSequence
-]
-]
-
 { #category : 'accessing' }
-UmeVulcanShrinker >> generateProperSubsetsOf: nodeSet [
+UmeVulcanShrinker >> auxiliaryReducers [ 
 
-	^ nodeSet combinations: windowSize
+	^auxiliaryReducers 
 ]
 
 { #category : 'accessing' }
 UmeVulcanShrinker >> grammar: aGrammar [
 
-	grammar := aGrammar.
+	super grammar: aGrammar. 
 	mainReducer grammar: aGrammar.
-	subtreeShrinker grammar: aGrammar.
+	auxiliaryReducers do: [ :reducer |
+		reducer grammar: aGrammar ]
 ]
 
 { #category : 'accessing' }
-UmeVulcanShrinker >> identifierReplacement: aTree bound: bound [
-
-	| allLeaf |
-	allLeaf := OrderedCollection new.
-	aTree allNodes do: [ :node | (node isLeaf) ifTrue: [ allLeaf add: node ] ].
+UmeVulcanShrinker >> identifierReplacer [ 
 	
-	allLeaf do: [ :leaf |
-		allLeaf do: [ :leafToReplace | 
-			(leafToReplace parent tag == leaf parent tag) ifTrue: [ | previousToken |
-				previousToken := leafToReplace token.
-				leafToReplace token: leaf token.
-				( self triggerBug: aTree upperBound: bound ) ifFalse: [
-					leafToReplace token: previousToken.
-				]
-			]
-		]
-	].
-				
-				
-	^ aTree 
+	^ self auxiliaryReducers at: 1
 ]
 
 { #category : 'accessing' }
@@ -97,19 +44,14 @@ UmeVulcanShrinker >> initialize [
 
 	super initialize.
 	
-	maxIterations := 1. 
-	windowSize := 4.
-	limit := 100.  
+	maxIterations := 1.
+	windowSize := 4. 
 	
-	mainReducer := UmeHDDShrinker new. 
-	subtreeShrinker := UmeGRABRShrinker new.
-	subtreeShrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer.
-]
-
-{ #category : 'accessing' }
-UmeVulcanShrinker >> limit: aNumber [
-
-	limit := aNumber 
+	mainReducer := UmeHDDShrinker new.
+	auxiliaryReducers := { 
+		UmeIdentifierReplacement new. 
+		UmeSubTreeReducer new.
+		UmeTreeBasedLEE new }
 ]
 
 { #category : 'accessing' }
@@ -122,67 +64,90 @@ UmeVulcanShrinker >> mainReducer: aReducer [
 { #category : 'shrinking' }
 UmeVulcanShrinker >> minimizeOne: originalTree upperBound: bound [
 
-	| minimum index prevByMain attempts |
+	| minimumInput index |
 	
-	minimum := self copyTree: originalTree.
-	prevByMain := nil.
+	minimumInput := self copyTree: originalTree.
 	index := 1.
-	attempts := 0.
 	
-	[ true ] whileTrue: [
-		prevByMain := self copyTree: minimum.
-		minimum := self reduce: minimum bound: bound.
-		( minimum treeSize < prevByMain treeSize ) ifTrue: [
-			attempts := 0.
-			prevByMain := minimum 
-	 	].
-		[ (minimum treeSize = prevByMain treeSize ) and: [ index <= 3] ] whileTrue: [ 
-			minimum := self reduce: minimum at: index with: bound.
-			attempts := attempts + 1.
-			( minimum treeSize = prevByMain treeSize ) ifTrue: [ 
-				index := index + 1.
-				attempts := 0.
-			]
-		].
-	
-		( minimum treeSize < prevByMain treeSize) ifTrue: [ 
-			attempts := 0
-		] ifFalse: [ (attempts > limit ) ifTrue: [ 
-			index := index + 1. 
-			attempts:= 0 
-			]
-		].
-	
-		(index >= 3 ) ifTrue: [ ^ minimum ].
+	[ index <= auxiliaryReducers size ] whileTrue: [
+		| startingSize result |
+		startingSize := minimumInput treeSize. 
+		
+		"Main reducer"
+		minimumInput := self reduceMain: minimumInput bound: bound.
+		self minimizationDone.
+		
+		"Auxiliary reducers"
+		result := self runAuxiliary: minimumInput startingAt: index  bound: bound.
+		minimumInput := result key.
+		index := result value.  
+		
+		"if we don't find smaller input, we stop"
+		(minimumInput treeSize = startingSize ) ifTrue: [ ^ minimumInput ].
 	].
+
+	auxiliaryReducers do: [ :auxiliar | self minimizationDone: (auxiliar getMinimizationDone). self failedMinimization: (auxiliar getFailedMinimization) ].
+	^ minimumInput
 ]
 
 { #category : 'accessing' }
 UmeVulcanShrinker >> oracle: aOracle [
 
-	oracle := aOracle.
+	super oracle: aOracle. 
 	mainReducer oracle: aOracle.
-	subtreeShrinker oracle: aOracle.
+	auxiliaryReducers do: [ :reducer |
+		reducer oracle: aOracle ]
 ]
 
 { #category : 'accessing' }
-UmeVulcanShrinker >> reduce: aTree at: index with: bound [
+UmeVulcanShrinker >> reduceAuxiliary: reducer on: aTree bound: bound [
 
-	( index = 1 ) ifTrue: [ ^ self subtreeReplacement: aTree bound: bound ].
-	( index = 2 ) ifTrue: [ ^ self identifierReplacement: aTree bound: bound ].
-	( index = 3 ) ifTrue: [ ^ self treeBasedLEE: aTree bound: bound ]
+	| candidate prevSize |
+	
+	prevSize := aTree treeSize.
+	candidate := reducer reduce: aTree bound: bound.
+	self minimizationDone.
+	
+	^ (candidate treeSize < prevSize ) ifTrue: [ candidate ] ifFalse: [ self failedMinimization. aTree ]
 ]
 
 { #category : 'accessing' }
-UmeVulcanShrinker >> reduce: aTree bound: bound [
+UmeVulcanShrinker >> reduceMain: aTree bound: bound [
 
 	^ mainReducer minimizeOne: aTree upperBound: bound 
 ]
 
 { #category : 'accessing' }
+UmeVulcanShrinker >> runAuxiliary: aTree startingAt: aIndex bound: bound [
+
+	| currentTree index haveReduce|
+	
+	currentTree := aTree.
+	index := aIndex.
+	haveReduce := false.
+	
+	[  (index <= auxiliaryReducers size) and: [ haveReduce not ] ] whileTrue: [ 
+		| reducer candidate prevSize |
+		reducer := auxiliaryReducers at: index. 
+		prevSize := currentTree treeSize.
+		candidate := self reduceAuxiliary: reducer on: currentTree bound: bound.
+		
+		(candidate treeSize < prevSize ) ifTrue: [ 
+			currentTree := candidate.
+			haveReduce := true.
+		] ifFalse: [ 
+			index := index + 1
+		]
+	].
+
+	^ currentTree -> index "we return the new tree and the new index"
+]
+
+{ #category : 'accessing' }
 UmeVulcanShrinker >> setWindowSize: aSize [
 
-	windowSize := aSize
+	windowSize := aSize.
+	(auxiliaryReducers at:3) windowSize: aSize
 ]
 
 { #category : 'accessing' }
@@ -193,41 +158,13 @@ UmeVulcanShrinker >> shouldStop: minimized size: size from: current size: curren
 ]
 
 { #category : 'accessing' }
-UmeVulcanShrinker >> subtreeReplacement: aTree bound: bound [
-
-	self minimizationDone.
+UmeVulcanShrinker >> subtreeReducer [ 
 	
-	^ subtreeShrinker minimizeOne: aTree upperBound: bound.
+	^ self auxiliaryReducers at: 2
 ]
 
 { #category : 'accessing' }
-UmeVulcanShrinker >> treeBasedLEE: aTree bound: bound [
-
-	| t level nodeSequence maxReduction |
+UmeVulcanShrinker >> treeBasedLee [ 
 	
-	t := aTree.
-	level := 0.
-	nodeSequence := { aTree root}. 
-	maxReduction := false. 
-	
-	[ nodeSequence size < windowSize and: [ nodeSequence isNotEmpty ] ] whileTrue: [
-		level := level + 1. 
-		nodeSequence := t allNodesAtLevel: level.
-	].
-
-	nodeSequence size < windowSize ifTrue: [ ^ t ].
-
-	[maxReduction] whileFalse: [ | windowPosition |
-		windowPosition := 1.
-		[ windowPosition + windowSize < nodeSequence size ] whileTrue: [ | initialSeqSize |
-			initialSeqSize := nodeSequence size.
-			nodeSequence:= self cutTree: nodeSequence position: windowPosition bound: bound tree: t.
-			(initialSeqSize == nodeSequence size) ifTrue: [ windowPosition := windowPosition + 1 ]
-		].
-		(nodeSequence allSatisfy: [ :node | node isLeaf ] ) ifTrue: [ ^ t ].
-		level := level +1.
-		nodeSequence := t allNodesAtLevel: level
-	].
-
-	^ t
+	^ self auxiliaryReducers at: 3
 ]

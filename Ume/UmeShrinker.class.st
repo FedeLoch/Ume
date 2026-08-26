@@ -39,6 +39,24 @@ UmeShrinker >> failedMinimization [
 ]
 
 { #category : 'shrinking' }
+UmeShrinker >> failedMinimization: number [
+
+	failedReductionsDone := failedReductionsDone + number
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> getFailedMinimization [
+
+	^ failedReductionsDone
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> getMinimizationDone [
+
+	^ reductionsDone
+]
+
+{ #category : 'shrinking' }
 UmeShrinker >> grammar [
 	
 	^ grammar
@@ -69,6 +87,12 @@ UmeShrinker >> maxIterations: nbIterations [
 UmeShrinker >> minimizationDone [
 
 	reductionsDone := reductionsDone + 1
+]
+
+{ #category : 'shrinking' }
+UmeShrinker >> minimizationDone: number [
+
+	reductionsDone := reductionsDone + number
 ]
 
 { #category : 'shrinking' }
