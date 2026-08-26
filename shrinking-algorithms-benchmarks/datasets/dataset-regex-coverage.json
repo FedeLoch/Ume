@@ -1,0 +1,119 @@
+[
+    {
+        "percetange": 23.529411764705884,
+        "input": "a+|",
+        "#nodes": 160,
+        "#methods": 90,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 23.676470588235293,
+        "input": "c?|b+c+|",
+        "#nodes": 161,
+        "#methods": 94,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 25.441176470588236,
+        "input": "|((a*a.+))b*c*||",
+        "#nodes": 173,
+        "#methods": 99,
+        "reducedInput": "|((a*a.+))b",
+        "reduceMethods": "DDminFuzzingBookShrinker",
+        "%inputReduction": 31.25
+    },
+    {
+        "percetange": 25.735294117647058,
+        "input": "b+bc||",
+        "#nodes": 175,
+        "#methods": 93,
+        "reducedInput": "b+bc|",
+        "reduceMethods": "DDminFuzzingBookShrinker",
+        "%inputReduction": 16.666666666666668
+    },
+    {
+        "percetange": 26.176470588235293,
+        "input": "b+b(b+c+a?)+|",
+        "#nodes": 178,
+        "#methods": 97,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 27.5,
+        "input": "b+bc||||a+a.+.?",
+        "#nodes": 187,
+        "#methods": 100,
+        "reducedInput": "b+bc||a.?",
+        "reduceMethods": "DDminFuzzingBookShrinker",
+        "%inputReduction": 40
+    },
+    {
+        "percetange": 27.5,
+        "input": "b+b(a*)||||a+a.+.?",
+        "#nodes": 187,
+        "#methods": 103,
+        "reducedInput": "b(a*)||a+.?",
+        "reduceMethods": "DDminFuzzingBookShrinker",
+        "%inputReduction": 38.888888888888886
+    },
+    {
+        "percetange": 28.38235294117647,
+        "input": "b+bc||a*||ac+a.+.?",
+        "#nodes": 193,
+        "#methods": 103,
+        "reducedInput": "b+bc|a*||c+a.?",
+        "reduceMethods": "DDminFuzzingBookShrinker",
+        "%inputReduction": 22.22222222222222
+    },
+    {
+        "percetange": 28.529411764705884,
+        "input": "b+bc|||||c*a+a.?a?|a",
+        "#nodes": 194,
+        "#methods": 103,
+        "reducedInput": "b+bc||c*a.?",
+        "reduceMethods": "DDminFuzzingBookShrinker",
+        "%inputReduction": 45
+    },
+    {
+        "percetange": 28.676470588235293,
+        "input": "b*a+bc|b+b+c+||||||a?|ac?.?",
+        "#nodes": 195,
+        "#methods": 103,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 28.823529411764707,
+        "input": "b*a+bc|b+b+bc+||||||a?|ac.?.?",
+        "#nodes": 196,
+        "#methods": 103,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 28.970588235294116,
+        "input": "b*a+ac|b+b+b(a+a*(c*|)b*|.)+||||||a?|ac.?.?",
+        "#nodes": 197,
+        "#methods": 103,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 29.11764705882353,
+        "input": "b*a+ac|b+b+.(a+a*(c*|)b*|.)+||||||a?|aa.?.?",
+        "#nodes": 198,
+        "#methods": 103,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    }
+]

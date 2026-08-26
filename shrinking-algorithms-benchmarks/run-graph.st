@@ -15,7 +15,7 @@ shrinkerClasses := {
     Smalltalk at: #UmeVulcanShrinker
 }.
 
-benchmark := (Smalltalk at: #UmeShrinkingRegexCoverageBenchmark) for: shrinkerClasses.
+benchmark := (Smalltalk at: #UmeShrinkingGraphCoverageBenchmark) for: shrinkerClasses.
 report := benchmark bench.
 
-report saveAsFile: 'UmeShrinkingRegexCoverageBenchmark.json'
+report saveAsFile: 'UmeShrinkingGraphCoverageBenchmark.json'
