@@ -14,7 +14,15 @@ Class {
 { #category : 'as yet unclassified' }
 UmeCoverageOracle >> accepts: input from: baseline [
 
-	^ (self evalInput: input) values = baseline values
+	| current |
+	
+	current := self evalInput: input.
+
+	current keys do: [ :key |
+		(baseline at: key) ~= (current at: key) ifTrue: [ ^ false ]
+	].
+
+	^ true
 ]
 
 { #category : 'accessing' }
