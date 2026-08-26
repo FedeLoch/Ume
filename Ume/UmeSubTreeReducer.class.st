@@ -21,7 +21,7 @@ UmeSubTreeReducer >> initialize [
 
 	super initialize. 
 	subtreeShrinker := UmeGRABRShrinker new.
-	subtreeShrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer.
+	subtreeShrinker reductionStrategy: UmeSimplifyGrammarSubtreeReducer. "only try to reduce by replacing subtrees with the same symbol"
 ]
 
 { #category : 'as yet unclassified' }
