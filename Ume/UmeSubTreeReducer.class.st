@@ -35,9 +35,3 @@ UmeSubTreeReducer >> reduce: aTree bound: bound [
 	
 	^ minimizedTree
 ]
-
-{ #category : 'as yet unclassified' }
-UmeSubTreeReducer >> subtreeShrinker [
-
-	^ subtreeShrinker 
-]
