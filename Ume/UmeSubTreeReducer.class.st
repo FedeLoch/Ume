@@ -10,6 +10,13 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+UmeSubTreeReducer >> grammar: aGrammar [
+
+	super grammar: aGrammar.
+	subtreeShrinker grammar: aGrammar 
+]
+
+{ #category : 'as yet unclassified' }
 UmeSubTreeReducer >> initialize [ 
 
 	super initialize. 
@@ -27,4 +34,10 @@ UmeSubTreeReducer >> reduce: aTree bound: bound [
 	self failedMinimization: (subtreeShrinker getFailedMinimization).
 	
 	^ minimizedTree
+]
+
+{ #category : 'as yet unclassified' }
+UmeSubTreeReducer >> subtreeShrinker [
+
+	^ subtreeShrinker 
 ]
