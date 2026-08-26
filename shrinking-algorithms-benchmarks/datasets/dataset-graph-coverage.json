@@ -1,0 +1,119 @@
+[
+    {
+        "percetange": 15.384615384615385,
+        "input": "RSGridLayout\rRSPieSlice\r576->031 . 107->370 . 056->551",
+        "#nodes": 338,
+        "#methods": 251,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 16.385980883022302,
+        "input": "RSTreeLayout\rRSLabel\r465->150 . 952->600",
+        "#nodes": 360,
+        "#methods": 266,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 18.024578971324534,
+        "input": "RSSugiyamaLayout\rRSPieSlice\r369->154",
+        "#nodes": 396,
+        "#methods": 273,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 18.29767865270824,
+        "input": "RSSugiyamaLayout\rRSBox\r679->886 . 333->677",
+        "#nodes": 402,
+        "#methods": 267,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 17.88802913063268,
+        "input": "RSForceBasedLayout\rRSEllipse\r976->801 . 770->260",
+        "#nodes": 393,
+        "#methods": 278,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 18.070095584888485,
+        "input": "RSForceBasedLayout\rRSCircle\r441->226 . 511->547 . 651->483 . 680->662 . 978->764",
+        "#nodes": 397,
+        "#methods": 279,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 18.161128812016386,
+        "input": "RSRectangleForceLayout\rRSPolygon\r003->652 . 920->524",
+        "#nodes": 399,
+        "#methods": 280,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 18.252162039144288,
+        "input": "RSRectangleForceLayout\rRSCircle\r721->152 . 184->235",
+        "#nodes": 401,
+        "#methods": 282,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 18.34319526627219,
+        "input": "RSSugiyamaLayout\rRSBox\r305->726 . 886->543 . 890->980 . 963->305 . 426->636",
+        "#nodes": 403,
+        "#methods": 267,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 18.38871187983614,
+        "input": "RSSugiyamaLayout\rRSBox\r686->688 . 674->467 . 129->045 . 045->179",
+        "#nodes": 404,
+        "#methods": 267,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 18.43422849340009,
+        "input": "RSSugiyamaLayout\rRSBox\r688->688 . 674->467 . 129->045 . 045->179",
+        "#nodes": 405,
+        "#methods": 267,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 18.479745106964042,
+        "input": "RSSugiyamaLayout\rRSBox\r688->688 . 674->467 . 129->045 . 674->756",
+        "#nodes": 406,
+        "#methods": 267,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    },
+    {
+        "percetange": 18.29767865270824,
+        "input": "RSForceBasedLayout\rRSPieSlice\r231->247 . 761->129 . 767->988",
+        "#nodes": 402,
+        "#methods": 285,
+        "reducedInput": "",
+        "reduceMethods": "",
+        "%inputReduction": 0
+    }
+]
