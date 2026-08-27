@@ -18,11 +18,11 @@ UmeShrinkingJSONCoverageBenchmark >> initialize [
 
 	tests := #(
 		'{}'
-		'{\"n\":true,\"n\":[],\"x\":6}'
-		'{\"s\":true,\"n\":[\"v\"],\"x\":6}'
-		'{\"s\":true,\"n\":[[false]],\"x\":6}'
-		'{\"s\":true,\"n\":[[false]],\"y\":[{\"t\":null},5]}'
-		'{\"s\":true,\"n\":[[false]],\"y\":[{\"th\":null},8e5]}'
-		'{\"s\":true,\"n\":[[false],5],\"}y\":[{\"th\":null},8e5]}'
+		'{"n":true,"n":[],"x":6}'
+		'{"s":true,"n":["v"],"x":6}'
+		'{"s":true,"n":[[false]],"x":6}'
+		'{"s":true,"n":[[false]],"y":[{"t":null},5]}'
+		'{"s":true,"n":[[false]],"y":[{"th":null},85]}'
+		'{"s":true,"n":[[false],5],"y":[{"th":null},85]}'
 	) collect: [ :input | ShrinkerTest input: input oracle: oracle ]
 ]
