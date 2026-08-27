@@ -119,7 +119,7 @@ UmeCorpusGenerator >> mutate: seed [
 UmeCorpusGenerator >> mutationMetadata [
 
 	^ {
-		'selectedMutatorIndex' -> (mutatorSelector lastSelectedIndex).
+		'selectedMutatorIndex' -> (mutatorSelector lastMutatedSelector).
 		'mutatorWeights' -> (mutatorSelector mutatorWeights)
 	} asDictionary
 ]
