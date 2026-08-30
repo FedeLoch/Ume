@@ -16,7 +16,7 @@ UmeCoverageOracle >> accepts: input from: baseline [
 
 	| current |
 	
-	current := self evalInput: input.
+	current := [self evalInput: input] on: Error do: [ ^ false ].
 
 	current keys do: [ :key |
 		(baseline at: key) ~= (current at: key) ifTrue: [ ^ false ]
