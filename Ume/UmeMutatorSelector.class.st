@@ -26,6 +26,12 @@ UmeMutatorSelector >> feed: feedback [
 ]
 
 { #category : 'accessing' }
+UmeMutatorSelector >> lastMutatedSelector [
+
+	^ corpusGenerator mutators indexOf: corpusGenerator lastSelectedMutator
+]
+
+{ #category : 'accessing' }
 UmeMutatorSelector >> lastSelectedIndex [
 
 	^ corpusGenerator mutators indexOf: corpusGenerator lastSelectedMutator

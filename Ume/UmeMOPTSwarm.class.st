@@ -56,19 +56,13 @@ UmeMOPTSwarm >> mopt: anObject [
 ]
 
 { #category : 'accessing' }
-UmeMOPTSwarm >> mutatorWeights [
-
-	^ probabilities"selectionCounts"
-]
-
-{ #category : 'accessing' }
 UmeMOPTSwarm >> probabilities [
 
 	^ probabilities
 ]
 
 { #category : 'as yet unclassified' }
-UmeMOPTSwarm >> selectMutatorFrom: mutatorList [
+UmeMOPTSwarm >> selectCandidateFrom: mutatorList [
 
 	| total roll cumulative |
 	"get the total probability sum"
@@ -80,10 +74,25 @@ UmeMOPTSwarm >> selectMutatorFrom: mutatorList [
 	"look for the lucky one"
 	probabilities withIndexDo: [ :prob :index |
 			cumulative := cumulative + prob.
-			roll <= cumulative ifTrue: [ ^ index ] ].
+			roll <= cumulative ifTrue: [
+				swarmSelections at: index put: (swarmSelections at: index) + 1.
+				^ index ] ].
 
 	"in case the coin is too high is because the lucky one is the last one"
+	swarmSelections atLast: 1 put: (swarmSelections atLast: 1) + 1.
 	^ probabilities size
+]
+
+{ #category : 'accessing' }
+UmeMOPTSwarm >> swarmSelections [
+
+	^ swarmSelections
+]
+
+{ #category : 'accessing' }
+UmeMOPTSwarm >> swarmSucccesses [
+
+	^ swarmSucccesses
 ]
 
 { #category : 'updating' }
@@ -100,7 +109,6 @@ UmeMOPTSwarm >> updateProbabilitiesWithSuccesses: localSuccesses onSelections: l
 
 			"Cumulate the total number of selections and successes of this swarm"
 			swarmSucccesses at: i put: (swarmSucccesses at: i) + localSuccess.
-			swarmSelections at: i put: (swarmSelections at: i) + localSelection.		
 			
 			localEfficiency := localSelection = 0
 				                   ifTrue: [ 0 ]
