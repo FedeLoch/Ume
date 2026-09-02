@@ -85,27 +85,27 @@
         "input": "b*a+bc|b+b+c+||||||a?|ac?.?",
         "#nodes": 195,
         "#methods": 103,
-        "reducedInput": "",
-        "reduceMethods": "",
-        "%inputReduction": 0
+        "reducedInput": "b*bc|b+||a.?",
+        "reduceMethods": "DDminFuzzingBookShrinker",
+        "%inputReduction": 55.56
     },
     {
         "percetange": 28.823529411764707,
         "input": "b*a+bc|b+b+bc+||||||a?|ac.?.?",
         "#nodes": 196,
         "#methods": 103,
-        "reducedInput": "",
-        "reduceMethods": "",
-        "%inputReduction": 0
+        "reducedInput": "b*a+bc||ac.?",
+        "reduceMethods": "DDminFuzzingBookShrinker",
+        "%inputReduction": 58.62
     },
     {
         "percetange": 28.970588235294116,
         "input": "b*a+ac|b+b+b(a+a*(c*|)b*|.)+||||||a?|ac.?.?",
         "#nodes": 197,
         "#methods": 103,
-        "reducedInput": "",
-        "reduceMethods": "",
-        "%inputReduction": 0
+        "reducedInput": "b*ac|b+(a+a*(c*)b*|.)+||a?ac.",
+        "reduceMethods": "DDminFuzzingBookShrinker",
+        "%inputReduction": 32.59
     },
     {
         "percetange": 29.11764705882353,
