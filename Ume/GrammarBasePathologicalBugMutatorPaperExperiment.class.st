@@ -130,6 +130,15 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> moptSelectionSchedulerSchema
 ]
 
 { #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> moptSelectionSchedulerWithOnlyGrammarMutatorsSchema: nSeeds [ 
+
+	^ self schemaCorpusWith: (
+		self grammarLiteralMutators,
+		self grammarDerivationMutators
+	) selector: UmeMOPTMutatorSelector new seeds: nSeeds
+]
+
+{ #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> mpi [
 
 	^ 3
@@ -154,6 +163,15 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> randomSelectionSchedulerSche
 		self grammarLiteralMutators,
 		self grammarDerivationMutators,
 		self stochasticMutators
+	) selector: UmeRandomMutatorSelector new seeds: nSeeds
+]
+
+{ #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> randomSelectionSchedulerWithOnlyGrammarMutatorsSchema: nSeeds [
+
+	^ self schemaCorpusWith: (
+		self grammarLiteralMutators,
+		self grammarDerivationMutators
 	) selector: UmeRandomMutatorSelector new seeds: nSeeds
 ]
 
@@ -225,7 +243,12 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> schema: config seeds: number
 		'grammar-derivations' -> ([ self grammarDerivationsSchema: numberOfSeeds ]).
 		'weighted-scheduling' -> ([ self weightSelectionSchedulerSchema: numberOfSeeds ]).
 		'random-scheduling' -> ([ self randomSelectionSchedulerSchema: numberOfSeeds ]).
-		'mopt-scheduling' -> ([ self moptSelectionSchedulerSchema: numberOfSeeds ])
+		'mopt-scheduling' -> ([ self moptSelectionSchedulerSchema: numberOfSeeds ]).
+		
+		'weighted-scheduling-with-grammar-mutators' -> ([ self weightSelectionSchedulerWithOnlyGrammarMutatorsSchema: numberOfSeeds ]).
+		'random-scheduling-with-grammar-mutators' -> ([ self randomSelectionSchedulerWithOnlyGrammarMutatorsSchema: numberOfSeeds ]).
+		'mopt-scheduling-with-grammar-mutators' -> ([ self moptSelectionSchedulerWithOnlyGrammarMutatorsSchema: numberOfSeeds ]).
+		
 	} asDictionary.
 
 	^ (schemas at: config) value
@@ -282,6 +305,15 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> weightSelectionSchedulerSche
 		self grammarLiteralMutators,
 		self grammarDerivationMutators,
 		self stochasticMutators
+	) selector: UmeWeightedMutatorSelector new seeds: numberOfSeeds
+]
+
+{ #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> weightSelectionSchedulerWithOnlyGrammarMutatorsSchema: numberOfSeeds [ 
+
+	^ self schemaCorpusWith: (
+		self grammarLiteralMutators,
+		self grammarDerivationMutators
 	) selector: UmeWeightedMutatorSelector new seeds: numberOfSeeds
 ]
 
