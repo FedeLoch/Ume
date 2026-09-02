@@ -31,12 +31,12 @@ MicrodownExperiment >> newGrammar [
 ]
 
 { #category : 'running' }
-MicrodownExperiment >> schemaCorpusWith: mutators selector: selector [
+MicrodownExperiment >> schemaCorpusWith: mutators selector: selector seeds: nSeeds [
 
 	| markdownGenerator |
 	
 	markdownGenerator := UmeCorpusGenerator new
-		  seeds: self seeds deepCopy;
+		  seeds: (self seeds: nSeeds) deepCopy;
 		  mutationsPerIteration: self mpi;
 		  mutators: mutators;
 		  mutatorSelector: selector;
@@ -49,7 +49,7 @@ MicrodownExperiment >> schemaCorpusWith: mutators selector: selector [
 ]
 
 { #category : 'running' }
-MicrodownExperiment >> seeds [
+MicrodownExperiment >> seeds: nSeeds [
 
 	^ { 'a' . '# Header
 	** This is a line comment **

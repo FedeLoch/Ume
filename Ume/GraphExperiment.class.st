@@ -47,11 +47,11 @@ GraphExperiment >> newGrammar [
 ]
 
 { #category : 'running' }
-GraphExperiment >> schemaCorpusWith: mutators selector: selector [
+GraphExperiment >> schemaCorpusWith: mutators selector: selector seeds: nSeeds [
 
 	| graphCodeGenerator |
 	
-	graphCodeGenerator := self corpusGenerator: mutators selector: selector.
+	graphCodeGenerator := self corpusGenerator: mutators selector: selector seeds: nSeeds.
 
 	^ UmeSchema new
 		  receiverConstraint: (UmeConstantGenerator new value: UmeRoassalGrapher);
@@ -60,8 +60,10 @@ GraphExperiment >> schemaCorpusWith: mutators selector: selector [
 ]
 
 { #category : 'running' }
-GraphExperiment >> seeds [
+GraphExperiment >> seeds: nSeeds [
 	"Auto Generated but hardcoded to allow repetition"
+	
+	(nSeeds = 2) ifTrue: [ ^ { self baseSeed . self complexSeed } ].
 
 	^ #( 'RSGridLayout
 RSPieSlice
@@ -265,8 +267,6 @@ RSLabel
 964->036' 'RSRectanglePackLayout
 RSPieSlice
 678->557' )
-
-	"^ { self baseSeed . self complexSeed }"
 ]
 
 { #category : 'running' }
