@@ -5,9 +5,9 @@ Class {
 		'wordToConsume',
 		'memo'
 	],
-	#category : 'Ume-Grammar Parser',
+	#category : 'Ume-Generic Tools',
 	#package : 'Ume',
-	#tag : 'Grammar Parser'
+	#tag : 'Generic Tools'
 }
 
 { #category : 'instance creation' }

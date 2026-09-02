@@ -8,9 +8,9 @@ Class {
 		'mutators',
 		'mopt'
 	],
-	#category : 'Ume-Selector Heuristics',
+	#category : 'Ume-Generic Tools',
 	#package : 'Ume',
-	#tag : 'Selector Heuristics'
+	#tag : 'Generic Tools'
 }
 
 { #category : 'running' }

@@ -17,9 +17,9 @@ Class {
 		'globalSuccessCounts',
 		'lastSelectedCandidateIndex'
 	],
-	#category : 'Ume-Selector Heuristics',
+	#category : 'Ume-Generic Tools',
 	#package : 'Ume',
-	#tag : 'Selector Heuristics'
+	#tag : 'Generic Tools'
 }
 
 { #category : 'accessing' }
@@ -37,9 +37,7 @@ UmeMOPT >> bestSwarm [
 { #category : 'updating' }
 UmeMOPT >> feed: feedback [
 
-	((feedback isNotNil and: [ feedback isPositive ]) and: [ lastSelectedCandidateIndex isNotNil ]) ifTrue: [
-			iterationSuccessCounts at: lastSelectedCandidateIndex put: (iterationSuccessCounts at: lastSelectedCandidateIndex) + 1.
-			globalSuccessCounts at: lastSelectedCandidateIndex put: (globalSuccessCounts at: lastSelectedCandidateIndex) + 1 ]
+	(self isPositiveFeedback: feedback) ifTrue: [ self increaseSuccessLastSelection ]
 ]
 
 { #category : 'accessing' }
@@ -64,6 +62,13 @@ UmeMOPT >> globalSuccessCounts [
 UmeMOPT >> globalSuccessCounts: anObject [
 
 	globalSuccessCounts := anObject
+]
+
+{ #category : 'updating' }
+UmeMOPT >> increaseSuccessLastSelection [
+
+	iterationSuccessCounts at: lastSelectedCandidateIndex put: (iterationSuccessCounts at: lastSelectedCandidateIndex) + 1.
+	globalSuccessCounts at: lastSelectedCandidateIndex put: (globalSuccessCounts at: lastSelectedCandidateIndex) + 1
 ]
 
 { #category : 'accessing' }
@@ -98,25 +103,29 @@ UmeMOPT >> initialize [
 { #category : 'initialization' }
 UmeMOPT >> initializeSwarms: mutators [
 
-	| count |
-	count := mutators size.
+	| mutatorsSize |
+	mutatorsSize := mutators size.
 
-	swarms := (1 to: numberOfSwarms) collect: [ :i |
-			          UmeMOPTSwarm new
-				          mopt: self;
-				          initializeSwarm: mutators;
-				          yourself ].
+	swarms := (1 to: numberOfSwarms) collect: [ :_ |
+		UmeMOPTSwarm new mopt: self; initializeSwarm: mutators; yourself
+	].
 
-	globalBestProbabilities := Array new: count withAll: 0.5.
+	globalBestProbabilities := Array new: mutatorsSize withAll: 0.5.
 
 	minProbability := 0.001.
 	maxProbability := 0.998.
 
-	globalSuccessCounts := Array new: count withAll: 0.
-	iterationSelectionCounts := Array new: count withAll: 0.
-	iterationSuccessCounts := Array new: count withAll: 0.
+	globalSuccessCounts := Array new: mutatorsSize withAll: 0.
+	iterationSelectionCounts := Array new: mutatorsSize withAll: 0.
+	iterationSuccessCounts := Array new: mutatorsSize withAll: 0.
 	lastSelectedCandidateIndex := 1.
 	selectionCounter := 0
+]
+
+{ #category : 'updating' }
+UmeMOPT >> isPositiveFeedback: feedback [
+
+	^ (feedback isNotNil and: [ feedback isPositive ]) and: [ lastSelectedCandidateIndex isNotNil ]
 ]
 
 { #category : 'accessing' }
@@ -199,9 +208,12 @@ UmeMOPT >> selectCandidate: mutators [
 
 	selectionCounter := selectionCounter + 1.
 	isPilotPhase := selectionCounter < (pilotPhaseMax * numberOfSwarms).
-	swarm := isPilotPhase
-		         ifTrue: [ "Pilot phase, we take the next swarm in round robin" swarms at: selectionCounter \\ numberOfSwarms + 1 ]
-		         ifFalse: [ "not in pilot phase anymore, use the best swarm" self bestSwarm ].
+	swarm := isPilotPhase ifTrue: [
+		"Pilot phase, we take the next swarm in round robin"
+		swarms at: selectionCounter \\ numberOfSwarms + 1 ] ifFalse: [
+		"not in pilot phase anymore, use the best swarm"
+		self bestSwarm
+	].
 
 	lastSelectedCandidateIndex := swarm selectCandidateFrom: mutators.
 
@@ -210,9 +222,9 @@ UmeMOPT >> selectCandidate: mutators [
 	selectionCounter \\ updatePeriod = 0 ifTrue: [
 			self updateGlobalBestProbabilitiesWithSuccesses: globalSuccessCounts.
 			swarm updateProbabilitiesWithSuccesses: iterationSuccessCounts onSelections: iterationSelectionCounts.
-			1 to: mutators size do: [ :i |
-					iterationSelectionCounts at: i put: 0.
-					iterationSuccessCounts at: i put: 0 ] ].
+			1 to: mutators size do: [ :mutatorIndex |
+					iterationSelectionCounts at: mutatorIndex put: 0.
+					iterationSuccessCounts at: mutatorIndex put: 0 ] ].
 
 	^ mutators at: lastSelectedCandidateIndex
 ]

@@ -10,17 +10,20 @@ Class {
 		'swarmSucccesses',
 		'swarmSelections'
 	],
-	#category : 'Ume-Selector Heuristics',
+	#category : 'Ume-Generic Tools',
 	#package : 'Ume',
-	#tag : 'Selector Heuristics'
+	#tag : 'Generic Tools'
 }
 
 { #category : 'accessing' }
 UmeMOPTSwarm >> efficiency [
 
 	| selections |
+	
 	selections := swarmSelections sum.
-	selections = 0 ifTrue: [ ^ 0 ].
+	
+	selections isZero ifTrue: [ ^ 0 ].
+	
 	^ swarmSucccesses sum / selections
 ]
 
