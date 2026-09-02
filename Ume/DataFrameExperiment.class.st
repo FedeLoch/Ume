@@ -31,12 +31,12 @@ DataFrameExperiment >> newGrammar [
 ]
 
 { #category : 'running' }
-DataFrameExperiment >> schemaCorpusWith: mutators selector: selector [
+DataFrameExperiment >> schemaCorpusWith: mutators selector: selector seeds: nSeeds [
 
 	| csvGenerator |
 	
 	csvGenerator := UmeCorpusGenerator new
-		  seeds: self seeds deepCopy;
+		  seeds: (self seeds: nSeeds) deepCopy;
 		  mutationsPerIteration: self mpi;
 		  mutators: mutators;
 		  mutatorSelector: selector;
@@ -57,8 +57,15 @@ DataFrameExperiment >> schemaCorpusWith: mutators selector: selector [
 ]
 
 { #category : 'running' }
-DataFrameExperiment >> seeds [
+DataFrameExperiment >> seeds: nSeeds [
 	"Auto Generated but hardcoded to allow repetition"
+
+	(nSeeds = 2) ifTrue: [ ^ { 'a' . 'id,first_name,last_name,email,gender,ip_address
+1,Jeannine,Sutehall,jsutehall0@lulu.com,Female,250.29.137.240
+2,Lynnette,Pashbee,lpashbee1@blogger.com,Female,179.86.141.239
+3,Garrick,Fontell,gfontell2@sitemeter.com,Male,4.57.36.151
+4,Osbert,O''Henecan,oohenecan3@senate.gov,Male,251.160.81.243
+5,Doug,Vieyra,dvieyra4@chronoengine.com,Genderfluid,72.234.190.220' } ].
 
 	^ #( '.#_
 8,180,,' '’,true,true
@@ -182,13 +189,6 @@ _F>/>#b-,false,,,null,,
 false
 .@' 'true,45,4' '248' 'true
 true,0' )
-
-	"	^ { 'a' . 'id,first_name,last_name,email,gender,ip_address
-1,Jeannine,Sutehall,jsutehall0@lulu.com,Female,250.29.137.240
-2,Lynnette,Pashbee,lpashbee1@blogger.com,Female,179.86.141.239
-3,Garrick,Fontell,gfontell2@sitemeter.com,Male,4.57.36.151
-4,Osbert,O''Henecan,oohenecan3@senate.gov,Male,251.160.81.243
-5,Doug,Vieyra,dvieyra4@chronoengine.com,Genderfluid,72.234.190.220' }"
 ]
 
 { #category : 'running' }

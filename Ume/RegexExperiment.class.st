@@ -50,14 +50,14 @@ RegexExperiment >> regexByProp: props and: feedback [
 ]
 
 { #category : 'running' }
-RegexExperiment >> schemaCorpusWith: mutators selector: selector [
+RegexExperiment >> schemaCorpusWith: mutators selector: selector seeds: nSeeds [
 
 | assert sharedProperties argumentConstraints receiverConstraint regexGenerator regexConstraint |
 
 	regexConstraint := UmeObjectConstraint new
 		unwrap: [ :case | (case class = UmeRegex) ifTrue: [ case regexString ] ifFalse: [ case ] ];
 		generator: (UmeCorpusGenerator new
-		seeds: self seeds deepCopy;
+		seeds: (self seeds: nSeeds) deepCopy;
 		mutationsPerIteration: self mpi;
 		mutators: mutators;
 		mutatorSelector: selector;
@@ -93,7 +93,9 @@ RegexExperiment >> schemaCorpusWith: mutators selector: selector [
 ]
 
 { #category : 'running' }
-RegexExperiment >> seeds [
+RegexExperiment >> seeds: nSeeds [
+
+	(nSeeds = 2) ifTrue: [ ^ { 'a' . 'ac?ab?ab?b?aa.?aaab?c?a(c)?ac?aaab?a?a' } ].
 
 	"Auto Generated but hardcoded to allow repetition"
 	^ #( '.?()*' '(|.*b*b+||a*|c*.?|a?|a?|.*)*|c?.?' 'a(.c?b+)|a?a+|a*|b?c*()+|(|a+)?(b*)' '|()*||' 'a(((.+().?)b+.+c*()+.+ba+)+|.b*)b?|c*||'
@@ -109,8 +111,6 @@ RegexExperiment >> seeds [
 	     'b*.a*' '|||c*||b+.a?|c*' 'a*.+c.+(|)*c?c|||' '||||' 'a*.*c+.+' '|.?(.+.)a+' 'a+a*' '(|)?b?b?b?()*' '(||.*)+.*(|)*c*a+|a*'
 	     '|' '(.|.c(a?|)+||(.?|)|c*.?c?)()*.?' 'ca+' '||a*.+()+' '..c*' 'a*c*|c+' 'b*b?|b+|' 'c*b+(|)?.+c+b+|a(|a+|a*b?b*a+c+||)*a|'
 	     'b+b(b+c+a?)+|' 'b*b?|' )
-	
-	"^ { 'a' . 'ac?ab?ab?b?aa.?aaab?c?a(c)?ac?aaab?a?a' }"
 ]
 
 { #category : 'running' }

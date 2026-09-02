@@ -34,12 +34,12 @@ NeoJSONExperiment >> newGrammar [
 ]
 
 { #category : 'running' }
-NeoJSONExperiment >> schemaCorpusWith: mutators selector: selector [
+NeoJSONExperiment >> schemaCorpusWith: mutators selector: selector seeds: nSeeds [
 
 	| receiverConstraint argumentConstraints jsonGenerator |
 	
 	jsonGenerator := UmeCorpusGenerator new
-		  seeds: self seeds deepCopy;
+		  seeds: (self seeds: nSeeds) deepCopy;
 		  mutationsPerIteration: self mpi;
 		  mutators: mutators;
 		  mutatorSelector: selector;
@@ -55,7 +55,7 @@ NeoJSONExperiment >> schemaCorpusWith: mutators selector: selector [
 ]
 
 { #category : 'running' }
-NeoJSONExperiment >> seeds [
+NeoJSONExperiment >> seeds: nSeeds [
 
 	^ { '{}' . '{"n":true,"n":[],"x":6}' }
 ]

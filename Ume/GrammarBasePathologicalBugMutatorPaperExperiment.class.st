@@ -3,8 +3,7 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'experimentTime',
-		'times',
-		'schemas'
+		'times'
 	],
 	#category : 'Ume-PerfUme Experimentation',
 	#package : 'Ume',
@@ -39,6 +38,12 @@ GrammarBasePathologicalBugMutatorPaperExperiment class >> getResults: sourcePath
 GrammarBasePathologicalBugMutatorPaperExperiment class >> run: confName [
 
 	^ self new runConf: confName
+]
+
+{ #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment class >> run: confName seeds: numberOfSeeds [
+
+	^ self new runConf: confName seeds: numberOfSeeds
 ]
 
 { #category : 'running' }
@@ -77,9 +82,9 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> grammarDerivationMutators [
 ]
 
 { #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> grammarDerivationsSchema [
+GrammarBasePathologicalBugMutatorPaperExperiment >> grammarDerivationsSchema: nSeeds [ 
 
-	^ self schemaCorpusWith: self grammarDerivationMutators selector: UmeWeightedMutatorSelector new
+	^ self schemaCorpusWith: self grammarDerivationMutators selector: UmeWeightedMutatorSelector new seeds: nSeeds
 ]
 
 { #category : 'running' }
@@ -89,9 +94,9 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralMutators [
 ]
 
 { #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralsSchema [
+GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralsSchema: seeds [
 
-	^ self schemaCorpusWith: self grammarLiteralMutators selector: UmeWeightedMutatorSelector new
+	^ self schemaCorpusWith: self grammarLiteralMutators selector: UmeWeightedMutatorSelector new seeds: seeds
 ]
 
 { #category : 'running' }
@@ -100,15 +105,6 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> initialize [
 	super initialize.
 	experimentTime := 1 hour.
 	times := 20.
-	schemas := {
-		'weighted-grammar-base' -> self weightedGrammarSchema.
-		'stochastic-base' -> self stochasticSchema.
-		'grammar-literals' -> self grammarLiteralsSchema.
-		'grammar-derivations' -> self grammarDerivationsSchema.
-		'weighted-scheduling' -> self weightSelectionSchedulerSchema.
-		'random-scheduling' -> self randomSelectionSchedulerSchema.
-		'mopt-scheduling' -> self moptSelectionSchedulerSchema
-	} asDictionary.
 ]
 
 { #category : 'running' }
@@ -124,13 +120,13 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> methodsToInstrument [
 ]
 
 { #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> moptSelectionSchedulerSchema [
+GrammarBasePathologicalBugMutatorPaperExperiment >> moptSelectionSchedulerSchema: nSeeds [ 
 
 	^ self schemaCorpusWith: (
 		self grammarLiteralMutators,
 		self grammarDerivationMutators,
 		self stochasticMutators
-	) selector: UmeMOPTMutatorSelector new
+	) selector: UmeMOPTMutatorSelector new seeds: nSeeds
 ]
 
 { #category : 'running' }
@@ -152,23 +148,29 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> newGrammar [
 ]
 
 { #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> randomSelectionSchedulerSchema [
+GrammarBasePathologicalBugMutatorPaperExperiment >> randomSelectionSchedulerSchema: nSeeds [
 
 	^ self schemaCorpusWith: (
 		self grammarLiteralMutators,
 		self grammarDerivationMutators,
 		self stochasticMutators
-	) selector: UmeRandomMutatorSelector new
+	) selector: UmeRandomMutatorSelector new seeds: nSeeds
 ]
 
 { #category : 'running' }
 GrammarBasePathologicalBugMutatorPaperExperiment >> run: config iteration: i [
 
+	^ self run: config iteration: i seeds: 100
+]
+
+{ #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> run: config iteration: i seeds: numberOfSeeds [
+
 	| schema runner result fileName |
 	
 	fileName := self csvFileName: config iteration: i.
 
-	schema := self schema: config.
+	schema := self schema: config seeds: numberOfSeeds.
 	
 	runner := UmeRunner test: self targetMethod from: schema for: self experimentTime.
 	
@@ -198,19 +200,45 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> runConf: confName [
 ]
 
 { #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> schema: config [
+GrammarBasePathologicalBugMutatorPaperExperiment >> runConf: confName seeds: numberOfSeeds [
 
-	^ schemas at: config
+	(1 to: times) do: [ :i |
+		Smalltalk garbageCollect. "We perform a garbageCollect before each execution"
+		self run: confName iteration: i seeds: numberOfSeeds
+	]
 ]
 
 { #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> schemaCorpusWith: mutators selector: selector [
+GrammarBasePathologicalBugMutatorPaperExperiment >> schema: config [
+
+	^ self schema: config seeds: 100
+]
+
+{ #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> schema: config seeds: numberOfSeeds [
+
+	| schemas |
+	schemas := {
+		'weighted-grammar-base' -> ([ self weightedGrammarSchema ]).
+		'stochastic-base' -> ([ self stochasticSchema: numberOfSeeds ]).
+		'grammar-literals' -> ([ self grammarLiteralsSchema: numberOfSeeds ]).
+		'grammar-derivations' -> ([ self grammarDerivationsSchema: numberOfSeeds ]).
+		'weighted-scheduling' -> ([ self weightSelectionSchedulerSchema: numberOfSeeds ]).
+		'random-scheduling' -> ([ self randomSelectionSchedulerSchema: numberOfSeeds ]).
+		'mopt-scheduling' -> ([ self moptSelectionSchedulerSchema: numberOfSeeds ])
+	} asDictionary.
+
+	^ (schemas at: config) value
+]
+
+{ #category : 'running' }
+GrammarBasePathologicalBugMutatorPaperExperiment >> schemaCorpusWith: mutators selector: selector seeds: nSeeds [
 
 	self subclassResponsibility 
 ]
 
 { #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> seeds [
+GrammarBasePathologicalBugMutatorPaperExperiment >> seeds: nSeeds [ 
 
 	self subclassResponsibility 
 ]
@@ -224,9 +252,9 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> stochasticMutators [
 ]
 
 { #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> stochasticSchema [
+GrammarBasePathologicalBugMutatorPaperExperiment >> stochasticSchema: nSeeds [
 
-	^ self schemaCorpusWith: self stochasticMutators selector: UmeWeightedMutatorSelector new
+	^ self schemaCorpusWith: self stochasticMutators selector: UmeWeightedMutatorSelector new seeds: nSeeds
 ]
 
 { #category : 'running' }
@@ -248,13 +276,13 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> times: anObject [
 ]
 
 { #category : 'running' }
-GrammarBasePathologicalBugMutatorPaperExperiment >> weightSelectionSchedulerSchema [
+GrammarBasePathologicalBugMutatorPaperExperiment >> weightSelectionSchedulerSchema: numberOfSeeds [ 
 
 	^ self schemaCorpusWith: (
 		self grammarLiteralMutators,
 		self grammarDerivationMutators,
 		self stochasticMutators
-	) selector: UmeWeightedMutatorSelector new
+	) selector: UmeWeightedMutatorSelector new seeds: numberOfSeeds
 ]
 
 { #category : 'running' }
