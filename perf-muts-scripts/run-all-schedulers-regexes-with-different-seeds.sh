@@ -26,13 +26,13 @@ scripts=(
 )
 
 folders=(
-    "regexes-weighted-scheduling-100-seeds"
-    "regexes-random-scheduling-100-seeds"
-    "regexes-mopt-scheduling-100-seeds"
+    "regexes-weighted-all-mutators-scheduling-100-seeds"
+    "regexes-random-all-mutators-scheduling-100-seeds"
+    "regexes-mopt-all-mutators-scheduling-100-seeds"
 
-    "regexes-weighted-scheduling-2-seeds"
-    "regexes-random-scheduling-2-seeds"
-    "regexes-mopt-scheduling-2-seeds"
+    "regexes-weighted-all-mutators-scheduling-2-seeds"
+    "regexes-random-all-mutators-scheduling-2-seeds"
+    "regexes-mopt-all-mutators-scheduling-2-seeds"
 
     "regexes-weighted-grammar-mutators-scheduling-100-seeds"
     "regexes-random-grammar-mutators-scheduling-100-seeds"
