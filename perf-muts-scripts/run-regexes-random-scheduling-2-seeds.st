@@ -4,4 +4,4 @@ Metacello new
 	onConflictUseIncoming;
     load.
 
-(Smalltalk at: #GraphExperiment) run: 'weighted-scheduling' seeds: 2.
+(Smalltalk at: #RegexExperiment) run: 'random-scheduling' seeds: 2.
