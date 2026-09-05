@@ -13,7 +13,7 @@ Class {
 ManifestUme class >> ruleCollectionProtocolRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#UmeNautilusShrinker #candidates: #false)) #'2026-06-17T10:25:57.033098+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#UmeNautilusShrinker #candidates: #false)) #'2026-06-17T10:25:57.033098+02:00') #(#(#RGMethodDefinition #(#UmePersesShrinker #minimizeOne:upperBound: #false)) #'2026-07-17T10:41:09.415435+02:00') )
 ]
 
 { #category : 'code-critics' }
