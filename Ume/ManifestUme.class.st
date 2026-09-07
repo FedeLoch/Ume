@@ -13,7 +13,7 @@ Class {
 ManifestUme class >> ruleCollectionProtocolRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#UmeNautilusShrinker #candidates: #false)) #'2026-06-17T10:25:57.033098+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#ShinNautilusShrinker #candidates: #false)) #'2026-06-17T10:25:57.033098+02:00') )
 ]
 
 { #category : 'code-critics' }
@@ -27,7 +27,7 @@ ManifestUme class >> ruleModifiesCollectionRuleV1FalsePositive [
 ManifestUme class >> ruleReIsNotNilAndConditionalRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#UmeNautilusShrinker #minimizeOne:upperBound: #false)) #'2026-06-17T10:24:47.051485+02:00') #(#(#RGClassDefinition #(#UmeNautilusShrinker)) #'2026-06-17T10:25:15.980842+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#ShinNautilusShrinker #minimizeOne:upperBound: #false)) #'2026-06-17T10:24:47.051485+02:00') #(#(#RGClassDefinition #(#ShinNautilusShrinker)) #'2026-06-17T10:25:15.980842+02:00') )
 ]
 
 { #category : 'code-critics' }
@@ -41,5 +41,5 @@ ManifestUme class >> ruleUnoptimizedToDoRuleV1FalsePositive [
 ManifestUme class >> ruleWhileTrueRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#UmeHDDShrinker #minimizeOne:upperBound: #false)) #'2026-07-29T11:28:29.575968+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#ShinHDDShrinker #minimizeOne:upperBound: #false)) #'2026-07-29T11:28:29.575968+02:00') )
 ]
