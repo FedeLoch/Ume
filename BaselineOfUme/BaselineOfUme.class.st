@@ -19,8 +19,9 @@ BaselineOfUme >> baseline: spec [
 		spec baseline: 'Microdown' with: [ spec repository: 'github://pillar-markup/Microdown:dev' ].
 		spec baseline: 'OSSubprocess' with: [ spec repository: 'github://pharo-contributions/OSSubprocess:master/repository' ].
 		spec baseline: 'Mate' with: [ spec repository: 'github://FedeLoch/Mate:main' ].
+		spec baseline: 'Shin' with: [ spec repository: 'github://FedeLoch/Shin:main' ].
 		
-		spec package: 'Ume' with: [ spec requires: #( 'Coverage2' 'Ume Tests' 'Phuzzer' "'BlocBenchs'" "'Roassal'" 'OSSubprocess' 'PBA' 'Gnocco' 'Microdown' 'Mate' ) ].
+		spec package: 'Ume' with: [ spec requires: #( 'Coverage2' 'Ume Tests' 'Phuzzer' "'BlocBenchs'" "'Roassal'" 'OSSubprocess' 'PBA' 'Gnocco' 'Microdown' 'Mate' 'Shin' ) ].
 		spec package: 'Coverage2'.
 		spec package: 'Ume Tests'.
 	]
