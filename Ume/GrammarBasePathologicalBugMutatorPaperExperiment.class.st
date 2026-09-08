@@ -103,7 +103,7 @@ GrammarBasePathologicalBugMutatorPaperExperiment >> grammarLiteralsSchema: seeds
 GrammarBasePathologicalBugMutatorPaperExperiment >> initialize [ 
 
 	super initialize.
-	experimentTime := 1 hour.
+	experimentTime := 4 hour.
 	times := 20.
 ]
 
