@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeRegexCoverageTest',
+	#name : 'UmeRegexGenerateDatasetTest',
 	#superclass : 'TestCase',
 	#instVars : [
 		'argumentConstraints',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : 'running' }
-UmeRegexCoverageTest >> regexByProp: props and: feedback [
+UmeRegexGenerateDatasetTest >> regexByProp: props and: feedback [
 
 	| regex grammarConstraint |
 	regex := nil.
@@ -32,7 +32,7 @@ UmeRegexCoverageTest >> regexByProp: props and: feedback [
 ]
 
 { #category : 'running' }
-UmeRegexCoverageTest >> seeds [
+UmeRegexGenerateDatasetTest >> seeds [
 
 	^ #( '.?()*' '(|.*b*b+||a*|c*.?|a?|a?|.*)*|c?.?' 'a(.c?b+)|a?a+|a*|b?c*()+|(|a+)?(b*)' '|()*||' 'a(((.+().?)b+.+c*()+.+ba+)+|.b*)b?|c*||'
 	     'a+|' 'b(|)*a*b*c+' 'b+||' 'c?|b+c+|' 'a+c?c' '.*|' 'b*|a*a+' '.*a*' '|((|)?((c?)+b|(b?|(|b+)+a?)?))?'
@@ -50,7 +50,7 @@ UmeRegexCoverageTest >> seeds [
 ]
 
 { #category : 'running' }
-UmeRegexCoverageTest >> setUp [
+UmeRegexGenerateDatasetTest >> setUp [
 
 	| regexGenerator sharedProperties regexConstraint |
 
@@ -99,7 +99,7 @@ UmeRegexCoverageTest >> setUp [
 ]
 
 { #category : 'tests' }
-UmeRegexCoverageTest >> testGuidingByCoverage [
+UmeRegexGenerateDatasetTest >> testGuidingByCoverage [
 
 	| result methods |
 	

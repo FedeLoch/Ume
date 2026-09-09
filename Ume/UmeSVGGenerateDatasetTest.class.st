@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeSVGTest',
+	#name : 'UmeSVGGenerateDatasetTest',
 	#superclass : 'TestCase',
 	#instVars : [
 		'argumentConstraints',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : 'running' }
-UmeSVGTest >> setUp [
+UmeSVGGenerateDatasetTest >> setUp [
 
 	super setUp.
 	self timeLimit: 5 hours.
@@ -30,7 +30,7 @@ UmeSVGTest >> setUp [
 ]
 
 { #category : 'as yet unclassified' }
-UmeSVGTest >> svgGenerator [
+UmeSVGGenerateDatasetTest >> svgGenerator [
 
 	| seeds randomGenerator |
 	randomGenerator := UmeGrammarGenerator new grammar: SvgPathGrammar new; maxHeight: SmallInteger maxVal; maxSize: 1000.
@@ -47,7 +47,7 @@ UmeSVGTest >> svgGenerator [
 ]
 
 { #category : 'tests' }
-UmeSVGTest >> testGuidingByCoverage [
+UmeSVGGenerateDatasetTest >> testGuidingByCoverage [
 
 	| result methods |
 	
@@ -63,7 +63,7 @@ UmeSVGTest >> testGuidingByCoverage [
 ]
 
 { #category : 'tests' }
-UmeSVGTest >> testGuidingByMethodsCalls [ 
+UmeSVGGenerateDatasetTest >> testGuidingByMethodsCalls [ 
 
 	| result methods |
 	

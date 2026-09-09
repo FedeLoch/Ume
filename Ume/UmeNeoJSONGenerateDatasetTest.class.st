@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeNeoJSONCoverageTest',
+	#name : 'UmeNeoJSONGenerateDatasetTest',
 	#superclass : 'TestCase',
 	#instVars : [
 		'argumentConstraints',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-UmeNeoJSONCoverageTest >> jsonGenerator [
+UmeNeoJSONGenerateDatasetTest >> jsonGenerator [
 
 	^ UmeCorpusGenerator new
 		  seeds: self seeds;
@@ -26,13 +26,13 @@ UmeNeoJSONCoverageTest >> jsonGenerator [
 ]
 
 { #category : 'running' }
-UmeNeoJSONCoverageTest >> seeds [
+UmeNeoJSONGenerateDatasetTest >> seeds [
 
 	^ { '{}' . '{"n":true,"n":[],"x":6}' }
 ]
 
 { #category : 'running' }
-UmeNeoJSONCoverageTest >> setUp [
+UmeNeoJSONGenerateDatasetTest >> setUp [
 
 	super setUp.
 	self timeLimit: 5 hours.
@@ -47,7 +47,7 @@ UmeNeoJSONCoverageTest >> setUp [
 ]
 
 { #category : 'tests' }
-UmeNeoJSONCoverageTest >> testGuidingByCoverage [
+UmeNeoJSONGenerateDatasetTest >> testGuidingByCoverage [
 
 	| result methods |
 	

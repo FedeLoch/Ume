@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeGraphTest',
+	#name : 'UmeGraphGenerateDatasetTest',
 	#superclass : 'TestCase',
 	#instVars : [
 		'argumentConstraints',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-UmeGraphTest >> graphCodeGenerator [
+UmeGraphGenerateDatasetTest >> graphCodeGenerator [
 
 	^ UmeCorpusGenerator new
 		  seeds: self seeds;
@@ -26,7 +26,7 @@ UmeGraphTest >> graphCodeGenerator [
 ]
 
 { #category : 'running' }
-UmeGraphTest >> seeds [
+UmeGraphGenerateDatasetTest >> seeds [
 
 	^ #( 'RSGridLayout
 RSPieSlice
@@ -233,7 +233,7 @@ RSPieSlice
 ]
 
 { #category : 'running' }
-UmeGraphTest >> setUp [
+UmeGraphGenerateDatasetTest >> setUp [
 
 	super setUp.
 	self timeLimit: 5 hours.
@@ -248,7 +248,7 @@ UmeGraphTest >> setUp [
 ]
 
 { #category : 'tests' }
-UmeGraphTest >> testGuidingByCoverage [
+UmeGraphGenerateDatasetTest >> testGuidingByCoverage [
 
 	| result methods |
 	

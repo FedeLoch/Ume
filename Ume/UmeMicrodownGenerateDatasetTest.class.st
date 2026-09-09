@@ -1,5 +1,5 @@
 Class {
-	#name : 'UmeMicrodownCoverageTest',
+	#name : 'UmeMicrodownGenerateDatasetTest',
 	#superclass : 'TestCase',
 	#instVars : [
 		'argumentConstraints',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-UmeMicrodownCoverageTest >> microdownFileGenerator [
+UmeMicrodownGenerateDatasetTest >> microdownFileGenerator [
 
 	^ UmeCorpusGenerator new
 		  seeds: self seeds;
@@ -26,7 +26,7 @@ UmeMicrodownCoverageTest >> microdownFileGenerator [
 ]
 
 { #category : 'running' }
-UmeMicrodownCoverageTest >> seeds [
+UmeMicrodownGenerateDatasetTest >> seeds [
 
 	^ { 'a' . '# Header
 	** This is a line comment **
@@ -47,7 +47,7 @@ UmeMicrodownCoverageTest >> seeds [
 ]
 
 { #category : 'running' }
-UmeMicrodownCoverageTest >> setUp [
+UmeMicrodownGenerateDatasetTest >> setUp [
 
 	super setUp.
 	self timeLimit: 5 hours.
@@ -62,7 +62,7 @@ UmeMicrodownCoverageTest >> setUp [
 ]
 
 { #category : 'tests' }
-UmeMicrodownCoverageTest >> testGuidingByCoverage [
+UmeMicrodownGenerateDatasetTest >> testGuidingByCoverage [
 
 	| result methods |
 	
