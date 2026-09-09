@@ -262,3 +262,19 @@ UmeGraphGenerateDatasetTest >> testGuidingByCoverage [
 
 	1 halt.
 ]
+
+{ #category : 'tests' }
+UmeGraphGenerateDatasetTest >> testGuidingByMethodsCalls [ 
+
+	| result methods |
+	
+	runner guidedByMethodsCalls.
+	methods := RSLineBuilder package methods, RSClusterRadialTreeLayout package methods.
+	"runner collectAllCases."
+	runner collectOnlyOutliers.
+	
+	runner methodsToInstrument: methods.
+	result := runner run.
+
+	1 halt.
+]

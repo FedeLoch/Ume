@@ -76,3 +76,19 @@ UmeMicrodownGenerateDatasetTest >> testGuidingByCoverage [
 
 	1 halt.
 ]
+
+{ #category : 'tests' }
+UmeMicrodownGenerateDatasetTest >> testGuidingByMethodsCalls [ 
+
+	| result methods |
+	
+	runner guidedByMethodsCalls.
+	methods := Microdown package methods.
+	"runner collectAllCases."
+	runner collectOnlyOutliers.
+	
+	runner methodsToInstrument: methods.
+	result := runner run.
+
+	1 halt.
+]

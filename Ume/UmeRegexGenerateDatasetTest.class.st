@@ -113,3 +113,19 @@ UmeRegexGenerateDatasetTest >> testGuidingByCoverage [
 
 	1 halt.
 ]
+
+{ #category : 'tests' }
+UmeRegexGenerateDatasetTest >> testGuidingByMethodsCalls [ 
+
+	| result methods |
+	
+	runner guidedByMethodsCalls.
+	methods := RxMatcher package methods.
+	"runner collectAllCases."
+	runner collectOnlyOutliers.
+	
+	runner methodsToInstrument: methods.
+	result := runner run.
+
+	1 halt.
+]
