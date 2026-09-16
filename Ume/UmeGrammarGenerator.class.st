@@ -14,7 +14,7 @@ Class {
 { #category : 'accessing' }
 UmeGrammarGenerator >> derivationTree: input [
 
-	^ UmeGrammarParser parse: input from: grammar
+	^ GncGenericGrammarParser parse: input from: grammar
 ]
 
 { #category : 'accessing' }

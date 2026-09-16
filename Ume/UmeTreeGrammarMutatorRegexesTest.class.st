@@ -26,7 +26,7 @@ UmeTreeGrammarMutatorRegexesTest >> testMutatingAnEmptyString [
 	
 	10000 timesRepeat: [ | mutated |
 		mutated := mutator mutate: str.
-		[ UmeGrammarParser parse: mutated from: mutator grammar ] on: Error do: [ :e | 1 halt. ].
+		[ GncGenericGrammarParser parse: mutated from: mutator grammar ] on: Error do: [ :e | 1 halt. ].
 		str := mutated.
 	].
 ]
@@ -46,6 +46,6 @@ UmeTreeGrammarMutatorRegexesTest >> testMutatingAnEmptyStringTestingMCTS [
 
 	100000 timesRepeat: [ | ast |
 		ast := grammar start generateMCTSAst: generator level: 0.
-		[ UmeGrammarParser parse: ast asStringInput from: grammar ] on: Error do: [ :e | 1 halt. ].
+		[ GncGenericGrammarParser parse: ast asStringInput from: grammar ] on: Error do: [ :e | 1 halt. ].
 	].
 ]

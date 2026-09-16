@@ -158,5 +158,5 @@ UmeGrammarDerivationMutator >> subNodesFrom: grammarRule parentSize: parentSize 
 { #category : 'accessing' }
 UmeGrammarDerivationMutator >> tree: word [
 
-	^ UmeGrammarParser parse: word from: grammar
+	^ GncGenericGrammarParser parse: word from: grammar
 ]
