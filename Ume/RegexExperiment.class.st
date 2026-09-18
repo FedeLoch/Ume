@@ -95,7 +95,7 @@ RegexExperiment >> schemaCorpusWith: mutators selector: selector seeds: nSeeds [
 { #category : 'running' }
 RegexExperiment >> seeds: nSeeds [
 
-	(nSeeds = 2) ifTrue: [ ^ { 'a' . 'ac?ab?ab?b?aa.?aaab?c?a(c)?ac?aaab?a?a' } ].
+	nSeeds = 2 ifTrue: [ ^ { '|ba+.*a*'. '..c*' } ].
 
 	"Auto Generated but hardcoded to allow repetition"
 	^ #( '.?()*' '(|.*b*b+||a*|c*.?|a?|a?|.*)*|c?.?' 'a(.c?b+)|a?a+|a*|b?c*()+|(|a+)?(b*)' '|()*||' 'a(((.+().?)b+.+c*()+.+ba+)+|.b*)b?|c*||'

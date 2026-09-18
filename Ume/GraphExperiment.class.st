@@ -62,8 +62,13 @@ GraphExperiment >> schemaCorpusWith: mutators selector: selector seeds: nSeeds [
 { #category : 'running' }
 GraphExperiment >> seeds: nSeeds [
 	"Auto Generated but hardcoded to allow repetition"
-	
-	(nSeeds = 2) ifTrue: [ ^ { self baseSeed . self complexSeed } ].
+
+	nSeeds = 2 ifTrue: [
+			^ { 'RSRectanglePackLayout
+RSPolygon
+495->734 . 542->124 . 704->666 . 099->138'. 'RSHorizontalTreeLayout
+RSBitmap
+800->849 . 452->206 . 017->300' } ].
 
 	^ #( 'RSGridLayout
 RSPieSlice
