@@ -7,6 +7,17 @@ Class {
 }
 
 { #category : 'running' }
+SVGExperiment >> corpusGenerator: mutators selector: selector seeds: nSeeds [
+
+	^ UmeCorpusGenerator new
+		  seeds: (self seeds: nSeeds) deepCopy;
+		  mutationsPerIteration: self mpi;
+		  mutators: mutators;
+		  mutatorSelector: selector;
+		  heuristic: UmePickBestElementDifferenceHeuristic new.
+]
+
+{ #category : 'running' }
 SVGExperiment >> maxInputSize [
 
 	^ 1000
