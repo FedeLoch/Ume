@@ -9,7 +9,6 @@ scripts=(
     "run-svg-stochastic-base.st"
 
     # All baselines - 2 seeds
-    "run-svg-grammar-literals-2-seeds.st"
     "run-svg-stochastic-base-2-seeds.st"
 
     # All schedulers with all mutators 100 seeds
@@ -23,7 +22,6 @@ folders=(
     "svg-grammar-literals-100-seeds"
     "svg-stochastic-base-100-seeds"
 
-    "svg-grammar-literals-2-seeds"
     "svg-stochastic-base-2-seeds"
 
     "run-svg-random-scheduling-100-seeds"
