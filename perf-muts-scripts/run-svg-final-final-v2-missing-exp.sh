@@ -10,12 +10,6 @@ scripts=(
 
     # All baselines - 2 seeds
     "run-svg-stochastic-base-2-seeds.st"
-
-    # All schedulers with all mutators 100 seeds
-    "run-svg-random-scheduling.st"
-
-    # All schedulers with all mutators 2 seeds
-    "run-svg-random-scheduling-2-seeds.st"
 )
 
 folders=(
@@ -23,10 +17,6 @@ folders=(
     "svg-stochastic-base-100-seeds"
 
     "svg-stochastic-base-2-seeds"
-
-    "run-svg-random-scheduling-100-seeds"
-
-    "run-svg-random-scheduling-2-seeds"
 )
 
 BASE_DIR="$(pwd)"
