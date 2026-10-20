@@ -52,7 +52,9 @@ UmeCorpusGenerator >> feedbacks: someFeedbacks [
 UmeCorpusGenerator >> gen: constraint [
 
 	iteration := iteration + 1.
-	
+	"Seeds are not produced by a mutator, so their feedback must not be credited to the last selected one"
+	lastSelectedMutator := nil.
+
 	"First, we consume all the seeds"
 	seeds ifNotEmpty: [ ^ self popSeed ].
 	
@@ -163,12 +165,8 @@ UmeCorpusGenerator >> pickOne: constraint [
 
 { #category : 'as yet unclassified' }
 UmeCorpusGenerator >> popSeed [
-	| top |
-	
-	top := seeds first.
-	seeds := seeds allButFirst.
-	
-	^ top
+
+	^ seeds removeFirst
 ]
 
 { #category : 'as yet unclassified' }
@@ -180,7 +178,8 @@ UmeCorpusGenerator >> seedGenerator: aGenerator [
 { #category : 'as yet unclassified' }
 UmeCorpusGenerator >> seeds: someSeeds [
 	
-	seeds := someSeeds 
+	"Copied into an OrderedCollection so seeds can be consumed in constant time without modifying the caller's collection"
+	seeds := OrderedCollection withAll: someSeeds
 ]
 
 { #category : 'as yet unclassified' }

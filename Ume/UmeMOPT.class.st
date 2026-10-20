@@ -15,7 +15,10 @@ Class {
 		'iterationSuccessCounts',
 		'iterationSelectionCounts',
 		'globalSuccessCounts',
-		'lastSelectedCandidateIndex'
+		'lastSelectedCandidateIndex',
+		'corePhaseMax',
+		'currentSwarm',
+		'pendingFlush'
 	],
 	#category : 'Ume-Generic Tools',
 	#package : 'Ume',
@@ -34,10 +37,50 @@ UmeMOPT >> bestSwarm [
 	^ bestSwarm
 ]
 
+{ #category : 'accessing' }
+UmeMOPT >> corePhaseMax [
+
+	^ corePhaseMax
+]
+
+{ #category : 'accessing' }
+UmeMOPT >> corePhaseMax: anInteger [
+
+	corePhaseMax := anInteger
+]
+
+{ #category : 'accessing' }
+UmeMOPT >> currentSwarm [
+
+	^ currentSwarm
+]
+
+{ #category : 'accessing' }
+UmeMOPT >> cycleLength [
+
+	^ self pilotPhaseLength + corePhaseMax
+]
+
 { #category : 'updating' }
 UmeMOPT >> feed: feedback [
 
-	(self isPositiveFeedback: feedback) ifTrue: [ self increaseSuccessLastSelection ]
+	(self isPositiveFeedback: feedback) ifTrue: [ self increaseSuccessLastSelection ].
+	"The feedback of the last selection of a period has arrived, so the period can be closed"
+	pendingFlush ifTrue: [ self flushIteration ]
+]
+
+{ #category : 'updating' }
+UmeMOPT >> flushIteration [
+	"Close the current period: the statistics gathered since the last flush belong to the swarm that made those selections"
+
+	pendingFlush := false.
+	(currentSwarm isNil or: [ iterationSelectionCounts sum = 0 ]) ifTrue: [ ^ self ].
+
+	self updateGlobalBestProbabilitiesWithSuccesses: globalSuccessCounts.
+	currentSwarm updateProbabilitiesWithSuccesses: iterationSuccessCounts onSelections: iterationSelectionCounts.
+	1 to: iterationSelectionCounts size do: [ :mutatorIndex |
+		iterationSelectionCounts at: mutatorIndex put: 0.
+		iterationSuccessCounts at: mutatorIndex put: 0 ]
 ]
 
 { #category : 'accessing' }
@@ -96,8 +139,11 @@ UmeMOPT >> initialize [
 	random := Random new.
 	iterationSuccessCounts := {  }.
 	
-	"how many warm up executions should be done to get the swarms up and running"
-	pilotPhaseMax := 100
+	"how many consecutive selections each swarm performs during the pilot phase"
+	pilotPhaseMax := 100.
+	"how many selections the best swarm performs during the core phase, before going back to the pilot phase"
+	corePhaseMax := pilotPhaseMax * numberOfSwarms.
+	pendingFlush := false
 ]
 
 { #category : 'initialization' }
@@ -118,7 +164,10 @@ UmeMOPT >> initializeSwarms: mutators [
 	globalSuccessCounts := Array new: mutatorsSize withAll: 0.
 	iterationSelectionCounts := Array new: mutatorsSize withAll: 0.
 	iterationSuccessCounts := Array new: mutatorsSize withAll: 0.
-	lastSelectedCandidateIndex := 1.
+	"No candidate has been selected yet, so no success can be credited"
+	lastSelectedCandidateIndex := nil.
+	currentSwarm := nil.
+	pendingFlush := false.
 	selectionCounter := 0
 ]
 
@@ -195,6 +244,18 @@ UmeMOPT >> pilotPhaseMax [
 ]
 
 { #category : 'accessing' }
+UmeMOPT >> pilotPhaseLength [
+
+	^ pilotPhaseMax * numberOfSwarms
+]
+
+{ #category : 'accessing' }
+UmeMOPT >> pilotPhaseMax: anInteger [
+
+	pilotPhaseMax := anInteger
+]
+
+{ #category : 'accessing' }
 UmeMOPT >> random [
 
 	^ random
@@ -203,28 +264,23 @@ UmeMOPT >> random [
 { #category : 'enumerating' }
 UmeMOPT >> selectCandidate: mutators [
 
-	| swarm isPilotPhase |
+	| swarm |
 	swarms ifNil: [ self initializeSwarms: mutators ].
 
+	"The feedback of the previous selection never arrived, close the period now"
+	pendingFlush ifTrue: [ self flushIteration ].
+
+	swarm := self swarmForNextSelection.
+	"Statistics are never shared between swarms"
+	(currentSwarm notNil and: [ swarm ~~ currentSwarm ]) ifTrue: [ self flushIteration ].
+	currentSwarm := swarm.
+
 	selectionCounter := selectionCounter + 1.
-	isPilotPhase := selectionCounter < (pilotPhaseMax * numberOfSwarms).
-	swarm := isPilotPhase ifTrue: [
-		"Pilot phase, we take the next swarm in round robin"
-		swarms at: selectionCounter \\ numberOfSwarms + 1 ] ifFalse: [
-		"not in pilot phase anymore, use the best swarm"
-		self bestSwarm
-	].
-
 	lastSelectedCandidateIndex := swarm selectCandidateFrom: mutators.
-
 	iterationSelectionCounts at: lastSelectedCandidateIndex put: (iterationSelectionCounts at: lastSelectedCandidateIndex) + 1.
 
-	selectionCounter \\ updatePeriod = 0 ifTrue: [
-			self updateGlobalBestProbabilitiesWithSuccesses: globalSuccessCounts.
-			swarm updateProbabilitiesWithSuccesses: iterationSuccessCounts onSelections: iterationSelectionCounts.
-			1 to: mutators size do: [ :mutatorIndex |
-					iterationSelectionCounts at: mutatorIndex put: 0.
-					iterationSuccessCounts at: mutatorIndex put: 0 ] ].
+	"The period is closed once the feedback of this selection arrives (see #feed:)"
+	selectionCounter \\ updatePeriod = 0 ifTrue: [ pendingFlush := true ].
 
 	^ mutators at: lastSelectedCandidateIndex
 ]
@@ -245,6 +301,19 @@ UmeMOPT >> swarms [
 UmeMOPT >> swarms: anObject [
 
 	swarms := anObject
+]
+
+{ #category : 'enumerating' }
+UmeMOPT >> swarmForNextSelection [
+	"Pilot phase: each swarm performs pilotPhaseMax consecutive selections.
+	 Core phase: the most efficient swarm performs corePhaseMax selections.
+	 Then the cycle starts again, as in MOPT (Lyu et al., USENIX Security 2019)"
+
+	| position |
+	position := selectionCounter \\ self cycleLength.
+	^ position < self pilotPhaseLength
+		ifTrue: [ swarms at: position // pilotPhaseMax + 1 ]
+		ifFalse: [ self bestSwarm ]
 ]
 
 { #category : 'updating' }

@@ -122,13 +122,24 @@ UmeResult >> exportExecutionValues [
 ]
 
 { #category : 'as yet unclassified' }
-UmeResult >> feed: someTests time: aTime [ 
+UmeResult >> feed: someTests time: aTime [
 
-	tests := tests, someTests.
+	^ self feed: someTests time: aTime numberOfGeneratedTests: (numberOfGeneratedTests ifNil: [ tests size ]) + someTests size
+]
+
+{ #category : 'as yet unclassified' }
+UmeResult >> feed: someTests time: aTime numberOfGeneratedTests: aNumberOfTests [
+
+	"Uses the setter so segmentedTests is recomputed as well"
+	self tests: tests, someTests.
+	numberOfGeneratedTests := aNumberOfTests.
 	totalTime := totalTime  + (Duration milliSeconds: (Time millisecondsSince: aTime)).
 	performanceResult := PerformanceResult from: tests withTime: totalTime.
 	topCases := runner feedbackEvaluator topCases.
 	ranking := (tests collect: [ :test | test score ifNil: [ 0 ] ifNotNil: [ test score ] ]) asSortedCollection reverse.
+	"Bugs are localized again on the whole set of tests"
+	localizedBugs := nil.
+	self localizeBugs
 ]
 
 { #category : 'accessing' }

@@ -13,13 +13,18 @@ Class {
 
 { #category : 'asserting' }
 UmeStopCoverageCriteria >> improvesCoverage: aCoverage [
-	previousCoverage ifNil: [ ^true ].
-	
-	(aCoverage asPercent = previousCoverage asPercent) ifTrue: [ timesWithouImprovement := timesWithouImprovement - 1 ].
-	
-	(aCoverage asPercent > previousCoverage asPercent ) ifTrue: [ timesWithouImprovement := tolerance ].
+	"previousCoverage is the percentage reached in the previous iteration.
+	 It must be a number: the coverage result is mutated in place, so keeping the object would always compare it with itself"
 
-	^ timesWithouImprovement ~= 0
+	| currentPercent |
+	currentPercent := aCoverage asPercent.
+	previousCoverage ifNil: [ ^ true ].
+
+	currentPercent > previousCoverage
+		ifTrue: [ timesWithouImprovement := tolerance ]
+		ifFalse: [ timesWithouImprovement := timesWithouImprovement - 1 ].
+
+	^ timesWithouImprovement > 0
 ]
 
 { #category : 'asserting' }
@@ -41,7 +46,7 @@ UmeStopCoverageCriteria >> progressFor: tests since: time for: iteration [
 	
 	previousCoverage ifNil: [ ^0 ]. 
 
-	^ previousCoverage asPercent
+	^ previousCoverage
 ]
 
 { #category : 'asserting' }
@@ -50,7 +55,7 @@ UmeStopCoverageCriteria >> shouldGenNext: currentTests since: aTime withCoverage
 	| res |
 	"Stop when the coverage is not improved since X iterations or the last coverage got 100%"
 	res := (self isNotOneHundredPercent: aCoverage) and: [ self improvesCoverage: aCoverage ].
-	previousCoverage := aCoverage.
+	previousCoverage := aCoverage asPercent.
 	^ res
 ]
 

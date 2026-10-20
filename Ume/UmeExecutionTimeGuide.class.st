@@ -8,8 +8,12 @@ Class {
 
 { #category : 'accessing' }
 UmeExecutionTimeGuide >> category: value [
+	"Same logarithmic buckets as the methods calls guide, so timing noise is not rewarded as an improvement"
 
-	^ value
+	value <= 0 ifTrue: [ ^ 0 ].
+	(value = 1) ifTrue: [ ^ 1 ].
+
+	^ self lnCategory: value
 ]
 
 { #category : 'as yet unclassified' }

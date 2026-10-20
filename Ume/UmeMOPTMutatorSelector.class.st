@@ -12,7 +12,10 @@ Class {
 { #category : 'feedback' }
 UmeMOPTMutatorSelector >> feed: feedback [
 
-	mopt feed: feedback
+	"Cases that were not produced by a mutator (e.g. seeds) must not be credited to any mutator"
+	mopt feed: ((corpusGenerator isNil or: [ corpusGenerator lastSelectedMutator isNil ])
+		ifTrue: [ nil ]
+		ifFalse: [ feedback ])
 ]
 
 { #category : 'initialization' }
