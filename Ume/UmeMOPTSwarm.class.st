@@ -132,15 +132,17 @@ UmeMOPTSwarm >> updateProbabilitiesWithSuccesses: localSuccesses onSelections: l
 
 	sum := 0.0.
 	1 to: probabilities size do: [ :i |
-			| localBestProbability globalBestProbability velocity newProb randomValue currentProbability |
+			| localBestProbability globalBestProbability velocity newProb cognitiveRandom socialRandom currentProbability |
 			"update the velocity of each one"
 			localBestProbability := localBestProbabilities at: i.
 			globalBestProbability := mopt globalBestProbabilities at: i.
 			velocity := velocities at: i.
-			randomValue := mopt random next.
+			"PSO uses independent random factors for the cognitive and the social components"
+		cognitiveRandom := mopt random next.
+		socialRandom := mopt random next.
 			currentProbability := (probabilities at: i).
-			velocity := mopt inertia * velocity + (randomValue * (localBestProbability - currentProbability))
-														+ (randomValue * (globalBestProbability - currentProbability)) .
+			velocity := mopt inertia * velocity + (cognitiveRandom * (localBestProbability - currentProbability))
+														+ (socialRandom * (globalBestProbability - currentProbability)) .
 			velocities at: i put: velocity.
 
 			"re compute the probability of each one"

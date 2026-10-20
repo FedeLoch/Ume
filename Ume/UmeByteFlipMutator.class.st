@@ -8,18 +8,19 @@ Class {
 
 { #category : 'accessing' }
 UmeByteFlipMutator >> applyMutation: target [
+	"Swaps two random characters. It works on a copy: the input may be a corpus element or a method literal"
 
-	| at1 at2 temp |
+	| at1 at2 temp mutated |
 	
 	target ifEmpty: [ ^ target ].
 	
-	at1 := target size atRandom.
-	at2 := target size atRandom.
+	mutated := target copy.
+	at1 := mutated size atRandom.
+	at2 := mutated size atRandom.
 
-	temp := target at: at1.
-	target beWritableObject.
-	target at: at1 put: (target at: at2).
-	target at: at2 put: temp.
+	temp := mutated at: at1.
+	mutated at: at1 put: (mutated at: at2).
+	mutated at: at2 put: temp.
 	
-	^ target
+	^ mutated
 ]

@@ -276,8 +276,8 @@ UmeRunner >> genTest: incrCoverage with: collector [
 	| arguments receiver result score caseFeedback test safeReceiver safeArguments |
 	
 	"Setup based on the enriched schema"
-	receiver := generator genReceiverFor: target from: schema.
-	arguments := generator genArgumentsFor: target from: schema.
+	receiver := self generateWithRetries: [ generator genReceiverFor: target from: schema ].
+	arguments := self generateWithRetries: [ generator genArgumentsFor: target from: schema ].
 	
 	"Creating safe copies to avoid object mutability"
 	safeReceiver := receiver veryDeepCopy.
@@ -304,6 +304,18 @@ UmeRunner >> genTest: incrCoverage with: collector [
 	generator feed: caseFeedback.
 	
 	^ test feedback: caseFeedback; property: schema property; yourself
+]
+
+{ #category : 'tests' }
+UmeRunner >> generateWithRetries: aBlock [
+	"A generator or a mutator may fail on a particular input. Retry a few times instead of aborting the whole campaign"
+
+	| attempts |
+	attempts := 0.
+	^ [ aBlock value ] on: Error do: [ :error |
+		attempts := attempts + 1.
+		attempts >= self maxGenerationRetries ifTrue: [ error pass ].
+		error retry ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -383,6 +395,12 @@ UmeRunner >> isKernelMethod: method [
 	^ method package name = 'Kernel'
 ]
 
+{ #category : 'tests' }
+UmeRunner >> maxGenerationRetries [
+
+	^ 10
+]
+
 { #category : 'accessing' }
 UmeRunner >> methodsToInstrument [
 
@@ -404,20 +422,26 @@ UmeRunner >> progressFor: tests since: time for: iteration [
 { #category : 'tests' }
 UmeRunner >> reRun: result [
 
-	| tests time collector incrCoverage |
+	| tests test time collector incrCoverage iteration firstIteration |
 	
 	time := Time millisecondClockValue.
 	tests := OrderedCollection new.
 	collector := result totalCoverage collector.
 	incrCoverage := result totalCoverage.
+	"Iterations continue the numbering of the previous campaign, the stop criteria counts only the new ones"
+	firstIteration := result numberOfGeneratedTests ifNil: [ result tests size ].
+	iteration := firstIteration.
 
 	collector runOn: [ [
-		self shouldGenNext: tests since: time withCoverage: incrCoverage] whileTrue: [
-			tests add: (self genTest: incrCoverage with: collector).
+		self shouldGenNext: iteration - firstIteration since: time withCoverage: incrCoverage] whileTrue: [
+		iteration := iteration + 1.
+		test := self genTest: incrCoverage with: collector.
+		test iteration: iteration.
+		(self shouldCollect: test) ifTrue: [ tests add: test ].
 		]
 	].
 
-	^ result feed: tests time: time
+	^ result feed: tests time: time numberOfGeneratedTests: iteration
 ]
 
 { #category : 'tests' }
